@@ -163,8 +163,8 @@ require("nvim-tree").setup({
     update_cwd = true,
   },
 actions= {
-    change_dir = { 
-        global = true 
+    change_dir = {
+        global = true
         }
     }
 })
@@ -249,16 +249,17 @@ wk.register({
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
         name = "+Terminal",
-        t = { ":FloatermToggle<cr>", "Toggle terminal" },
-        K = { ":FloatermNext<cr>", "Next terminal" },
-        J = { ":FloatermPrev<cr>", "Previous terminal" },
+        f = { ":FloatermToggle<cr>", "Toggle terminal" },
+        h = { ":FloatermNext<cr>", "Next terminal" },
+        l = { ":FloatermPrev<cr>", "Previous terminal" },
         d = { ":FloatermKill<cr>", "Kill terminal" },
         n = { ":FloatermNew<cr>", "New terminal" },
+        t = { ":term<cr>", "Open new terminal in buffer" },
     },
     p = {
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
-    h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" }
+    h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
 }, { prefix = "<leader>" })
 
