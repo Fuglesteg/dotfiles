@@ -16,17 +16,31 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
+vim.wo.colorcolumn = '80'
+
 -- Dirty yucky mouse support
 -- set mouse=a
 vim.opt.mouse = 'a'
 
 -- Neovide
-vim.g.guifont = "mononoki Nerd Font Mono:h12"
-vim.env.neovide_cursor_trail_length = "0.01"
-vim.env.neovide_cursor_animation_length = "0.01"
-vim.env.neovide_fullscreen = true
-vim.env.neovide_refresh_rate = 144
-vim.wo.colorcolumn = '80'
+vim.opt.guifont = "mononoki Nerd Font Mono:h14"
+vim.g.neovide_cursor_trail_length = 0.01
+vim.g.neovide_cursor_animation_length = 0.01
+vim.g.neovide_fullscreen = true
+vim.g.neovide_refresh_rate = 144
+vim.g.neovide_refresh_rate_idle = 5
+vim.g.neovide_scroll_animation_length = 0.3
+
+-- Terminal autocmd
+local disableNumbers = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+end
+
+vim.api.nvim_create_autocmd({"TermOpen"}, {
+    pattern = {"term://*"},
+    callback = disableNumbers,
+})
 
 -- Plugins
 
@@ -180,7 +194,7 @@ end
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
-tmap("<Esc>", "<C-\\><C-n>")
+tmap("<C-Esc>", "<C-\\><C-n>")
 -- inoremap <C-j> <Down>
 -- inoremap <C-k> <Up>
 -- inoremap <C-h> <Left>
@@ -232,6 +246,7 @@ wk.register({
         r = { ":Telescope lsp_references<cr>", "Go to references" },
         f = { ":Telescope lsp_document_symbols", "Find symbols in file" },
     },
+    C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
         name = "+Terminal",
         t = { ":FloatermToggle<cr>", "Toggle terminal" },
