@@ -5,6 +5,8 @@
 -- Personal configuration file for neovim    |
 -- __________________________________________|
 
+-- TODO Add magit (https://github.com/TimUntersberger/neogit)
+
 -- Basic settings
 -- set number
 vim.opt.number = true
@@ -211,7 +213,7 @@ end
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
-tmap("<C-Esc>", "<C-\\><C-n>")
+tmap("<C-a>", "<C-\\><C-n>")
 -- inoremap <C-j> <Down>
 -- inoremap <C-k> <Up>
 -- inoremap <C-h> <Left>
@@ -240,6 +242,7 @@ wk.register({
         q = { ":wq<cr>", "Write and quit file" },
         Q = { ":wqall<cr>", "Write and quit all files" },
         f = { ":NvimTreeOpen<cr>", "Open NvimTree" },
+        r = { ":Telescope oldfiles<cr>", "Open NvimTree" },
         --! = { ":qall!<cr>", "Quit all files" },
     },
     w = {
