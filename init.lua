@@ -168,6 +168,19 @@ actions= {
         }
     }
 })
+
+-- Learn the keybindings, see :help lsp-zero-keybindings
+-- Learn to configure LSP servers, see :help lsp-zero-api-showcase
+local lsp = require('lsp-zero')
+lsp.preset('recommended')
+
+lsp.setup()
+
+vim.diagnostic.config({
+    virtual_text = true,
+    signs = false,
+})
+
 -- Keybindings
 
 vim.g.mapleader = ' '
@@ -185,6 +198,10 @@ end
 
 local function vmap(binding, command)
     remap('v', binding, command)
+end
+
+local function imap(binding, command)
+    remap('i', binding, command)
 end
 
 local function tmap(binding, command)
@@ -210,6 +227,8 @@ nmap("<silent>K", "gt")
 -- nnoremap <C-v> +p
 nmap("<silent>gd", ":lua vim.lsp.buf.definition()<cr>")
 nmap("<silent>gr", ":Telescope lsp_references<cr>")
+
+imap("<C-space>", "lua vim.lsp.buf.definition()<cr>")
 
 -- Which-key config
 local wk = require("which-key")
