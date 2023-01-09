@@ -163,8 +163,8 @@ require("nvim-tree").setup({
     update_cwd = true,
   },
 actions= {
-    change_dir = { 
-        global = true 
+    change_dir = {
+        global = true
         }
     }
 })
