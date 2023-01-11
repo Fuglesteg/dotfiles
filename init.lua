@@ -5,7 +5,8 @@
 -- Personal configuration file for neovim    |
 -- __________________________________________|
 
--- TODO Add magit (https://github.com/TimUntersberger/neogit)
+-- TODO: Add magit (https://github.com/TimUntersberger/neogit)
+-- TODO: Add git diff
 
 -- Basic settings
 -- set number
@@ -21,7 +22,6 @@ vim.opt.expandtab = true
 vim.wo.colorcolumn = '80'
 
 -- Dirty yucky mouse support
--- set mouse=a
 vim.opt.mouse = 'a'
 
 -- Neovide
@@ -171,17 +171,11 @@ actions= {
     }
 })
 
--- Learn the keybindings, see :help lsp-zero-keybindings
--- Learn to configure LSP servers, see :help lsp-zero-api-showcase
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-
-lsp.setup()
-
 vim.diagnostic.config({
     virtual_text = true,
-    signs = false,
+    signs = true,
 })
+vim.opt.signcolumn = 'yes'
 
 -- Keybindings
 
