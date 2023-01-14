@@ -24,6 +24,8 @@ vim.wo.colorcolumn = '80'
 -- Dirty yucky mouse support
 vim.opt.mouse = 'a'
 
+vim.o.termguicolors = true
+
 -- Neovide
 vim.opt.guifont = "mononoki Nerd Font Mono:h14"
 vim.g.neovide_cursor_trail_length = 0.01
@@ -122,6 +124,13 @@ lsp.preset('recommended')
 
 lsp.setup()
 
+-- Treesitter
+require("nvim-treesitter.configs").setup {
+    highlight = {
+        enable = true
+    }
+}
+
 -- Lua line config
 local function statusClock()
     local timeTable = date()
@@ -146,8 +155,9 @@ require("project_nvim").setup {
 		patterns = { ".git", "package.json" },
 		--silent_chdir = false
 }
-require("telescope").load_extension("projects")
-require("telescope").setup {
+local telescope = require("telescope")
+telescope.load_extension("projects")
+telescope.setup {
 	defaults = {
 		file_ignore_patterns = {
 			"%.png",
