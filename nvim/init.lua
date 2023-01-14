@@ -246,7 +246,7 @@ wk.register({
         q = { ":wq<cr>", "Write and quit file" },
         Q = { ":wqall<cr>", "Write and quit all files" },
         f = { ":NvimTreeOpen<cr>", "Open NvimTree" },
-        r = { ":Telescope oldfiles<cr>", "Open NvimTree" },
+        r = { ":Telescope oldfiles<cr>", "Open recent files" },
         --! = { ":qall!<cr>", "Quit all files" },
     },
     w = {
