@@ -14,8 +14,6 @@ vim.opt.number = true
 vim.opt.syntax = "on"
 vim.opt.wildmenu = true
 
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
@@ -234,7 +232,7 @@ nmap("<silent>K", "gt")
 nmap("<silent>gd", ":lua vim.lsp.buf.definition()<cr>")
 nmap("<silent>gr", ":Telescope lsp_references<cr>")
 
-imap("<C-space>", "lua vim.lsp.buf.definition()<cr>")
+imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
 -- Which-key config
 local wk = require("which-key")
