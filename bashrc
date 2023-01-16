@@ -117,6 +117,7 @@ if ! shopt -oq posix; then
 fi
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
+export JAVA_HOME=/usr/bin/java
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 
