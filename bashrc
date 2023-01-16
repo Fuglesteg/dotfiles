@@ -116,10 +116,10 @@ if ! shopt -oq posix; then
   fi
 fi
 export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
+export JAVA_HOME=/usr/bin/java
 
 SSH_ENV="$HOME/.ssh/agent-environment"
-
-
 
 # Start SSH agent automatically on login
 function start_agent {
