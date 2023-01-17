@@ -10,6 +10,7 @@
     ~/.vimrc: vimrc
     ~/.config/nvim: nvim
     ~/.bashrc: bashrc
+    ~/.config/alacritty: alacritty
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
