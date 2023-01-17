@@ -7,6 +7,7 @@
 
 -- TODO: Add magit (https://github.com/TimUntersberger/neogit)
 -- TODO: Add git diff
+-- TODO: Treesitter text objects
 
 -- Basic settings
 -- set number
@@ -72,9 +73,11 @@ require('packer').startup(function(use)
         {'hrsh7th/nvim-cmp'},
         {'hrsh7th/cmp-buffer'},
         {'hrsh7th/cmp-path'},
+        {'hrsh7th/cmp-cmdline'},
         {'saadparwaiz1/cmp_luasnip'},
         {'hrsh7th/cmp-nvim-lsp'},
         {'hrsh7th/cmp-nvim-lua'},
+        {'hrsh7th/cmp-nvim-lsp-signature-help'},
 
         -- Snippets
         {'L3MON4D3/LuaSnip'},
@@ -120,7 +123,23 @@ vim.cmd('colorscheme tokyonight')
 
 -- LSP config
 local lsp = require('lsp-zero')
-lsp.preset('recommended')
+-- lsp.preset('recommended')
+lsp.preset('lsp-compe')
+
+-- TODO: Setup sources
+local cmp = require("cmp")
+cmp.setup({
+    sources = {
+        {name = "buffer"},
+        {name = "path"},
+        {name = "cmdline"},
+        {name = "nvim-lsp"},
+        {name = "nvim-lua"},
+        {name = "nvim-lsp-signature-help"},
+    }
+})
+
+lsp.nvim_workspace()
 
 lsp.setup()
 
@@ -131,6 +150,7 @@ require("nvim-treesitter.configs").setup {
     }
 }
 
+-- FIXME: Fix status clock or remove
 -- Lua line config
 local function statusClock()
     local timeTable = date()
