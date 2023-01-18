@@ -7,6 +7,7 @@
 
 -- TODO: Add magit (https://github.com/TimUntersberger/neogit)
 -- TODO: Add git diff
+-- TODO: Set scrolloff
 
 -- Basic settings
 -- set number
