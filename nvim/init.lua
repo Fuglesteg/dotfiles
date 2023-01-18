@@ -7,9 +7,7 @@
 
 -- TODO: Add magit (https://github.com/TimUntersberger/neogit)
 -- TODO: Add git diff
--- TODO: Set scrolloff
 -- TODO: Treesitter text objects
--- TODO: Add "dragoff"
 -- TODO: File manager (file buffer file system & neotree? & Telescope File explorer)
 
 -- Basic settings
@@ -21,6 +19,8 @@ vim.opt.wildmenu = true
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 vim.opt.termguicolors = true
+
+vim.opt.scrolloff = 8
 
 vim.wo.colorcolumn = '80'
 
@@ -125,11 +125,13 @@ vim.cmd('colorscheme tokyonight')
 
 -- LSP config
 local lsp = require('lsp-zero')
--- lsp.preset('recommended')
-lsp.preset('lsp-compe')
+lsp.preset('recommended')
+-- lsp.preset('lsp-compe')
+lsp.set_server_config({
+        single_file_support = true
+})
 
--- lsp.nvim_workspace()
-lsp.setup()
+lsp.nvim_workspace()
 
 -- TODO: Setup sources
 local cmp = require("cmp")
@@ -140,20 +142,7 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 vim.opt.completeopt = {"menu", "menuone", "noselect"}
-
-cmp.setup(lsp.defaults.cmp_config({
-    sources = {
-        {name = "buffer"},
-        {name = "path"},
-        {name = "cmdline"},
-        {name = "nvim-lsp"},
-        {name = "nvim-lua"},
-        {name = "nvim-lsp-signature-help"},
-    },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
+local function superTab(fallback)
               if cmp.visible() then
                 cmp.select_next_item()
               -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
@@ -165,9 +154,8 @@ cmp.setup(lsp.defaults.cmp_config({
               else
                 fallback()
               end
-            end, { "i", "s" }),
-
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
+            end
+            local function superSTab(fallback)
               if cmp.visible() then
                 cmp.select_prev_item()
               elseif luasnip.jumpable(-1) then
@@ -175,9 +163,25 @@ cmp.setup(lsp.defaults.cmp_config({
               else
                 fallback()
               end
-            end, { "i", "s" }),
+            end
+lsp.setup_nvim_cmp({
+    sources = {
+        {name = "nvim_lsp"},
+        {name = "nvim_lsp_signature_help"},
+        {name = "buffer"},
+        {name = "path"},
+        {name = "luasnip"},
+        {name = "nvim_lua"},
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ["<Tab>"] = cmp.mapping(superTab, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s" }),
+        ["<C-j>"] = cmp.mapping(superTab, { "i", "s" }),
+        ["<C-k>"] = cmp.mapping(superSTab, { "i", "s" }),
             })
-}))
+})
 
 cmp.setup.cmdline({"/", "?"}, {
         mapping = cmp.mapping.preset.cmdline(),
@@ -199,12 +203,12 @@ cmp.setup.cmdline(":", {
                 }
         })
 })
+lsp.setup()
 
-local capabilities = require("cmp-nvim-lsp").default_capabilities()
-require('lsp-config').gopls.setup {
-        capabilities = capabilities
-}
-
+-- local capabilities = require("cmp-nvim-lsp").default_capabilities()
+-- require('lsp-config').gopls.setup {
+-- capabilities = capabilities
+        -- }
 
 -- Treesitter
 require("nvim-treesitter.configs").setup {
