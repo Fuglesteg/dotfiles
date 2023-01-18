@@ -7,6 +7,7 @@
 
 -- TODO: Add magit (https://github.com/TimUntersberger/neogit)
 -- TODO: Add git diff
+-- TODO: Set scrolloff
 -- TODO: Treesitter text objects
 -- TODO: Add "dragoff"
 -- TODO: File manager (file buffer file system & neotree? & Telescope File explorer)
