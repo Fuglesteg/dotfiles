@@ -8,8 +8,8 @@
 -- TODO: Add magit (https://github.com/TimUntersberger/neogit)
 -- TODO: Add git diff
 -- TODO: Treesitter text objects
--- TODO: Noice and similar
--- NOTE: Consider Oil file browwser
+-- NOTE: Consider Oil file browser
+-- FIXME: Inline hints are gone
 
 require("fuglesteg.plugins")
 require("fuglesteg.keymaps")

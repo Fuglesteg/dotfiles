@@ -80,7 +80,7 @@ wk.register({
         s = { ":Telescope live_grep<cr>", "Fuzzy find" },
         a = { ":lua vim.lsp.buf.code_action()<cr>", "Actions" },
         e = { ":lua vim.lsp.buf.rename()<cr>", "Rename" },
-        d = { ":lua vim.lsp.buf.definition()<cr>", "Go to definition" },
+        d = { ":Telescope lsp_definitions<cr>", "Go to definition" },
         r = { ":Telescope lsp_references<cr>", "Go to references" },
         f = { ":Telescope lsp_document_symbols<cr>", "Find symbols in file" },
     },

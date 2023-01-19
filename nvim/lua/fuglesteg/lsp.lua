@@ -60,8 +60,9 @@ lsp.setup_nvim_cmp({
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-Space>'] = cmp.mapping.complete(),
-        -- ['<CR>'] = cmp.mapping.confirm({ select = false }),
-        ['<CR>'] = cmp.mapping(function(fallback)
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            superTab(fallback)
             if cmp.visible() then
                 local entry = cmp.get_selected_entry()
                 if not entry then
@@ -73,7 +74,7 @@ lsp.setup_nvim_cmp({
                 fallback()
             end
         end, {"i","s","c",}),
-        ["<Tab>"] = cmp.mapping(superTab, { "i", "s" }),
+        -- ["<Tab>"] = cmp.mapping(superTab, { "i", "s" }),
         ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s" }),
         ["<C-j>"] = cmp.mapping(superTab, { "i", "s" }),
         ["<C-k>"] = cmp.mapping(superSTab, { "i", "s" }),

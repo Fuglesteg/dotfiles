@@ -47,6 +47,8 @@ require('packer').startup(function(use)
     })
 
     use {'stevearc/dressing.nvim'}
+    use {'TimUntersberger/neogit'}
+    use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
     use 'amadeus/vim-convert-color-to'
     use 'tpope/vim-surround'
     use "nvim-telescope/telescope-file-browser.nvim"

@@ -1,8 +1,12 @@
 require("fuglesteg.lsp")
 
 -- Noice
-require("noice").setup({
-    
+require("noice").setup({})
+
+require("neogit").setup({
+    integrations = {
+        diffview = true
+    }
 })
 require("dressing").setup({
     input = {
