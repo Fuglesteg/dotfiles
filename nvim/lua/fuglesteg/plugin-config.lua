@@ -1,4 +1,4 @@
-require("fuglesteg.lsp")
+require("fuglesteg.lsp_zero")
 
 -- Noice
 require("noice").setup({})
