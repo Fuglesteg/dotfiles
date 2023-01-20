@@ -5,11 +5,8 @@
 -- Personal configuration file for neovim    |
 -- __________________________________________|
 
--- TODO: Add magit (https://github.com/TimUntersberger/neogit)
--- TODO: Add git diff
 -- TODO: Treesitter text objects
--- NOTE: Consider Oil file browser
--- FIXME: Inline hints are gone
+-- TODO: Fix autocomplete
 
 require("fuglesteg.plugins")
 require("fuglesteg.keymaps")
@@ -20,6 +17,7 @@ require("fuglesteg.plugin-config")
 vim.opt.number = true
 vim.opt.syntax = "on"
 vim.opt.wildmenu = true
+vim.opt.cursorline = true
 
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4

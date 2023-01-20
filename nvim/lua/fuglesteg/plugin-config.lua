@@ -24,8 +24,8 @@ require("nvim-treesitter.configs").setup {
 -- FIXME: Fix status clock or remove
 -- Lua line config
 local function statusClock()
-    local timeTable = date()
-    local timeHourMinute = timeTable.hour
+    local timeTable = os.date("*t")
+    local timeHourMinute = timeTable.hour + ":" + timeTable.min
     return timeHourMinute
 end
 

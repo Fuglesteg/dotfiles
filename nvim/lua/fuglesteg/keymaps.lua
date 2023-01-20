@@ -94,12 +94,12 @@ wk.register({
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
         name = "+Terminal",
-        f = { ":FloatermToggle<cr>", "Toggle terminal" },
-        h = { ":FloatermNext<cr>", "Next terminal" },
-        l = { ":FloatermPrev<cr>", "Previous terminal" },
-        d = { ":FloatermKill<cr>", "Kill terminal" },
-        n = { ":FloatermNew<cr>", "New terminal" },
-        t = { ":term<cr>", "Open new terminal in buffer" },
+        t = { ":FloatermToggle<cr>", "Toggle floating terminal" },
+        h = { ":FloatermNext<cr>", "Next floating terminal" },
+        l = { ":FloatermPrev<cr>", "Previous floating terminal" },
+        d = { ":FloatermKill<cr>", "Kill floating terminal" },
+        n = { ":FloatermNew<cr>", "New floating terminal" },
+        b = { ":term<cr>", "Open new terminal in buffer" },
     },
     p = {
         name = "+Projects",

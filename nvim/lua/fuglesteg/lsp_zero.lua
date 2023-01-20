@@ -1,10 +1,3 @@
-vim.diagnostic.config({
-    virtual_text = true,
-    signs = true,
-})
-
-vim.opt.signcolumn = 'yes'
-
 
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
@@ -15,7 +8,6 @@ lsp.set_server_config({
 
 lsp.nvim_workspace()
 
--- TODO: Setup sources
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 
@@ -102,3 +94,10 @@ cmp.setup.cmdline(":", {
         })
 })
 lsp.setup()
+
+vim.diagnostic.config({
+    virtual_text = true,
+    signs = true,
+})
+
+vim.opt.signcolumn = 'yes'
