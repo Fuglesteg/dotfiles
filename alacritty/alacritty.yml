@@ -23,4 +23,4 @@ colors:
     cyan:    '0x46d9ff'
     white:   '0xbbc2cf'
 import:
-    - "~/.alacritty/system_specifics.yml"
+    - "~/.alacritty/linux.yml"
