@@ -1,4 +1,4 @@
-require("fuglesteg.lsp")
+require("fuglesteg.lsp_zero")
 
 -- FIXME: Noice and dressing overriding each other
 require("noice").setup({})

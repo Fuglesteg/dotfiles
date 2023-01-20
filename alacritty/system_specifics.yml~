@@ -1,5 +1,0 @@
-working_directory: "A:/Code"
-shell:
-    program: powershell
-    args:
-        - -nologo
