@@ -25,6 +25,9 @@ local function tmap(binding, command)
     remap('t', binding, command)
 end
 
+nmap("j", "gj")
+nmap("k", "gk")
+
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
