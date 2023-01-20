@@ -87,6 +87,10 @@ wk.register({
         r = { ":Telescope lsp_references<cr>", "Go to references" },
         f = { ":Telescope lsp_document_symbols<cr>", "Find symbols in file" },
     },
+    g = {
+        name = "+git",
+        s = { ":Neogit<cr>", "git status" },
+    },
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
         name = "+Terminal",
