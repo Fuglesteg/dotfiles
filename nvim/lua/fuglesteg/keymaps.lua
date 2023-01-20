@@ -25,6 +25,9 @@ local function tmap(binding, command)
     remap('t', binding, command)
 end
 
+nmap("j", "gj")
+nmap("k", "gk")
+
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
@@ -83,6 +86,10 @@ wk.register({
         d = { ":Telescope lsp_definitions<cr>", "Go to definition" },
         r = { ":Telescope lsp_references<cr>", "Go to references" },
         f = { ":Telescope lsp_document_symbols<cr>", "Find symbols in file" },
+    },
+    g = {
+        name = "+git",
+        s = { ":Neogit<cr>", "git status" },
     },
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
