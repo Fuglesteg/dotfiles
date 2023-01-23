@@ -64,6 +64,8 @@ require('packer').startup(function(use)
 
     use 'kyazdani42/nvim-web-devicons'
 
+    use 'onsails/lspkind.nvim'
+
     use 'nvim-lua/plenary.nvim'
 
     use 'nvim-telescope/telescope.nvim'
