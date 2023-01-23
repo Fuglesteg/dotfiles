@@ -1,4 +1,3 @@
-
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
 -- lsp.preset('lsp-compe')
@@ -42,35 +41,40 @@ local function superSTab(fallback)
 end
 
 lsp.setup_nvim_cmp({
+    preselect = "none",
+    completion = {
+        completeopt = "menu,menuone,noinsert,noselect",
+    },
     sources = {
         { name = "nvim_lsp" },
-        { name = "nvim_lsp_signature_help" },
+        -- { name = "nvim_lsp_signature_help" }, -- Noice bitches if this is on
         { name = "buffer" },
         { name = "path" },
         { name = "luasnip" },
         { name = "nvim_lua" },
     },
     mapping = cmp.mapping.preset.insert({
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                local entry = cmp.get_selected_entry()
-                if not entry then
-                      cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                else
-                      cmp.confirm()
-                end
-            else
-                fallback()
-            end
-            superTab(fallback)
-        end, {"i","s","c",}),
-        -- ["<Tab>"] = cmp.mapping(superTab, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s" }),
-        ["<C-j>"] = cmp.mapping(superTab, { "i", "s" }),
-        ["<C-k>"] = cmp.mapping(superSTab, { "i", "s" }),
-    })
+        ['<C-s>'] = cmp.mapping.complete(),
+        ["<Nul>"] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
+        ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
+        ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
+        ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
+        ["<C-k>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
+    }),
+    -- formatting = {
+    --     format = function(entry, vim_item)
+    --         if vim.tbl_contains({ 'path' }, entry.source.name) then
+    --             local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+    --             if icon then
+    --                 vim_item.kind = icon
+    --                 vim_item.kind_hl_group = hl_group
+    --                 return vim_item
+    --             end
+    --         end
+    --         return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
+    --     end
+    -- }
 })
 
 cmp.setup.cmdline({ "/", "?" }, {
