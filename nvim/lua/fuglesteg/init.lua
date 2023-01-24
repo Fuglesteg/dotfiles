@@ -18,20 +18,24 @@ require("fuglesteg.terminal")
 -- set number
 vim.opt.number = true
 vim.opt.syntax = "on"
-vim.opt.wildmenu = true
-vim.opt.cursorline = true
 
+-- Indenting
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+
+-- Visual
 vim.opt.termguicolors = true
 vim.cmd('colorscheme tokyonight')
-
 vim.opt.scrolloff = 8
-
 vim.wo.colorcolumn = '80'
+vim.opt.cursorline = true
+vim.opt.wildmenu = true
+vim.opt.linebreak = true
+vim.opt.wrap = false
 
-vim.o.termguicolors = true
 -- Dirty yucky mouse support
 vim.opt.mouse = 'a'
 
