@@ -1,4 +1,5 @@
 require("fuglesteg.lsp_zero")
+require("fuglesteg.nvim-dap")
 
 -- FIXME: Noice and dressing overriding each other
 require("noice").setup({})

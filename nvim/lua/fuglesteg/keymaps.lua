@@ -50,6 +50,10 @@ nmap("<silent>gr", ":Telescope lsp_references<cr>")
 
 imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
+nmap("<F1>", require("dap").continue, "Start or continue debug session")
+nmap("<F2>", require("dap").step_over, "Step over")
+nmap("<F3>", require("dap").step_into, "Step into")
+
 -- Which-key config
 local wk = require("which-key")
 wk.register({
@@ -88,8 +92,11 @@ wk.register({
         f = { ":Telescope lsp_document_symbols<cr>", "Find symbols in file" },
     },
     g = {
-        name = "+git",
+        name = "+Git",
         s = { ":Neogit<cr>", "git status" },
+        d = {
+            name = "+Diff",
+        }
     },
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
@@ -106,5 +113,12 @@ wk.register({
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
     h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
+    d = {
+        name = "+Debug",
+        b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
+        s = { require("dap").continue, "Start or continue debug session" },
+        o = { require("dap").step_over, "Step over" },
+        i = { require("dap").step_into, "Step into" },
+    }
 }, { prefix = "<leader>" })
 

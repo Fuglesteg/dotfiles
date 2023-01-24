@@ -34,6 +34,7 @@ require('packer').startup(function(use)
         {'rafamadriz/friendly-snippets'},
         }
     }
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
     use({  "folke/noice.nvim",
         config = function()
             require("noice").setup({
