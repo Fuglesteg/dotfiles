@@ -142,3 +142,4 @@ ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
 else
     start_agent;
 fi
+. "$HOME/.cargo/env"
