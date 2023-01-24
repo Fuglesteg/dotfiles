@@ -22,23 +22,20 @@ require("fuglesteg.terminal")
 vim.opt.number = true
 vim.opt.syntax = "on"
 
+-- Search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 -- Indenting
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.autoindent = true
+vim.opt.smarttab = true
 
 -- Visual
 vim.opt.termguicolors = true
-vim.cmd('colorscheme tokyonight')
-
--- set tab
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-
-
 vim.cmd('colorscheme tokyonight')
 
 vim.o.wrap = false
