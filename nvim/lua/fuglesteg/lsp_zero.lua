@@ -98,6 +98,22 @@ cmp.setup.cmdline(":", {
         })
 })
 
+-- Completion in command line buffer (<C-f>)
+cmp.setup.filetype("vim", {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = "path" }
+    },
+        {
+            {
+                name = "cmdline",
+                option = {
+                    ignore_cmds = { "Man", "!" }
+                }
+            }
+        })
+})
+
 lsp.configure("jdtls", {
     root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw')
     -- root_dir = function ()
