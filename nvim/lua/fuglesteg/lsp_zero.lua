@@ -93,6 +93,14 @@ cmp.setup.cmdline(":", {
             }
         })
 })
+
+lsp.configure("jdtls", {
+    root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw')
+    -- root_dir = function ()
+    --     vim.fs.dirname(vim.fs.find({'.gradlew', '.git', 'mvnw'}, { upward = true })[1])
+    -- end
+})
+
 lsp.setup()
 
 vim.diagnostic.config({
