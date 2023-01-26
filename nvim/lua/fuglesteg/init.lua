@@ -4,6 +4,7 @@
 -- ------------------------------------------|
 -- Personal configuration file for neovim    |
 -- __________________________________________|
+-- --TESTINCOMMIT NEOGIT
 
 -- TODO: Treesitter text objects
 -- TODO: Add indent guide
