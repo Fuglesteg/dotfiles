@@ -10,6 +10,10 @@ require("dressing").setup({
     }
 })
 
+require("indent_blankline").setup {
+    
+}
+
 require("neogit").setup({
     integrations = {
         diffview = true

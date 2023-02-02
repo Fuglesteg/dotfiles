@@ -35,6 +35,8 @@ require('packer').startup(function(use)
         }
     }
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+    use "tpope/vim-sleuth"
+    use "lukas-reineke/indent-blankline.nvim"
     use({  "folke/noice.nvim",
         config = function()
             require("noice").setup({
