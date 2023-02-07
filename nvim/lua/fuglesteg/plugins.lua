@@ -34,6 +34,7 @@ require('packer').startup(function(use)
         {'rafamadriz/friendly-snippets'},
         }
     }
+    use "anuvyklack/hydra.nvim"
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
     use "tpope/vim-sleuth"
     use "lukas-reineke/indent-blankline.nvim"
