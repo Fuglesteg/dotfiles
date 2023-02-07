@@ -4,6 +4,8 @@ require("fuglesteg.nvim-dap")
 -- FIXME: Noice and dressing overriding each other
 require("noice").setup({})
 
+require("fuglesteg.hydra")
+
 require("dressing").setup({
     input = {
         enabled = true
