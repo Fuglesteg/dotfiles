@@ -4,12 +4,10 @@
 -- ------------------------------------------|
 -- Personal configuration file for neovim    |
 -- __________________________________________|
--- --TESTINCOMMIT NEOGIT
 
 -- TODO: Treesitter text objects
--- TODO: Add indent guide
--- TODO: Add git gutter
--- TODO: Add autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
+-- TODO: Git gutter
+-- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 
 require("fuglesteg.plugins")
@@ -49,8 +47,8 @@ vim.opt.wrap = false
 vim.opt.mouse = 'a'
 
 -- Alacritty
-vim.cmd([[
-if $TERM == 'alacritty'
-      set ttymouse=sgr
-endif
-]])
+-- vim.cmd([[
+-- if $TERM == 'alacritty'
+--       set ttymouse=sgr
+-- endif
+-- ]])
