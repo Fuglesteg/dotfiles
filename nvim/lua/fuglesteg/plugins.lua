@@ -37,6 +37,11 @@ require('packer').startup(function(use)
     use "anuvyklack/hydra.nvim"
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
     use "tpope/vim-sleuth"
+    use {'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && \
+            cmake --build build --config Release && \
+            cmake --install build --prefix build'
+        }
     use "lukas-reineke/indent-blankline.nvim"
     use({  "folke/noice.nvim",
         config = function()
