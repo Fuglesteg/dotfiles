@@ -75,19 +75,19 @@ require('packer').startup(function(use)
     use 'onsails/lspkind.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use "lukas-reineke/indent-blankline.nvim"
-    use({  "folke/noice.nvim",
-        config = function()
-            require("noice").setup({
-                -- add any options here    
-            })
-        end,
-        requires = {
-            "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
-        }
-    })
+    -- use({  "folke/noice.nvim",
+        -- config = function()
+        --     require("noice").setup({
+        --         -- add any options here    
+        --     })
+        -- end,
+        -- requires = {
+        --     "MunifTanjim/nui.nvim",
+        --     "rcarriga/nvim-notify",
+        -- }
+    -- })
 
-    use {'stevearc/dressing.nvim'}
+    -- use {'stevearc/dressing.nvim'}
 -- Colorschemes
     use 'romgrk/doom-one.vim'
     use 'folke/tokyonight.nvim'
