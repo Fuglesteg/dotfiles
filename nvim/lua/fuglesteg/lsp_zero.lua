@@ -62,6 +62,7 @@ lsp.setup_nvim_cmp({
         ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
         ["<C-k>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
     }),
+    -- Formatting of completion menu, adding symbols like vscode
     -- formatting = {
     --     format = function(entry, vim_item)
     --         if vim.tbl_contains({ 'path' }, entry.source.name) then
@@ -115,7 +116,14 @@ cmp.setup.filetype("vim", {
 })
 
 lsp.configure("jdtls", {
-    root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw')
+    root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),
+    settings = {
+        java = {
+            checksums = {
+                "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}"
+            }
+        }
+    }
     -- root_dir = function ()
     --     vim.fs.dirname(vim.fs.find({'.gradlew', '.git', 'mvnw'}, { upward = true })[1])
     -- end
