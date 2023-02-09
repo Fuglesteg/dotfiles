@@ -72,11 +72,12 @@ wk.register({
         name = "+Window",
         v = { ":vs<cr>", "Vertical Split" },
         s = { ":split<cr>", "Horizontal Split" },
-        l = { "<C-w>l", "Go left" },
-        h = { "<C-w>h", "Go right" },
-        j = { "<C-w>j", "Go down" },
-        k = { "<C-w>k", "Go up" },
-        d = { "<C-w>c", "Close" },
+        -- Configured in Hydra
+        -- l = { "<C-w>l", "Go left" },
+        -- h = { "<C-w>h", "Go right" },
+        -- j = { "<C-w>j", "Go down" },
+        -- k = { "<C-w>k", "Go up" },
+        -- d = { "<C-w>c", "Close" },
     },
     b = {
         name = "+Buffer",
@@ -113,12 +114,12 @@ wk.register({
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
     h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
-    d = {
-        name = "+Debug",
-        b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
-        s = { require("dap").continue, "Start or continue debug session" },
-        o = { require("dap").step_over, "Step over" },
-        i = { require("dap").step_into, "Step into" },
-    }
+    -- d = {
+    --     name = "+Debug",
+    --     b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
+    --     s = { require("dap").continue, "Start or continue debug session" },
+    --     o = { require("dap").step_over, "Step over" },
+    --     i = { require("dap").step_into, "Step into" },
+    -- }
 }, { prefix = "<leader>" })
 

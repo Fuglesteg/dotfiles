@@ -8,6 +8,7 @@
 -- TODO: Treesitter text objects
 -- TODO: Git gutter
 -- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
+-- TODO: Native search (fzf native telescope)
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 
 require("fuglesteg.plugins")
