@@ -37,6 +37,6 @@ require("fuglesteg.lua-line")
 require('todo-comments').setup {}
 require('trouble').setup {}
 
-require("fuglesteg.project-nvim")
+-- require("fuglesteg.project-nvim")
 require("fuglesteg.telescope")
 require("fuglesteg.nvim-tree")

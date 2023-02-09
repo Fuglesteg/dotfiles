@@ -1,7 +1,5 @@
 local telescope = require("telescope")
-telescope.load_extension("projects")
-telescope.load_extension("file_browser")
-telescope.load_extension("fzf")
+-- telescope.load_extension("projects")
 telescope.setup {
     defaults = {
         file_ignore_patterns = {
@@ -12,3 +10,5 @@ telescope.setup {
         }
     }
 }
+telescope.load_extension("file_browser")
+telescope.load_extension("fzf")
