@@ -27,7 +27,7 @@ local sSplit = require("smart-splits")
 hydra({
     name = "Window",
     mode = "n",
-    body = "<leader>w",
+    body = "<leader>ww",
     heads = {
         { "h", "<c-w>h", {desc = "Window left"}},
         { "l", "<c-w>l", {desc = "Window right"}},
@@ -43,6 +43,7 @@ hydra({
     },
     hint = [[Windows]],
     config = {
+        invoke_on_body = true,
         silent = true,
         -- invoke_on_body = true,
         hint = {
