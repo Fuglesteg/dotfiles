@@ -22,9 +22,8 @@ colors:
     magenta: '0xc678dd'
     cyan:    '0x46d9ff'
     white:   '0xbbc2cf'
-import:
-    - "~/.alacritty/linux.yml"
-window:
-  decorations: none
 env:
   TERM: xterm-256color
+window:
+  decorations: none
+  startup_mode: Maximized

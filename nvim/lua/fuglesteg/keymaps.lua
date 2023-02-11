@@ -72,12 +72,11 @@ wk.register({
         name = "+Window",
         v = { ":vs<cr>", "Vertical Split" },
         s = { ":split<cr>", "Horizontal Split" },
-        -- Configured in Hydra
-        -- l = { "<C-w>l", "Go left" },
-        -- h = { "<C-w>h", "Go right" },
-        -- j = { "<C-w>j", "Go down" },
-        -- k = { "<C-w>k", "Go up" },
-        -- d = { "<C-w>c", "Close" },
+        l = { "<C-w>l", "Go left" },
+        h = { "<C-w>h", "Go right" },
+        j = { "<C-w>j", "Go down" },
+        k = { "<C-w>k", "Go up" },
+        d = { "<C-w>c", "Close" },
     },
     b = {
         name = "+Buffer",

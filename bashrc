@@ -118,6 +118,7 @@ fi
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 export JAVA_HOME=/usr/bin/java
+export GDK_THEME=Fluent-round-Dark
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 
