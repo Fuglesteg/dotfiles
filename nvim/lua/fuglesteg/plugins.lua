@@ -56,6 +56,10 @@ require('packer').startup(function(use)
     use  "nvim-telescope/telescope-file-browser.nvim"
     use 'kyazdani42/nvim-tree.lua'
     use 'mrjones2014/smart-splits.nvim'
+    use {
+        'jedrzejboczar/possession.nvim',
+        requires = { 'nvim-lua/plenary.nvim' },
+    }
 -- Search
     use 'nvim-telescope/telescope.nvim'
     use 'folke/trouble.nvim'

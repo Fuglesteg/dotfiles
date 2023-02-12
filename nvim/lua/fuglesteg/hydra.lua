@@ -76,5 +76,8 @@ hydra({
         { "o", require("dap").step_over, {desc = "Step over"}},
         { "s", require("dap").continue, {desc = "Start or continue"}},
         { "b", require("dap").toggle_breakpoint, {desc = "Toggle breakpoint"}},
+    },
+    config = {
+        invoke_on_body = true,
     }
 })

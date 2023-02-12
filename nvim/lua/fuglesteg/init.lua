@@ -21,6 +21,9 @@ require("fuglesteg.terminal")
 vim.opt.number = true
 vim.opt.syntax = "on"
 
+-- List highlight
+vim.cmd [[set list listchars=tab:»\ ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+
 -- Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true

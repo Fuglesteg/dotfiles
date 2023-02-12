@@ -98,6 +98,15 @@ wk.register({
             name = "+Diff",
         }
     },
+    s = {
+        name = "+Search",
+        s = { ":Telescope possession list<cr>", "Sessions" },
+    },
+    S = {
+        name = "+Session",
+        s = { ":Telescope possession list<cr>", "Sessions" },
+        m = { "", ""},
+    },
     C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
     t = {
         name = "+Terminal",
@@ -122,3 +131,6 @@ wk.register({
     -- }
 }, { prefix = "<leader>" })
 
+local function promptForSessionName()
+    return require("possession.session").session_name or ""
+end
