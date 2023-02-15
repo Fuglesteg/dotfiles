@@ -11,6 +11,7 @@
 -- TODO: Git gutter
 -- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
+-- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
 
 require("fuglesteg.plugins")
 require("fuglesteg.keymaps")
@@ -28,7 +29,8 @@ vim.opt.syntax = "on"
 vim.opt.list = true
 vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
 
--- Set diff view to always start as vertical
+-- Set diff view to always start as vertical, other options are default:
+-- Default options: internal,filler,closeoff
 vim.opt.diffopt = "internal,filler,closeoff,vertical"
 
 -- Search
