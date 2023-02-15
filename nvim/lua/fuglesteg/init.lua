@@ -25,7 +25,6 @@ vim.opt.number = true
 vim.opt.syntax = "on"
 
 -- List highlight
--- vim.cmd [[set list listchars=tab:»\ ,trail:·,nbsp:⎵,precedes:<,extends:>]]
 vim.opt.list = true
 vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
 

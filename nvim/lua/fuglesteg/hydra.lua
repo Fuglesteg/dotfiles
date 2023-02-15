@@ -40,6 +40,8 @@ hydra({
         { "<c-k>", function () sSplit.resize_up(2) end, {desc = "Change height up"}},
         { "=", "<c-w>=", {desc = "Equalize windows"}},
         { "d", "<c-w>c", {desc = "Close window"}},
+        { "v", "<c-w>v", {desc = "Vertical split"}},
+        { "s", "<c-w>s", {desc = "Split"}},
     },
     hint = [[Windows]],
     config = {
