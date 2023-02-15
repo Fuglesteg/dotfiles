@@ -6,6 +6,8 @@
 -- __________________________________________|
 
 -- TODO: Treesitter text objects
+-- TODO: Look into navigate.nvim
+-- TODO: Fix java
 -- TODO: Git gutter
 -- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
@@ -22,7 +24,12 @@ vim.opt.number = true
 vim.opt.syntax = "on"
 
 -- List highlight
-vim.cmd [[set list listchars=tab:»\ ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+-- vim.cmd [[set list listchars=tab:»\ ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+vim.opt.list = true
+vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+
+-- Set diff view to always start as vertical
+vim.opt.diffopt = "internal,filler,closeoff,vertical"
 
 -- Search
 vim.opt.ignorecase = true
