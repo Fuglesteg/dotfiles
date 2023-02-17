@@ -107,7 +107,12 @@ wk.register({
         s = { ":Telescope possession list<cr>", "Sessions" },
         m = { "", ""},
     },
-    C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
+    C = {
+        name = "+Configure",
+        c = {":e ~/.config/nvim/init.lua | cd ~/.config/nvim<cr>", "Open config file" },
+        r = {":source ~/.config/nvim/init.lua<cr>", "Reload config" },
+        -- Add quick options hydra
+    },
     t = {
         name = "+Terminal",
         t = { ":FloatermToggle<cr>", "Toggle floating terminal" },
