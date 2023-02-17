@@ -1,5 +1,6 @@
 local hydra = require("hydra")
 local cmd = require("hydra.keymap-util").cmd
+local buffer = require("fuglesteg.buffer")
 
 hydra({
     name = "Buffer",
@@ -7,7 +8,8 @@ hydra({
     body = "<leader>b",
     heads = {
         { "n", cmd "bnext", { desc = "Next buffer" } },
-        { "N", cmd "bprev", { desc = "Previous buffer" } }
+        { "N", cmd "bprev", { desc = "Previous buffer" } },
+        { "d", function() buffer.kill(0, nil) end, { desc = "Close buffer" } },
     },
     hint = [[Buffers]],
     config = {
