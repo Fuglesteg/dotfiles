@@ -98,7 +98,21 @@ wk.register({
             name = "+Diff",
         }
     },
-    C = { ":e ~/.config/nvim/init.lua<cr>", "Open config file" },
+    s = {
+        name = "+Search",
+        s = { ":Telescope possession list<cr>", "Sessions" },
+    },
+    S = {
+        name = "+Session",
+        s = { ":Telescope possession list<cr>", "Sessions" },
+        m = { "", ""},
+    },
+    C = {
+        name = "+Configure",
+        c = {":e ~/.config/nvim/init.lua | cd ~/.config/nvim<cr>", "Open config file" },
+        r = {":source ~/.config/nvim/init.lua<cr>", "Reload config" },
+        -- Add quick options hydra
+    },
     t = {
         name = "+Terminal",
         t = { ":FloatermToggle<cr>", "Toggle floating terminal" },
@@ -122,3 +136,6 @@ wk.register({
     -- }
 }, { prefix = "<leader>" })
 
+local function promptForSessionName()
+    return require("possession.session").session_name or ""
+end

@@ -1,5 +1,6 @@
 local hydra = require("hydra")
 local cmd = require("hydra.keymap-util").cmd
+local buffer = require("fuglesteg.buffer")
 
 hydra({
     name = "Buffer",
@@ -7,7 +8,8 @@ hydra({
     body = "<leader>b",
     heads = {
         { "n", cmd "bnext", { desc = "Next buffer" } },
-        { "N", cmd "bprev", { desc = "Previous buffer" } }
+        { "N", cmd "bprev", { desc = "Previous buffer" } },
+        { "d", function() buffer.kill(0, nil) end, { desc = "Close buffer" } },
     },
     hint = [[Buffers]],
     config = {
@@ -40,6 +42,8 @@ hydra({
         { "<c-k>", function () sSplit.resize_up(2) end, {desc = "Change height up"}},
         { "=", "<c-w>=", {desc = "Equalize windows"}},
         { "d", "<c-w>c", {desc = "Close window"}},
+        { "v", "<c-w>v", {desc = "Vertical split"}},
+        { "s", "<c-w>s", {desc = "Split"}},
     },
     hint = [[Windows]],
     config = {
@@ -76,5 +80,8 @@ hydra({
         { "o", require("dap").step_over, {desc = "Step over"}},
         { "s", require("dap").continue, {desc = "Start or continue"}},
         { "b", require("dap").toggle_breakpoint, {desc = "Toggle breakpoint"}},
+    },
+    config = {
+        invoke_on_body = true,
     }
 })

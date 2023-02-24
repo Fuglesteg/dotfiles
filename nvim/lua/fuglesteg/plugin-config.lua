@@ -1,5 +1,11 @@
 require("fuglesteg.lsp_zero")
 require("fuglesteg.nvim-dap")
+require("possession").setup({
+    autosave = {
+        current = true,
+        tmp = true,
+    }
+})
 
 -- FIXME: Noice and dressing overriding each other
 

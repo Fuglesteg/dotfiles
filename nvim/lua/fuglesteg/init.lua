@@ -6,9 +6,15 @@
 -- __________________________________________|
 
 -- TODO: Treesitter text objects
+-- TODO: Look into navigate.nvim
+-- TODO: Fix java
 -- TODO: Git gutter
 -- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
+-- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
+-- TODO: Look into Bob (nvim version control)
+-- TODO: Change z hydra to use same command as scrolling horizontally (Maybe nvim_input_mouse ??)
+-- TODO: Syntax highlight on command line buffer
 
 require("fuglesteg.plugins")
 require("fuglesteg.keymaps")
@@ -20,6 +26,14 @@ require("fuglesteg.terminal")
 -- set number
 vim.opt.number = true
 vim.opt.syntax = "on"
+
+-- List highlight
+vim.opt.list = true
+vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+
+-- Set diff view to always start as vertical, other options are default:
+-- Default options: internal,filler,closeoff
+vim.opt.diffopt = "internal,filler,closeoff,vertical"
 
 -- Search
 vim.opt.ignorecase = true
