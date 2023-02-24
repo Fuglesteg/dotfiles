@@ -60,8 +60,8 @@ hydra({
     mode = "n",
     body = "z",
     heads = {
-        { "h", "zh", {desc = "Scroll to the left"}},
-        { "l", "zl", {desc = "Scroll to the right"}},
+        { "h", "zh:IndentBlanklineRefresh", {desc = "Scroll to the left"}},
+        { "l", "zl:IndentBlanklineRefresh", {desc = "Scroll to the right"}},
         { "j", "<c-e>", {desc = "Scroll up"}},
         { "k", "<c-y>", {desc = "Scroll down"}},
     }
