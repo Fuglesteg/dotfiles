@@ -31,7 +31,7 @@ nmap("k", "gk")
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
-tmap("<C-a>", "<C-\\><C-n>")
+tmap("<Esc>", "<C-\\><C-n>")
 -- inoremap <C-j> <Down>
 -- inoremap <C-k> <Up>
 -- inoremap <C-h> <Left>
