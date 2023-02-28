@@ -30,6 +30,8 @@ vim.opt.syntax = "on"
 -- List highlight
 vim.opt.list = true
 vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+-- Highlight nbsp as error
+vim.cmd([[match Error /\%xA0/]])
 
 -- Set diff view to always start as vertical, other options are default:
 -- Default options: internal,filler,closeoff
