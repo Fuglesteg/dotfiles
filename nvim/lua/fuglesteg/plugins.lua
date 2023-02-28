@@ -38,6 +38,7 @@ require('packer').startup(function(use)
         }
     }
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+    use "leoluz/nvim-dap-go"
 -- Formatting
     use "tpope/vim-sleuth"
 
