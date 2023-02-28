@@ -13,6 +13,7 @@ require('packer').startup(function(use)
 
 -- Code intelligence
     use 'nvim-treesitter/nvim-treesitter'
+    use 'm-demare/hlargs.nvim'
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -38,6 +39,7 @@ require('packer').startup(function(use)
         }
     }
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+    use 'echasnovski/mini.pairs'
 -- Formatting
     use "tpope/vim-sleuth"
 
