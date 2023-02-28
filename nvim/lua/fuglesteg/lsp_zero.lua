@@ -1,8 +1,12 @@
 local lsp = require('lsp-zero')
-lsp.preset('recommended')
+lsp.preset({
+    -- name = 'recommended',
+    name = 'minimal',
+    manage_nvim_cmp = false,
+})
 -- lsp.preset('lsp-compe')
 lsp.set_server_config({
-    single_file_support = true
+    single_file_support = true,
 })
 
 lsp.nvim_workspace()
@@ -18,7 +22,7 @@ end
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 local function superTab(fallback)
     if cmp.visible() then
-        cmp.select_next_item()
+        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
         -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
         -- they way you will only jump inside the snippet region
     elseif luasnip.expand_or_jumpable() then
@@ -32,22 +36,22 @@ end
 
 local function superSTab(fallback)
     if cmp.visible() then
-        cmp.select_prev_item()
-    elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
+        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+    elseif luasnip.jumpable( -1) then
+        luasnip.jump( -1)
     else
         fallback()
     end
 end
-
-lsp.setup_nvim_cmp({
-    preselect = "none",
+-- lsp.setup_nvim_cmp(
+local cmp_config = {
+    preselect = cmp.PreselectMode.None,
     completion = {
         completeopt = "menu,menuone,noinsert,noselect",
     },
     sources = {
         { name = "nvim_lsp" },
-        -- { name = "nvim_lsp_signature_help" }, -- Noice bitches if this is on
+        -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help
         { name = "buffer" },
         { name = "path" },
         { name = "luasnip" },
@@ -56,12 +60,17 @@ lsp.setup_nvim_cmp({
     mapping = cmp.mapping.preset.insert({
         ['<C-s>'] = cmp.mapping.complete(),
         ["<Nul>"] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm({ select = false }),
+        ['<CR>'] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
         ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
         ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
         ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
         ["<C-k>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
     }),
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
+    },
     -- Formatting of completion menu, adding symbols like vscode
     -- formatting = {
     --     format = function(entry, vim_item)
@@ -76,7 +85,9 @@ lsp.setup_nvim_cmp({
     --         return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
     --     end
     -- }
-})
+    experimental = { ghost_text = true },
+}
+cmp.setup(cmp_config)
 
 cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),
