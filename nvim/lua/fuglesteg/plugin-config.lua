@@ -13,6 +13,8 @@ require("possession").setup({
 
 require("fuglesteg.hydra")
 
+require("mini.pairs").setup()
+
 -- require("dressing").setup({
 --     input = {
 --         enabled = true
@@ -37,6 +39,7 @@ require("nvim-treesitter.configs").setup {
         enable = true
     }
 }
+require("hlargs").setup()
 
 require("fuglesteg.markdown-preview")
 require("fuglesteg.lua-line")
