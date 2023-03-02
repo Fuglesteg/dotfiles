@@ -9,7 +9,7 @@
 -- TODO: Look into navigate.nvim
 -- TODO: Fix java
 -- TODO: Git gutter
--- TODO: Autopairs (https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item)
+-- TODO: Lazy.nvim
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 -- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
 -- TODO: Look into Bob (nvim version control)
@@ -29,9 +29,10 @@ vim.opt.syntax = "on"
 
 -- List highlight
 vim.opt.list = true
-vim.opt.listchars = [[tab:» ,trail:·,nbsp:⎵,precedes:<,extends:>]]
+vim.opt.listchars = [[tab:» ,trail:·,nbsp:, precedes:<,extends:>]]
 -- Highlight nbsp as error
 vim.cmd([[match Error /\%xA0/]])
+
 
 -- Set diff view to always start as vertical, other options are default:
 -- Default options: internal,filler,closeoff
