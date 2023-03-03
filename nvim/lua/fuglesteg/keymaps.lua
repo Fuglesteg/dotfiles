@@ -1,7 +1,5 @@
 -- Keybindings
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
 -- Utility functions
 
