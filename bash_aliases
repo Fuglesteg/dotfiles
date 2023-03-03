@@ -24,6 +24,9 @@ if [ -x /usr/bin/exa ]; then
    alias ls='exa -l --icons'
 fi
 
+# SSH
+alias sshf='ssh andy@fuglesteg.mywire.org'
+
 # Apt
 alias apt='sudo apt'
 alias apti='sudo apt install'
