@@ -127,6 +127,7 @@ wk.register({
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
     h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
+    ["<tab>"] = { "<c-6>", "Switch buffer"},
     -- d = {
     --     name = "+Debug",
     --     b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
