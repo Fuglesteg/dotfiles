@@ -9,10 +9,8 @@
 -- TODO: Look into navigate.nvim
 -- TODO: Fix java
 -- TODO: Git gutter
--- TODO: Lazy.nvim
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 -- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
--- TODO: Look into Bob (nvim version control)
 -- TODO: Change z hydra to use same command as scrolling horizontally (Maybe nvim_input_mouse ??)
 -- TODO: Syntax highlight on command line buffer
 
