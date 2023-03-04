@@ -86,6 +86,7 @@ return {
             },
             mapping = cmp.mapping.preset.insert({
                 ['<C-s>'] = cmp.mapping.complete(),
+                ['<C-space>'] = cmp.mapping.complete(),
                 ["<Nul>"] = cmp.mapping.complete(),
                 ['<CR>'] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
                 ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
@@ -167,6 +168,7 @@ return {
                 java = {
                     checksums = {
                         "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}"
+                        -- {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
                     }
                 }
             }

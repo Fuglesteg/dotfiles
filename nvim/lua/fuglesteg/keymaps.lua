@@ -40,13 +40,13 @@ nmap("<leader>;", ":Commentary<cr>")
 vmap("<leader>;", ":Commentary<cr>")
 vmap(">", ">gv")
 vmap("<", "<gv")
-nmap("<silent>J", "gT")
-nmap("<silent>K", "gt")
+-- nmap("J", "gT")
+-- nmap("K", "gt")
 -- nnoremap <C-v> +p
-nmap("<silent>gd", ":lua vim.lsp.buf.definition()<cr>")
-nmap("<silent>gr", ":Telescope lsp_references<cr>")
+nmap("gd", ":lua vim.lsp.buf.definition()<cr>")
+nmap("gr", ":Telescope lsp_references<cr>")
 
-imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
+-- imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
