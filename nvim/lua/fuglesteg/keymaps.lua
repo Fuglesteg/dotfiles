@@ -1,7 +1,5 @@
 -- Keybindings
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
 -- Utility functions
 
@@ -42,17 +40,29 @@ nmap("<leader>;", ":Commentary<cr>")
 vmap("<leader>;", ":Commentary<cr>")
 vmap(">", ">gv")
 vmap("<", "<gv")
-nmap("<silent>J", "gT")
-nmap("<silent>K", "gt")
+-- nmap("J", "gT")
+-- nmap("K", "gt")
 -- nnoremap <C-v> +p
-nmap("<silent>gd", ":lua vim.lsp.buf.definition()<cr>")
-nmap("<silent>gr", ":Telescope lsp_references<cr>")
+nmap("gd", ":lua vim.lsp.buf.definition()<cr>")
+nmap("gr", ":Telescope lsp_references<cr>")
 
-imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
+-- imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
 nmap("<F3>", require("dap").step_into, "Step into")
+
+local possession = require("possession.session")
+local function promptForSessionName()
+    local session_name = possession.session_name or ""
+    session_name = vim.fn.input("Session: ", session_name)
+    if session_name ~= "" then
+        possession.save(session_name)
+    end
+end
+local function deleteSession(session_name)
+    possession.delete(session_name)
+end
 
 -- Which-key config
 local wk = require("which-key")
@@ -64,7 +74,8 @@ wk.register({
         q = { ":wq<cr>", "Write and quit file" },
         Q = { ":wqall<cr>", "Write and quit all files" },
         t = { ":NvimTreeToggle<cr>", "Open NvimTree" },
-        f = { ":Telescope file_browser<cr>", "Open File Browser" },
+        p = { ":Telescope file_browser<cr>", "Open File Browser in cwd" },
+        f = { ":Telescope file_browser path=%:p:h select_buffer=true<cr>", "Open File Browser in directory of open file" },
         r = { ":Telescope oldfiles<cr>", "Open recent files" },
         --! = { ":qall!<cr>", "Quit all files" },
     },
@@ -104,8 +115,11 @@ wk.register({
     },
     S = {
         name = "+Session",
-        s = { ":Telescope possession list<cr>", "Sessions" },
-        m = { "", ""},
+        l = { ":Telescope possession list<cr>", "List sessions" },
+        s = { promptForSessionName, "Save session"},
+        r = { ":PossessionLoad tmp<cr>", "Restore last session"},
+        d = { ":PossessionDelete ", "Delete session"},
+        c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
         name = "+Configure",
@@ -127,6 +141,7 @@ wk.register({
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
     h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
+    ["<tab>"] = { "<c-6>", "Switch buffer"},
     -- d = {
     --     name = "+Debug",
     --     b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
@@ -136,6 +151,3 @@ wk.register({
     -- }
 }, { prefix = "<leader>" })
 
-local function promptForSessionName()
-    return require("possession.session").session_name or ""
-end
