@@ -64,13 +64,14 @@ hydra({
     mode = "n",
     body = "z",
     heads = {
-        { "h", "zh:IndentBlanklineRefresh", {desc = "Scroll to the left"}},
-        { "l", "zl:IndentBlanklineRefresh", {desc = "Scroll to the right"}},
+        { "h", "zh:IndentBlanklineRefresh", {desc = "Scroll left"}},
+        { "l", "zl:IndentBlanklineRefresh", {desc = "Scroll right"}},
         { "j", "<c-e>", {desc = "Scroll up"}},
         { "k", "<c-y>", {desc = "Scroll down"}},
     }
 })
 
+-- FIXME: Debug doesn't progress while hydra is open
 hydra({
     name = "Debug",
     mode = "n",
