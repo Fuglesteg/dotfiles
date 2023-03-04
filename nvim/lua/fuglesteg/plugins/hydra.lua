@@ -1,9 +1,10 @@
 return {
     "anuvyklack/hydra.nvim",
+    dependencies ={ "echasnovski/mini.bufremove" },
     config = function()
         local hydra = require("hydra")
         local cmd = require("hydra.keymap-util").cmd
-        local buffer = require("fuglesteg.buffer")
+        -- local buffer = require("fuglesteg.buffer")
 
         -- TODO: change buffer kill to mini.buffer thing
         hydra({
