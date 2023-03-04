@@ -52,6 +52,18 @@ nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
 nmap("<F3>", require("dap").step_into, "Step into")
 
+local possession = require("possession.session")
+local function promptForSessionName()
+    local session_name = possession.session_name or ""
+    session_name = vim.fn.input("Session: ", session_name)
+    if session_name ~= "" then
+        possession.save(session_name)
+    end
+end
+local function deleteSession(session_name)
+    possession.delete(session_name)
+end
+
 -- Which-key config
 local wk = require("which-key")
 wk.register({
@@ -103,8 +115,11 @@ wk.register({
     },
     S = {
         name = "+Session",
-        s = { ":Telescope possession list<cr>", "Sessions" },
-        m = { "", ""},
+        l = { ":Telescope possession list<cr>", "List sessions" },
+        s = { promptForSessionName, "Save session"},
+        r = { ":PossessionLoad tmp<cr>", "Restore last session"},
+        d = { ":PossessionDelete ", "Delete session"},
+        c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
         name = "+Configure",
@@ -136,6 +151,3 @@ wk.register({
     -- }
 }, { prefix = "<leader>" })
 
-local function promptForSessionName()
-    return require("possession.session").session_name or ""
-end
