@@ -5,6 +5,7 @@ return {
         local cmd = require("hydra.keymap-util").cmd
         local buffer = require("fuglesteg.buffer")
 
+        -- TODO: change buffer kill to mini.buffer thing
         hydra({
             name = "Buffer",
             mode = "n",
@@ -12,7 +13,7 @@ return {
             heads = {
                 { "n", cmd "bnext",                        { desc = "Next buffer" } },
                 { "N", cmd "bprev",                        { desc = "Previous buffer" } },
-                { "d", function() buffer.kill(0, nil) end, { desc = "Close buffer" } },
+                { "d", MiniBufremove.delete, { desc = "Close buffer" } },
             },
             hint = [[Buffers]],
             config = {
@@ -28,7 +29,6 @@ return {
         })
 
         local sSplit = require("smart-splits")
-
         hydra({
             name = "Window",
             mode = "n",
