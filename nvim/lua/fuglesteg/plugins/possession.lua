@@ -7,6 +7,9 @@ return
             autosave = {
                 current = true,
                 tmp = true,
+            },
+            plugins = {
+                delete_hidden_buffers = false
             }
         })
     end,
