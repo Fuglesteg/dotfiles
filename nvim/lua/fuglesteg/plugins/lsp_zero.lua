@@ -27,6 +27,8 @@ return {
         lsp.preset({
             -- name = 'recommended',
             name = 'minimal',
+            set_lsp_keymaps = true,
+            suggest_lsp_servers = true,
             manage_nvim_cmp = false,
         })
         -- lsp.preset('lsp-compe')
@@ -150,6 +152,14 @@ return {
                     }
                 })
         })
+
+        local navic = require("nvim-navic")
+        lsp.on_attach(function(client, bufnr)
+                if client.server_capabilities.documentSymbolProvider then
+                    navic.attach(client, bufnr)
+                end
+            end
+        )
 
         lsp.configure("jdtls", {
             root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),

@@ -24,12 +24,13 @@ return {
             },
             sections = {
                 lualine_a = { "mode" },
-                lualine_b = { "branch" },
+                lualine_b = {
+                    -- {
+                    --     -- "branch",
+                    --     -- separator = { left = "", right = "" },
+                    -- }
+                },
                 lualine_c = {
-                    "diff", "diagnostics",
-                    function()
-                        return "%="
-                    end,
                     {
                         "filename",
                         color = { bg = bg_color, fg = fg_color },
@@ -41,9 +42,22 @@ return {
                         color = { bg = bg_color, fg = fg_color },
                         separator = { left = "", right = "" },
                     },
+                    "diff", "diagnostics",
+                    function()
+                        local navic = require("nvim-navic")
+                        if navic.is_available() then
+                            return navic.get_location()
+                        else
+                            return ""
+                        end
+                    end,
+                    -- function()
+                    --     return "%="
+                    -- end,
                 },
                 lualine_x = {
-                    session_name
+                    session_name,
+                    "branch"
                 },
             },
             tabline = {
