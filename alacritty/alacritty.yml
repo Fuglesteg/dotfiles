@@ -4,7 +4,6 @@ font:
     style: "Bold"
 selection:
   save_to_clipboard: true
-  
 # Colors (Doom One)
 colors:
   # Default colors
@@ -23,7 +22,7 @@ colors:
     cyan:    '0x46d9ff'
     white:   '0xbbc2cf'
 env:
-  TERM: xterm-256color
+  TERM: alacritty
 window:
   decorations: none
   startup_mode: Maximized
