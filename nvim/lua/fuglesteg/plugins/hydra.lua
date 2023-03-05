@@ -71,7 +71,13 @@ return {
                 { "l", "zl:IndentBlanklineRefresh", { desc = "Scroll to the right" } },
                 { "j", "<c-e>",                     { desc = "Scroll up" } },
                 { "k", "<c-y>",                     { desc = "Scroll down" } },
-            }
+            },
+            config = {
+                hint = {
+                    position = "top",
+                    type = "window",
+                }
+            },
         })
 
         hydra({
