@@ -35,6 +35,7 @@ return {
         lsp.set_server_config({
             single_file_support = true,
         })
+        lsp.skip_server_setup({"jdtls"})
 
         lsp.nvim_workspace()
 
@@ -154,20 +155,20 @@ return {
                 })
         })
 
-        lsp.configure("jdtls", {
-            root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),
-            settings = {
-                java = {
-                    checksums = {
-                        "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}"
-                        -- {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
-                    }
-                }
-            }
+        -- lsp.configure("jdtls", {
+        --     root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),
+        --     settings = {
+        --         java = {
+        --             checksums = {
+        --                 "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}"
+        --                 -- {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
+        --             }
+        --         }
+        --     }
             -- root_dir = function ()
             --     vim.fs.dirname(vim.fs.find({'.gradlew', '.git', 'mvnw'}, { upward = true })[1])
             -- end
-        })
+        -- })
 
         lsp.setup()
 
