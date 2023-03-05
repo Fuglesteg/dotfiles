@@ -5,12 +5,12 @@
 -- Personal configuration file for neovim    |
 -- __________________________________________|
 
--- TODO: Treesitter text objects
--- TODO: Look into navigate.nvim
 -- TODO: Fix java
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 -- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
 -- TODO: Change z hydra to use same command as scrolling horizontally (Maybe nvim_input_mouse ??)
+-- TODO: Scrollbar
+-- TODO: Illuminator
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

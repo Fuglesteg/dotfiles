@@ -45,6 +45,7 @@ vmap("<", "<gv")
 -- nnoremap <C-v> +p
 nmap("gd", ":lua vim.lsp.buf.definition()<cr>")
 nmap("gr", ":Telescope lsp_references<cr>")
+nmap("gh", vim.lsp.buf.hover)
 
 -- imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
@@ -59,9 +60,6 @@ local function promptForSessionName()
     if session_name ~= "" then
         possession.save(session_name)
     end
-end
-local function deleteSession(session_name)
-    possession.delete(session_name)
 end
 
 -- Which-key config
@@ -140,14 +138,6 @@ wk.register({
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
-    h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
     ["<tab>"] = { "<c-6>", "Switch buffer"},
-    -- d = {
-    --     name = "+Debug",
-    --     b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
-    --     s = { require("dap").continue, "Start or continue debug session" },
-    --     o = { require("dap").step_over, "Step over" },
-    --     i = { require("dap").step_into, "Step into" },
-    -- }
 }, { prefix = "<leader>" })
 
