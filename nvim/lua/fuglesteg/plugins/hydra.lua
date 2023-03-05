@@ -6,7 +6,6 @@ return {
         local cmd = require("hydra.keymap-util").cmd
         -- local buffer = require("fuglesteg.buffer")
 
-        -- TODO: change buffer kill to mini.buffer thing
         hydra({
             name = "Buffer",
             mode = "n",
@@ -72,7 +71,13 @@ return {
                 { "l", "zl:IndentBlanklineRefresh", { desc = "Scroll to the right" } },
                 { "j", "<c-e>",                     { desc = "Scroll up" } },
                 { "k", "<c-y>",                     { desc = "Scroll down" } },
-            }
+            },
+            config = {
+                hint = {
+                    position = "top",
+                    type = "window",
+                }
+            },
         })
 
         hydra({
@@ -87,6 +92,11 @@ return {
             },
             config = {
                 invoke_on_body = true,
+                color = "pink",
+                hint = {
+                    position = "top",
+                    type = "window",
+                }
             }
         })
     end
