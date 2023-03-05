@@ -52,6 +52,7 @@ vim.opt.smartindent = true
 vim.opt.termguicolors = true
 vim.cmd('colorscheme tokyonight')
 
+vim.opt.signcolumn = 'yes'
 vim.o.wrap = false
 vim.opt.scrolloff = 8
 vim.wo.colorcolumn = '80'

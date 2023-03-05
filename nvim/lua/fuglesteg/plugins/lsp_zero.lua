@@ -100,19 +100,19 @@ return {
                 end,
             },
             -- Formatting of completion menu, adding symbols like vscode
-            -- formatting = {
-            --     format = function(entry, vim_item)
-            --         if vim.tbl_contains({ 'path' }, entry.source.name) then
-            --             local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
-            --             if icon then
-            --                 vim_item.kind = icon
-            --                 vim_item.kind_hl_group = hl_group
-            --                 return vim_item
-            --             end
-            --         end
-            --         return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
-            --     end
-            -- }
+            formatting = {
+                format = function(entry, vim_item)
+                    if vim.tbl_contains({ 'path' }, entry.source.name) then
+                        local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+                        if icon then
+                            vim_item.kind = icon
+                            vim_item.kind_hl_group = hl_group
+                            return vim_item
+                        end
+                    end
+                    return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
+                end
+            },
             experimental = { ghost_text = true },
         }
         cmp.setup(cmp_config)
@@ -154,14 +154,6 @@ return {
                 })
         })
 
-        local navic = require("nvim-navic")
-        lsp.on_attach(function(client, bufnr)
-                if client.server_capabilities.documentSymbolProvider then
-                    navic.attach(client, bufnr)
-                end
-            end
-        )
-
         lsp.configure("jdtls", {
             root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),
             settings = {
@@ -184,6 +176,5 @@ return {
             signs = true,
         })
 
-        vim.opt.signcolumn = 'yes'
     end,
 }
