@@ -138,6 +138,7 @@ wk.register({
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
+    z = { ":ZenMode<cr>", "Zen" },
     ["<tab>"] = { "<c-6>", "Switch buffer"},
 }, { prefix = "<leader>" })
 

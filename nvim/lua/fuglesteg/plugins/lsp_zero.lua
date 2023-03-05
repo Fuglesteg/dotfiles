@@ -14,7 +14,7 @@ return {
         { 'saadparwaiz1/cmp_luasnip' },
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/cmp-nvim-lua' },
-        { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+        -- { 'hrsh7th/cmp-nvim-lsp-signature-help' },
 
         -- Snippets
         { 'L3MON4D3/LuaSnip' },
@@ -79,7 +79,7 @@ return {
             },
             sources = {
                 { name = "nvim_lsp" },
-                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help
+                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better
                 { name = "buffer" },
                 { name = "path" },
                 { name = "luasnip" },
