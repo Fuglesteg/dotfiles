@@ -138,7 +138,17 @@ wk.register({
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
-    z = { ":ZenMode<cr>", "Zen" },
+    T = { vim.cmd.tabnew, "New tab" },
+    ["1"] = { function() vim.api.nvim_set_current_tabpage(1) end, "Tab 1"},
+    ["2"] = { function() vim.api.nvim_set_current_tabpage(2) end, "Tab 2"},
+    ["3"] = { function() vim.api.nvim_set_current_tabpage(3) end, "Tab 3"},
+    ["4"] = { function() vim.api.nvim_set_current_tabpage(4) end, "Tab 4"},
+    ["5"] = { function() vim.api.nvim_set_current_tabpage(5) end, "Tab 5"},
+    ["6"] = { function() vim.api.nvim_set_current_tabpage(6) end, "Tab 6"},
+    ["7"] = { function() vim.api.nvim_set_current_tabpage(7) end, "Tab 7"},
+    ["8"] = { function() vim.api.nvim_set_current_tabpage(8) end, "Tab 8"},
+    ["9"] = { function() vim.api.nvim_set_current_tabpage(9) end, "Tab 9"},
+    z = { ":TZAtaraxis<cr>", "Zen" },
     ["<tab>"] = { "<c-6>", "Switch buffer"},
 }, { prefix = "<leader>" })
 

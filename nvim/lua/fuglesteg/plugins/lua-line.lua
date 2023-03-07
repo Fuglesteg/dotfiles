@@ -11,11 +11,38 @@ return {
             return require("possession.session").session_name or ""
         end
 
+        local function update()
+            require("lualine").refresh()
+        end
+        local function show_buffers()
+            local hydra_name = require("hydra.statusline").get_name()
+            return hydra_name == "Buffer"
+        end
+
+        local function show_tabs()
+            return #vim.api.nvim_list_tabpages() > 1
+        end
+
+        local function should_show_tabline()
+            -- print("Show buffer: ", show_buffers())
+            -- print("Show tabs: ", show_tabs())
+            return show_buffers() or show_tabs()
+        end
+
+        local tabline_value = vim.opt.showtabline
+        vim.opt.showtabline = 0
+        local function show_tabline_if()
+            if should_show_tabline() then
+                vim.opt.showtabline = 2
+            else
+                vim.opt.showtabline = 0
+            end
+        end
+
         local theme = require("lualine.themes.tokyonight")
         local bg_color = theme.visual.b.bg
         local fg_color = theme.normal.b.fg
 
-        local tabline_value = vim.opt.showtabline
         require("lualine").setup {
             options = {
                 theme = "tokyonight",
@@ -65,16 +92,18 @@ return {
                     {
                         "tabs",
                         mode = 3,
-                        cond = function()
-                            if #vim.api.nvim_list_tabpages() > 1 then
-                                vim.opt.showtabline = tabline_value
-                                return true
-                            else
-                                vim.opt.showtabline = 0
-                                return false
-                            end
-                        end
+                        cond = show_tabs,
                     },
+                },
+                lualine_b = {
+                    {
+                        "buffers",
+                        cond = show_buffers,
+                    },
+                    function()
+                        show_tabline_if()
+                        return ""
+                    end
                 }
             }
         }
