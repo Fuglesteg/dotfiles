@@ -39,13 +39,14 @@ return {
             end
         end
 
-        local theme = require("lualine.themes.tokyonight")
-        local bg_color = theme.visual.b.bg
-        local fg_color = theme.normal.b.fg
+        local theme = "tokyonight"
+        local lualine_theme = require("lualine.themes." .. theme)
+        local bg_color = lualine_theme.visual.b.bg
+        local fg_color = lualine_theme.normal.b.fg
 
         require("lualine").setup {
             options = {
-                theme = "tokyonight",
+                theme = theme,
                 component_separators = "|",
                 section_separators = { left = "", right = "" },
             },
@@ -91,6 +92,7 @@ return {
                 lualine_a = {
                     {
                         "tabs",
+                        max_length = vim.o.columns,
                         mode = 3,
                         cond = show_tabs,
                     },
