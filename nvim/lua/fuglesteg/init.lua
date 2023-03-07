@@ -14,10 +14,6 @@
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-require("fuglesteg.lazy")
-require("fuglesteg.keymaps")
-require("fuglesteg.neovide")
-require("fuglesteg.terminal")
 
 -- Basic settings
 -- set number
@@ -53,8 +49,7 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 
 -- Visual
-vim.opt.termguicolors = true
-vim.cmd('colorscheme tokyonight')
+vim.o.termguicolors = true
 
 vim.opt.signcolumn = 'yes'
 vim.o.wrap = false
@@ -67,3 +62,9 @@ vim.opt.wrap = false
 
 -- Dirty yucky mouse support
 vim.opt.mouse = 'a'
+
+require("fuglesteg.lazy")
+require("fuglesteg.keymaps")
+require("fuglesteg.neovide")
+require("fuglesteg.terminal")
+vim.cmd('colorscheme tokyonight')
