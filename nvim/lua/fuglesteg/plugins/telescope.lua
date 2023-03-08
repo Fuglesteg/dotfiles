@@ -17,8 +17,16 @@ return {
                     "%.jpg",
                     "%.jpeg",
                     "%.gif"
+                },
+                mappings = {
+                    n = {
+                        ["<c-c>"] = require("telescope.actions").delete_buffer
+                    },
+                    i = {
+                        ["<c-c>"] = require("telescope.actions").delete_buffer
+                    }
                 }
-            }
+            },
         }
         telescope.load_extension("file_browser")
         telescope.load_extension("fzf")
