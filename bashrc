@@ -4,6 +4,7 @@
 
 # PATH
 PATH="$PATH:~/.local/share/bob/nvim-bin"
+PATH="$PATH:~/.local/bin"
 
 # If not running interactively, don't do anything
 case $- in
