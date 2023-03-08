@@ -139,7 +139,7 @@ wk.register({
         b = { ":Telescope buffers<cr>", "Buffers" },
         g = { ":Telescope live_grep<cr>", "Grep" },
         c = { ":Telescope current_buffer_fuzzy_find<cr>", "Fuzzy current file" },
-        f = { ":Telescope files<cr>", "Grep" },
+        f = { ":Telescope find_files<cr>", "Find files" },
         r = { ":Telescope resume<cr>", "Resume last search" },
         o = { ":Telescope oldfiles<cr>", "Oldfiles" },
         q = { ":Telescope quickfix<cr>", "Quickfix" },
