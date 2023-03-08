@@ -50,6 +50,7 @@ vim.opt.smartindent = true
 
 -- Visual
 vim.opt.showtabline = 2
+vim.opt.laststatus = 3
 vim.o.termguicolors = true
 
 vim.opt.signcolumn = 'yes'

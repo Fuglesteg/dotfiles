@@ -26,12 +26,13 @@ return {
                 { "N", bufferprev, { desc = "Previous buffer" } },
                 { "d", MiniBufremove.delete, { desc = "Close buffer" } },
                 { "c", cmd "new", { desc = "New buffer" } },
+                { "b", cmd "Telescope buffers", { desc = "Search buffers" } },
             },
             hint = [[Buffers]],
             config = {
                 silent = true,
                 color = "pink",
-                -- invoke_on_body = true,
+                invoke_on_body = true,
                 hint = {
                     border = "double",
                     -- show_name = false,

@@ -1,4 +1,10 @@
 return {
     "Pocco81/true-zen.nvim",
-    opts = {},
+    opts = {
+        integrations = {
+            lualine = true,
+            tmux = true,
+            -- twilight = true,
+        }
+    },
 }

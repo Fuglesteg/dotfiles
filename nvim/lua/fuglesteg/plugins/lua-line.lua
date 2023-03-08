@@ -1,19 +1,10 @@
 return {
     "nvim-lualine/lualine.nvim",
     config = function()
-        local function status_clock()
-            local timeTable = os.date("*t")
-            local timeHourMinute = (timeTable.hour .. ":" .. timeTable.min) or ""
-            return timeHourMinute
-        end
-
         local function session_name()
             return require("possession.session").session_name or ""
         end
 
-        local function update()
-            require("lualine").refresh()
-        end
         local function show_buffers()
             local hydra_name = require("hydra.statusline").get_name()
             return hydra_name == "Buffer"
@@ -26,14 +17,14 @@ return {
         local function should_show_tabline()
             -- print("Show buffer: ", show_buffers())
             -- print("Show tabs: ", show_tabs())
-            return show_buffers() or show_tabs()
+            return show_tabs()
         end
 
         local tabline_value = vim.opt.showtabline
         vim.opt.showtabline = 0
         local function show_tabline_if()
             if should_show_tabline() then
-                vim.opt.showtabline = 2
+                vim.opt.showtabline = tabline_value
             else
                 vim.opt.showtabline = 0
             end
@@ -48,6 +39,7 @@ return {
             options = {
                 theme = theme,
                 component_separators = "|",
+                -- component_separators = "",
                 section_separators = { left = "", right = "" },
             },
             sections = {
@@ -61,6 +53,7 @@ return {
                 lualine_c = {
                     {
                         "filename",
+                        path = 1,
                         color = { bg = bg_color, fg = fg_color },
                         separator = { left = "", right = "" },
                     },
@@ -84,7 +77,10 @@ return {
                     -- end,
                 },
                 lualine_x = {
-                    session_name,
+                    {
+                        session_name,
+                        icon = "",
+                    },
                     "branch"
                 },
             },
@@ -96,16 +92,18 @@ return {
                         mode = 3,
                         cond = show_tabs,
                     },
-                },
-                lualine_b = {
-                    {
-                        "buffers",
-                        cond = show_buffers,
-                    },
                     function()
                         show_tabline_if()
                         return ""
                     end
+                },
+            },
+            winbar = {
+                lualine_a = {
+                    {
+                        "buffers",
+                        cond = show_buffers,
+                    },
                 }
             }
         }
