@@ -14,6 +14,7 @@
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.opt.updatetime = 300
 
 -- Basic settings
 -- set number
