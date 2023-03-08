@@ -53,13 +53,40 @@ nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
 nmap("<F3>", require("dap").step_into, "Step into")
 
-local possession = require("possession.session")
-local function promptForSessionName()
-    local session_name = possession.session_name or ""
+local possession_session = require("possession.session")
+local function saveSessionPrompt()
+    local session_name = possession_session.session_name or ""
     session_name = vim.fn.input("Session: ", session_name)
     if session_name ~= "" then
-        possession.save(session_name)
+        possession_session.save(session_name)
     end
+end
+
+local possession = require("possession")
+local function renameSessionPrompt()
+    local session_name = possession_session.session_name or ""
+    if session_name == "" then
+        print("Error: Not currently in a session")
+        return
+    end
+    local new_session_name = vim.fn.input("New session name: ", session_name)
+    if new_session_name == "" then
+        print("Error: No name provided")
+        return
+    end
+    possession.save(new_session_name)
+    possession.delete(session_name, { no_confirm = true })
+end
+
+local function loadLastSession()
+    local last_session_path = possession.last()
+    if last_session_path == nil then
+        print("Could not find previous session")
+        return
+    end
+    local last_session_file = string.gsub(last_session_path, ".*/", "")
+    local last_session_name = string.gsub(last_session_file, ".json", "")
+    possession.load(last_session_name)
 end
 
 -- Which-key config
@@ -89,7 +116,6 @@ wk.register({
     },
     b = {
         name = "+Buffer",
-        b = { ":Telescope buffers<cr>", "Buffers" }
     },
     c = {
         name = "+Code",
@@ -110,19 +136,28 @@ wk.register({
     s = {
         name = "+Search",
         s = { ":Telescope possession list<cr>", "Sessions" },
+        b = { ":Telescope buffers<cr>", "Buffers" },
+        g = { ":Telescope live_grep<cr>", "Grep" },
+        c = { ":Telescope current_buffer_fuzzy_find<cr>", "Fuzzy current file" },
+        f = { ":Telescope files<cr>", "Grep" },
+        r = { ":Telescope resume<cr>", "Resume last search" },
+        o = { ":Telescope oldfiles<cr>", "Oldfiles" },
+        q = { ":Telescope quickfix<cr>", "Quickfix" },
+        m = { ":Telescope marks<cr>", "Marks" },
     },
     S = {
         name = "+Session",
         l = { ":Telescope possession list<cr>", "List sessions" },
-        s = { promptForSessionName, "Save session"},
+        s = { saveSessionPrompt, "Save session"},
+        r = { renameSessionPrompt, "Rename session"},
         t = { ":PossessionLoad tmp<cr>", "Restore temp session"},
+        o = { loadLastSession, "Open last session"},
         d = { ":PossessionDelete ", "Delete session"},
         c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
         name = "+Configure",
         c = {":e ~/.config/nvim/init.lua | cd ~/.config/nvim<cr>", "Open config file" },
-        r = {":source ~/.config/nvim/init.lua<cr>", "Reload config" },
         -- Add quick options hydra
     },
     t = {
