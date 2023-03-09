@@ -29,7 +29,6 @@ return {
 
 -- Colorschemes
     'romgrk/doom-one.vim',
-    'folke/tokyonight.nvim',
 
 -- Plugin dependency
     'voldikss/vim-floaterm',

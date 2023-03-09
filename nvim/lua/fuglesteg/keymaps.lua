@@ -118,7 +118,7 @@ wk.register({
         l = { ":Telescope possession list<cr>", "List sessions" },
         s = { promptForSessionName, "Save session"},
         r = { ":PossessionLoad tmp<cr>", "Restore last session"},
-        d = { ":PossessionDelete ", "Delete session"},
+        d = { ":PossessionDelete ", "Delete session", silent = false},
         c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
