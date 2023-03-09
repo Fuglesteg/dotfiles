@@ -45,6 +45,7 @@ vmap("<", "<gv")
 -- nnoremap <C-v> +p
 nmap("gd", ":lua vim.lsp.buf.definition()<cr>")
 nmap("gr", ":Telescope lsp_references<cr>")
+nmap("gh", vim.lsp.buf.hover)
 
 -- imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
@@ -52,16 +53,40 @@ nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
 nmap("<F3>", require("dap").step_into, "Step into")
 
-local possession = require("possession.session")
-local function promptForSessionName()
-    local session_name = possession.session_name or ""
+local possession_session = require("possession.session")
+local function saveSessionPrompt()
+    local session_name = possession_session.session_name or ""
     session_name = vim.fn.input("Session: ", session_name)
     if session_name ~= "" then
-        possession.save(session_name)
+        possession_session.save(session_name)
     end
 end
-local function deleteSession(session_name)
-    possession.delete(session_name)
+
+local possession = require("possession")
+local function renameSessionPrompt()
+    local session_name = possession_session.session_name or ""
+    if session_name == "" then
+        print("Error: Not currently in a session")
+        return
+    end
+    local new_session_name = vim.fn.input("New session name: ", session_name)
+    if new_session_name == "" then
+        print("Error: No name provided")
+        return
+    end
+    possession.save(new_session_name)
+    possession.delete(session_name, { no_confirm = true })
+end
+
+local function loadLastSession()
+    local last_session_path = possession.last()
+    if last_session_path == nil then
+        print("Could not find previous session")
+        return
+    end
+    local last_session_file = string.gsub(last_session_path, ".*/", "")
+    local last_session_name = string.gsub(last_session_file, ".json", "")
+    possession.load(last_session_name)
 end
 
 -- Which-key config
@@ -91,7 +116,6 @@ wk.register({
     },
     b = {
         name = "+Buffer",
-        b = { ":Telescope buffers<cr>", "Buffers" }
     },
     c = {
         name = "+Code",
@@ -112,19 +136,29 @@ wk.register({
     s = {
         name = "+Search",
         s = { ":Telescope possession list<cr>", "Sessions" },
+        b = { ":Telescope buffers<cr>", "Buffers" },
+        g = { ":Telescope live_grep<cr>", "Grep" },
+        c = { ":Telescope current_buffer_fuzzy_find<cr>", "Fuzzy current file" },
+        f = { ":Telescope find_files<cr>", "Find files" },
+        r = { ":Telescope resume<cr>", "Resume last search" },
+        o = { ":Telescope oldfiles<cr>", "Oldfiles" },
+        q = { ":Telescope quickfix<cr>", "Quickfix" },
+        m = { ":Telescope marks<cr>", "Marks" },
     },
     S = {
         name = "+Session",
         l = { ":Telescope possession list<cr>", "List sessions" },
-        s = { promptForSessionName, "Save session"},
-        r = { ":PossessionLoad tmp<cr>", "Restore last session"},
         d = { ":PossessionDelete ", "Delete session", silent = false},
+        s = { saveSessionPrompt, "Save session"},
+        r = { renameSessionPrompt, "Rename session"},
+        t = { ":PossessionLoad tmp<cr>", "Restore temp session"},
+        o = { loadLastSession, "Open last session"},
+        d = { ":PossessionDelete ", "Delete session"},
         c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
         name = "+Configure",
         c = {":e ~/.config/nvim/init.lua | cd ~/.config/nvim<cr>", "Open config file" },
-        r = {":source ~/.config/nvim/init.lua<cr>", "Reload config" },
         -- Add quick options hydra
     },
     t = {
@@ -140,14 +174,17 @@ wk.register({
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
     },
-    h = { ":lua vim.lsp.buf.hover()<cr>", "View documentation" },
+    T = { vim.cmd.tabnew, "New tab" },
+    ["1"] = { function() vim.api.nvim_set_current_tabpage(1) end, "Tab 1"},
+    ["2"] = { function() vim.api.nvim_set_current_tabpage(2) end, "Tab 2"},
+    ["3"] = { function() vim.api.nvim_set_current_tabpage(3) end, "Tab 3"},
+    ["4"] = { function() vim.api.nvim_set_current_tabpage(4) end, "Tab 4"},
+    ["5"] = { function() vim.api.nvim_set_current_tabpage(5) end, "Tab 5"},
+    ["6"] = { function() vim.api.nvim_set_current_tabpage(6) end, "Tab 6"},
+    ["7"] = { function() vim.api.nvim_set_current_tabpage(7) end, "Tab 7"},
+    ["8"] = { function() vim.api.nvim_set_current_tabpage(8) end, "Tab 8"},
+    ["9"] = { function() vim.api.nvim_set_current_tabpage(9) end, "Tab 9"},
+    z = { ":TZAtaraxis<cr>", "Zen" },
     ["<tab>"] = { "<c-6>", "Switch buffer"},
-    -- d = {
-    --     name = "+Debug",
-    --     b = { require("dap").toggle_breakpoint, "Toggle breakpoint" },
-    --     s = { require("dap").continue, "Start or continue debug session" },
-    --     o = { require("dap").step_over, "Step over" },
-    --     i = { require("dap").step_into, "Step into" },
-    -- }
 }, { prefix = "<leader>" })
 

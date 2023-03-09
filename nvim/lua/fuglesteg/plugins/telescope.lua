@@ -12,13 +12,27 @@ return {
         local telescope = require("telescope")
         telescope.setup {
             defaults = {
+                layout_config = {
+                    height = 0.9,
+                    width = 0.9,
+                    prompt_position = "top"
+                },
+                sorting_strategy = "ascending",
                 file_ignore_patterns = {
                     "%.png",
                     "%.jpg",
                     "%.jpeg",
                     "%.gif"
+                },
+                mappings = {
+                    n = {
+                        ["<c-c>"] = require("telescope.actions").delete_buffer
+                    },
+                    i = {
+                        ["<c-c>"] = require("telescope.actions").delete_buffer
+                    }
                 }
-            }
+            },
         }
         telescope.load_extension("file_browser")
         telescope.load_extension("fzf")

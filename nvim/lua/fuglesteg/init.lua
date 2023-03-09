@@ -5,20 +5,16 @@
 -- Personal configuration file for neovim    |
 -- __________________________________________|
 
--- TODO: Treesitter text objects
--- TODO: Look into navigate.nvim
 -- TODO: Fix java
 -- FIXME: Neogit crashes after sending second commit, empty confirm message
 -- TODO: This was caused by Noice.nvim, check if it is fixed in Neovim nightly, as it was described in a reddit comment by Folke
 -- TODO: Change z hydra to use same command as scrolling horizontally (Maybe nvim_input_mouse ??)
--- TODO: Syntax highlight on command line buffer
+-- TODO: Scrollbar
+-- TODO: Illuminator
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-require("fuglesteg.lazy")
-require("fuglesteg.keymaps")
-require("fuglesteg.neovide")
-require("fuglesteg.terminal")
+vim.opt.updatetime = 300
 
 -- Basic settings
 -- set number
@@ -32,6 +28,12 @@ vim.opt.listchars = [[tab:» ,trail:·,nbsp:,precedes:<,extends:>]]
 -- Highlight nbsp as error
 vim.cmd([[match Error /\%xA0/]])
 
+-- Highlight in command line window
+vim.api.nvim_create_autocmd({"CmdwinEnter"}, {
+  callback = function()
+    vim.api.nvim_buf_set_option(0, "syntax", "vim")
+  end
+})
 
 -- Set diff view to always start as vertical, other options are default:
 -- Default options: internal,filler,closeoff
@@ -48,9 +50,11 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 
 -- Visual
-vim.opt.termguicolors = true
-vim.cmd('colorscheme tokyonight')
+vim.opt.showtabline = 2
+vim.opt.laststatus = 3
+vim.o.termguicolors = true
 
+vim.opt.signcolumn = 'yes'
 vim.o.wrap = false
 vim.opt.scrolloff = 8
 vim.wo.colorcolumn = '80'
@@ -61,3 +65,9 @@ vim.opt.wrap = false
 
 -- Dirty yucky mouse support
 vim.opt.mouse = 'a'
+
+require("fuglesteg.lazy")
+require("fuglesteg.keymaps")
+require("fuglesteg.neovide")
+require("fuglesteg.terminal")
+vim.cmd('colorscheme tokyonight')

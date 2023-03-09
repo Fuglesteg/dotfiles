@@ -1,16 +1,9 @@
 return {
+-- -- Code intelligence
+	"leoluz/nvim-dap-go",
 
--- Code intelligence
-    "leoluz/nvim-dap-go",
-
--- Formatting
-    "tpope/vim-sleuth",
-
-    -- Java
-    -- use "mfussenegger/nvim-jdtls"
-
-
--- Git
+-- -- Formatting
+	"tpope/vim-sleuth",
 
 -- Utility
     'amadeus/vim-convert-color-to',
@@ -18,7 +11,7 @@ return {
     'tpope/vim-commentary',
     "nvim-telescope/telescope-file-browser.nvim",
     'mrjones2014/smart-splits.nvim',
--- Search
+    'voldikss/vim-floaterm',
 
 -- Keybinds
     'folke/which-key.nvim',
@@ -30,13 +23,8 @@ return {
 -- Colorschemes
     'romgrk/doom-one.vim',
 
--- Plugin dependency
-    'voldikss/vim-floaterm',
 
-    -- install without yarn or npm
-    -- use({
-    --     "iamcco/markdown-preview.nvim",
-    --     run = function() vim.fn["mkdp#util#install"]() end,
-    -- })
-
+-- -- Colorschemes
+       'romgrk/doom-one.vim',
+       'folke/tokyonight.nvim',
 }

@@ -14,7 +14,7 @@ return {
         { 'saadparwaiz1/cmp_luasnip' },
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/cmp-nvim-lua' },
-        { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+        -- { 'hrsh7th/cmp-nvim-lsp-signature-help' },
 
         -- Snippets
         { 'L3MON4D3/LuaSnip' },
@@ -35,6 +35,7 @@ return {
         lsp.set_server_config({
             single_file_support = true,
         })
+        lsp.skip_server_setup({"jdtls"})
 
         lsp.nvim_workspace()
 
@@ -78,7 +79,7 @@ return {
             },
             sources = {
                 { name = "nvim_lsp" },
-                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help
+                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better
                 { name = "buffer" },
                 { name = "path" },
                 { name = "luasnip" },
@@ -100,19 +101,19 @@ return {
                 end,
             },
             -- Formatting of completion menu, adding symbols like vscode
-            -- formatting = {
-            --     format = function(entry, vim_item)
-            --         if vim.tbl_contains({ 'path' }, entry.source.name) then
-            --             local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
-            --             if icon then
-            --                 vim_item.kind = icon
-            --                 vim_item.kind_hl_group = hl_group
-            --                 return vim_item
-            --             end
-            --         end
-            --         return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
-            --     end
-            -- }
+            formatting = {
+                format = function(entry, vim_item)
+                    if vim.tbl_contains({ 'path' }, entry.source.name) then
+                        local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+                        if icon then
+                            vim_item.kind = icon
+                            vim_item.kind_hl_group = hl_group
+                            return vim_item
+                        end
+                    end
+                    return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
+                end
+            },
             experimental = { ghost_text = true },
         }
         cmp.setup(cmp_config)
@@ -154,28 +155,17 @@ return {
                 })
         })
 
-        local navic = require("nvim-navic")
-        lsp.on_attach(function(client, bufnr)
-                if client.server_capabilities.documentSymbolProvider then
-                    navic.attach(client, bufnr)
-                end
-            end
-        )
-
-        lsp.configure("jdtls", {
-            root_dir = require("lspconfig").util.root_pattern('.gradlew', '.git', 'mvnw'),
-            settings = {
-                java = {
-                    checksums = {
-                        "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}"
-                        -- {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
-                    }
-                }
-            }
-            -- root_dir = function ()
-            --     vim.fs.dirname(vim.fs.find({'.gradlew', '.git', 'mvnw'}, { upward = true })[1])
-            -- end
-        })
+        -- lsp.configure("jdtls", {
+        --     root_dir = require("lspconfig").util.root_pattern(".project", '.gradlew', '.git', 'mvnw'),
+        --     settings = {
+        --         java = {
+        --             checksums = {
+        --                 "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}",
+        --                 {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
+        --             }
+        --         }
+        --     },
+        -- })
 
         lsp.setup()
 
@@ -184,6 +174,5 @@ return {
             signs = true,
         })
 
-        vim.opt.signcolumn = 'yes'
     end,
 }

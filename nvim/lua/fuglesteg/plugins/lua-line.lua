@@ -1,25 +1,45 @@
 return {
     "nvim-lualine/lualine.nvim",
     config = function()
-        local function status_clock()
-            local timeTable = os.date("*t")
-            local timeHourMinute = (timeTable.hour .. ":" .. timeTable.min) or ""
-            return timeHourMinute
-        end
-
         local function session_name()
             return require("possession.session").session_name or ""
         end
 
-        local theme = require("lualine.themes.tokyonight")
-        local bg_color = theme.visual.b.bg
-        local fg_color = theme.normal.b.fg
+        local function show_buffers()
+            local hydra_name = require("hydra.statusline").get_name()
+            return hydra_name == "Buffer"
+        end
+
+        local function show_tabs()
+            return #vim.api.nvim_list_tabpages() > 1
+        end
+
+        local function should_show_tabline()
+            -- print("Show buffer: ", show_buffers())
+            -- print("Show tabs: ", show_tabs())
+            return show_tabs()
+        end
 
         local tabline_value = vim.opt.showtabline
+        vim.opt.showtabline = 0
+        local function show_tabline_if()
+            if should_show_tabline() then
+                vim.opt.showtabline = tabline_value
+            else
+                vim.opt.showtabline = 0
+            end
+        end
+
+        local theme = "tokyonight"
+        local lualine_theme = require("lualine.themes." .. theme)
+        local bg_color = lualine_theme.visual.b.bg
+        local fg_color = lualine_theme.normal.b.fg
+
         require("lualine").setup {
             options = {
-                theme = "tokyonight",
+                theme = theme,
                 component_separators = "|",
+                -- component_separators = "",
                 section_separators = { left = "", right = "" },
             },
             sections = {
@@ -33,6 +53,7 @@ return {
                 lualine_c = {
                     {
                         "filename",
+                        path = 1,
                         color = { bg = bg_color, fg = fg_color },
                         separator = { left = "", right = "" },
                     },
@@ -56,7 +77,10 @@ return {
                     -- end,
                 },
                 lualine_x = {
-                    session_name,
+                    {
+                        session_name,
+                        icon = "",
+                    },
                     "branch"
                 },
             },
@@ -64,16 +88,21 @@ return {
                 lualine_a = {
                     {
                         "tabs",
+                        max_length = vim.o.columns,
                         mode = 3,
-                        cond = function()
-                            if #vim.api.nvim_list_tabpages() > 1 then
-                                vim.opt.showtabline = tabline_value
-                                return true
-                            else
-                                vim.opt.showtabline = 0
-                                return false
-                            end
-                        end
+                        cond = show_tabs,
+                    },
+                    function()
+                        show_tabline_if()
+                        return ""
+                    end
+                },
+            },
+            winbar = {
+                lualine_a = {
+                    {
+                        "buffers",
+                        cond = show_buffers,
                     },
                 }
             }
