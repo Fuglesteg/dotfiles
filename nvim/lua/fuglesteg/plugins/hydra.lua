@@ -31,8 +31,8 @@ return {
             hint = [[Buffers]],
             config = {
                 silent = true,
-                color = "pink",
-                invoke_on_body = true,
+                -- color = "pink",
+                -- invoke_on_body = true,
                 hint = {
                     border = "double",
                     -- show_name = false,
@@ -42,43 +42,6 @@ return {
                 on_exit = status_line_update,
             }
         })
-
-        local function close_tabpage()
-            vim.cmd.tabclose()
-        end
-
-        local function new_tabpage()
-            vim.cmd.tabnew()
-        end
-
-        local function next_tabpage()
-            vim.cmd.tabnext()
-        end
-
-        local function previous_tabpage()
-            vim.cmd.tabprevious()
-        end
-
-        -- hydra({
-        --     name = "Tabpage",
-        --     mode = "n",
-        --     body = "<leader>t",
-        --     heads = {
-        --         { "t", cmd "tabnext", { desc = "Next tabpage" } },
-        --         { "T", cmd "tabprevious", { desc = "Previous tabpage" } },
-        --         { "d", cmd "tabclose", { desc = "Close tabpage" } },
-        --         { "c", cmd "tabnew", { desc = "New tabpage" } },
-        --     },
-        --     hint = [[Navigate]],
-        --     config = {
-        --         invoke_on_body = true,
-        --         hint = {
-        --             border = "double",
-        --             position = "bottom",
-        --             type = "window",
-        --         },
-        --     }
-        -- })
 
          local sSplit = require("smart-splits")
          hydra({
@@ -113,7 +76,7 @@ return {
                  }
              }
          })
- 
+
          hydra({
              name = "Scroll",
              mode = "n",
