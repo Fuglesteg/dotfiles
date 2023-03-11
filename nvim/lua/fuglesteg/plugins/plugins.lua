@@ -1,28 +1,26 @@
 return {
--- -- Code intelligence
+-- Code intelligence
 	"leoluz/nvim-dap-go",
 
--- -- Formatting
+-- Formatting
 	"tpope/vim-sleuth",
 
--- -- Utility
+-- Utility
        'amadeus/vim-convert-color-to',
        'tpope/vim-surround',
        'tpope/vim-commentary',
        "nvim-telescope/telescope-file-browser.nvim",
        'mrjones2014/smart-splits.nvim',
+       'voldikss/vim-floaterm',
 
--- -- Keybinds
+-- Keybinds
        'folke/which-key.nvim',
 
--- -- Visual
+-- Visual
        'onsails/lspkind.nvim',
        'kyazdani42/nvim-web-devicons',
 
--- -- Colorschemes
+-- Colorschemes
        'romgrk/doom-one.vim',
        'folke/tokyonight.nvim',
-
--- -- Plugin dependency
-       'voldikss/vim-floaterm',
 }

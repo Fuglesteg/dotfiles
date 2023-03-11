@@ -4,17 +4,17 @@ return {
     config = function()
         local colors = require("tokyonight.colors").setup()
         require("incline").setup({
-            highlight = {
-                groups = {
-                    InclineNormal = { guibg = colors.blue, guifg = colors.black},
-                    InclineNormalNC = { guifg = colors.blue, guibg = colors.black}
-                }
-            },
             render = function(props)
                 local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
                 local icon, color = require("nvim-web-devicons").get_icon_color(filename)
                 return { { icon, guifg = color }, { " " }, { filename } }
             end,
+            highlight = {
+                groups = {
+                    InclineNormal = { guifg = colors.blue, guibg = colors.bg_dark},
+                    InclineNormalNC = { guibg = colors.bg, guifg = colors.blue}
+                }
+            },
             hide = {
                 cursorline = true,
                 only_win = true,
@@ -22,6 +22,10 @@ return {
             window = {
                 placement = {
                     -- horizontal = "center"
+                },
+                margin = {
+                    -- horizontal = 0,
+                    vertical = 0,
                 }
             }
         })
