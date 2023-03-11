@@ -79,7 +79,7 @@ return {
             },
             sources = {
                 { name = "nvim_lsp" },
-                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better
+                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better, using own plugin for this (ray-x/lsp_signature.nvim)
                 { name = "buffer" },
                 { name = "path" },
                 { name = "luasnip" },
@@ -89,7 +89,7 @@ return {
                 ['<C-s>'] = cmp.mapping.complete(),
                 ['<C-space>'] = cmp.mapping.complete(),
                 ["<Nul>"] = cmp.mapping.complete(),
-                ['<CR>'] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
+                ['<CR>'] = cmp.mapping.confirm({ select = false }),
                 ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
                 ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
                 ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
