@@ -2,8 +2,6 @@ return {
 -- -- Code intelligence
 	"leoluz/nvim-dap-go",
 
--- -- Formatting
-	"tpope/vim-sleuth",
 
 -- Utility
     'amadeus/vim-convert-color-to',
