@@ -31,7 +31,7 @@ return {
             hint = [[Buffers]],
             config = {
                 silent = true,
-                -- color = "pink",
+                color = "pink",
                 -- invoke_on_body = true,
                 hint = {
                     border = "double",
@@ -82,12 +82,13 @@ return {
              mode = "n",
              body = "z",
              heads = {
-                 { "h", "zh:IndentBlanklineRefresh", { desc = "Scroll to the left" } },
-                 { "l", "zl:IndentBlanklineRefresh", { desc = "Scroll to the right" } },
+                 { "h", function() vim.api.nvim_input_mouse("wheel", "left", "", 0, 0, 0) end, { desc = "Scroll to the left" } },
+                 { "l", function() vim.api.nvim_input_mouse("wheel", "right", "", 0, 0, 0) end, { desc = "Scroll to the right" } },
                  { "j", "<c-e>",                     { desc = "Scroll up" } },
                  { "k", "<c-y>",                     { desc = "Scroll down" } },
              },
              config = {
+                color = "pink",
                  hint = {
                      position = "top",
                      type = "window",
