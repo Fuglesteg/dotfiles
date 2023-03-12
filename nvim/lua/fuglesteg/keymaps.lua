@@ -114,9 +114,7 @@ wk.register({
         k = { "<C-w>k", "Go up" },
         d = { "<C-w>c", "Close" },
     },
-    b = {
-        name = "+Buffer",
-    },
+    b = { ":Telescope buffers<cr>", "Buffers"},
     c = {
         name = "+Code",
         s = { ":Telescope live_grep<cr>", "Fuzzy find" },

@@ -17,32 +17,6 @@ return {
             vim.cmd.bprev()
         end
 
-        hydra({
-            name = "Buffer",
-            mode = "n",
-            body = "<leader>b",
-            heads = {
-                { "n", buffernext, { desc = "Next buffer" } },
-                { "N", bufferprev, { desc = "Previous buffer" } },
-                { "d", MiniBufremove.delete, { desc = "Close buffer" } },
-                { "c", cmd "new", { desc = "New buffer" } },
-                { "b", cmd "Telescope buffers", { desc = "Search buffers" } },
-            },
-            hint = [[Buffers]],
-            config = {
-                silent = true,
-                color = "pink",
-                -- invoke_on_body = true,
-                hint = {
-                    border = "double",
-                    -- show_name = false,
-                    position = "bottom",
-                    type = "window",
-                },
-                on_exit = status_line_update,
-            }
-        })
-
          local sSplit = require("smart-splits")
          hydra({
              name = "Window",
