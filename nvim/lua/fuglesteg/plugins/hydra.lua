@@ -50,14 +50,23 @@ return {
                  }
              }
          })
+        local function getCurrentWindowRowCol()
+            return unpack(vim.api.nvim_win_get_position(0))
+        end
+
+        local function scrollInCurrentWindow(direction)
+            local row, col = getCurrentWindowRowCol()
+            vim.api.nvim_input_mouse("wheel", direction, "", 0, row, col)
+        end
+
 
          hydra({
              name = "Scroll",
              mode = "n",
              body = "z",
              heads = {
-                 { "h", function() vim.api.nvim_input_mouse("wheel", "left", "", 0, 0, 0) end, { desc = "Scroll to the left" } },
-                 { "l", function() vim.api.nvim_input_mouse("wheel", "right", "", 0, 0, 0) end, { desc = "Scroll to the right" } },
+                 { "h", function() scrollInCurrentWindow("left") end, { desc = "Scroll to the left" } },
+                 { "l", function() scrollInCurrentWindow("right") end, { desc = "Scroll to the right" } },
                  { "j", "<c-e>",                     { desc = "Scroll up" } },
                  { "k", "<c-y>",                     { desc = "Scroll down" } },
              },
