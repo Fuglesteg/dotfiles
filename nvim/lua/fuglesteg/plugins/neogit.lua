@@ -1,7 +1,7 @@
 return {
     'TimUntersberger/neogit',
     dependencies = {
-        'sindrets/diffview.nvim', dependencies = 'nvim-lua/plenary.nvim'
+        'sindrets/diffview.nvim',
     },
     config = function()
         require("neogit").setup({
