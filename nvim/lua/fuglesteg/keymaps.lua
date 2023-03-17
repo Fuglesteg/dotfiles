@@ -1,26 +1,21 @@
--- Keybindings
-
-
--- Utility functions
-
-local function remap(mode, binding, command)
-    vim.keymap.set(mode, binding, command, { silent = true })
+local function remap(mode, binding, command, desc)
+    vim.keymap.set(mode, binding, command, { silent = true, desc = desc })
 end
 
-local function nmap(binding, command)
-    remap('n', binding, command)
+local function nmap(binding, command, desc)
+    remap('n', binding, command, desc)
 end
 
-local function vmap(binding, command)
-    remap('v', binding, command)
+local function vmap(binding, command, desc)
+    remap('v', binding, command, desc)
 end
 
-local function imap(binding, command)
-    remap('i', binding, command)
+local function imap(binding, command, desc)
+    remap('i', binding, command, desc)
 end
 
-local function tmap(binding, command)
-    remap('t', binding, command)
+local function tmap(binding, command, desc)
+    remap('t', binding, command, desc)
 end
 
 nmap("j", "gj")
@@ -30,24 +25,15 @@ nmap("k", "gk")
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
 tmap("<Esc>", "<C-\\><C-n>")
--- inoremap <C-j> <Down>
--- inoremap <C-k> <Up>
--- inoremap <C-h> <Left>
--- inoremap <C-l> <Right>
 nmap("<C-j>", "<Tab>")
 nmap("<C-k>", "<S-Tab>")
 nmap("<leader>;", ":Commentary<cr>")
 vmap("<leader>;", ":Commentary<cr>")
 vmap(">", ">gv")
 vmap("<", "<gv")
--- nmap("J", "gT")
--- nmap("K", "gt")
--- nnoremap <C-v> +p
 nmap("gd", ":lua vim.lsp.buf.definition()<cr>")
 nmap("gr", ":Telescope lsp_references<cr>")
 nmap("gh", vim.lsp.buf.hover)
-
--- imap("<c-space>", "lua vim.lsp.buf.definition()<cr>")
 
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
@@ -151,7 +137,6 @@ wk.register({
         r = { renameSessionPrompt, "Rename session"},
         t = { ":PossessionLoad tmp<cr>", "Restore temp session"},
         o = { loadLastSession, "Open last session"},
-        d = { ":PossessionDelete ", "Delete session"},
         c = { ":PossessionClose<cr>", "Close Session"},
     },
     C = {
