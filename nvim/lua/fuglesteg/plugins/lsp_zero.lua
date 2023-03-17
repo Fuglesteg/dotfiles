@@ -14,6 +14,7 @@ return {
         { 'saadparwaiz1/cmp_luasnip' },
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/cmp-nvim-lua' },
+        { "rcarriga/cmp-dap" },
         -- { 'hrsh7th/cmp-nvim-lsp-signature-help' },
 
         -- Snippets
@@ -153,6 +154,12 @@ return {
                         }
                     }
                 })
+        })
+
+        cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+            sources = {
+                { name = "dap" },
+            }
         })
 
         -- lsp.configure("jdtls", {
