@@ -24,7 +24,7 @@ nmap("k", "gk")
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
-tmap("<Esc>", "<C-\\><C-n>")
+tmap("<Esc><Esc>", "<C-\\><C-n>")
 nmap("<C-j>", "<Tab>")
 nmap("<C-k>", "<S-Tab>")
 nmap("<leader>;", ":Commentary<cr>")

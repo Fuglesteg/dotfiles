@@ -5,6 +5,7 @@
 # PATH
 PATH="$PATH:~/.local/share/bob/nvim-bin"
 PATH="$PATH:~/.local/bin"
+PATH="$PATH:/usr/local/texlive/2023/bin/x86_64-linux"
 
 # If not running interactively, don't do anything
 case $- in
@@ -53,6 +54,7 @@ unset color_prompt force_color_prompt
 # PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
 
 
+set -o vi
 
 
 # Alias definitions.
