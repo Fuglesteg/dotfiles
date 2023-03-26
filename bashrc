@@ -4,7 +4,9 @@
 
 # PATH
 PATH="$PATH:~/.local/share/bob/nvim-bin"
+PATH="$PATH:~/.local/share/bob/"
 PATH="$PATH:~/.local/bin"
+PATH="$PATH:~/.cargo/bin"
 
 # If not running interactively, don't do anything
 case $- in
