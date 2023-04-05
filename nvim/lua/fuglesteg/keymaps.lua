@@ -18,6 +18,8 @@ local function tmap(binding, command, desc)
     remap('t', binding, command, desc)
 end
 
+local term = require("fuglesteg.terminal")
+
 nmap("j", "gj")
 nmap("k", "gk")
 
@@ -38,6 +40,8 @@ nmap("gh", vim.lsp.buf.hover)
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
 nmap("<F3>", require("dap").step_into, "Step into")
+
+vmap("<leader>e", term.executeSelection, "Execute selection")
 
 local possession_session = require("possession.session")
 local function saveSessionPrompt()
@@ -152,6 +156,8 @@ wk.register({
         d = { ":FloatermKill<cr>", "Kill floating terminal" },
         n = { ":FloatermNew<cr>", "New floating terminal" },
         b = { ":term<cr>", "Open new terminal in buffer" },
+        m = { term.setTermAsMain, "Set current terminal as main" },
+        e = { term.executeSelection, "Execute selection" },
     },
     p = {
         name = "+Projects",
