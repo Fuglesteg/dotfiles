@@ -1,2 +1,3 @@
-vim.g.vimtex_view_method = "zathura"
-vim.g.localleader = [[,]]
+vim.b.spell = true
+vim.b.spelllang = "en,nb"
+vim.b.textwidth = 80
