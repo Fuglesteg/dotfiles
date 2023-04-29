@@ -17,7 +17,7 @@ return {
             },
             hide = {
                 cursorline = true,
-                only_win = true,
+                -- only_win = true,
             },
             window = {
                 placement = {
