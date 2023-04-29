@@ -162,6 +162,14 @@ return {
             }
         })
 
+        lsp.configure("ltex", {
+            settings = {
+                ltex = {
+                    language = "nb-NO"
+                }
+            }
+        })
+
         -- lsp.configure("jdtls", {
         --     root_dir = require("lspconfig").util.root_pattern(".project", '.gradlew', '.git', 'mvnw'),
         --     settings = {
