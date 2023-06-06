@@ -12,6 +12,11 @@
     ~/.bashrc: bashrc
     ~/.config/alacritty: alacritty
     ~/.bash_aliases: bash_aliases
+    ~/.latexmkrc: latexmkrc
+    ~/.config/stumpwm: stumpwm
+    ~/.lem/init.lisp: lem/init.lisp
+    ~/.lem/config.lisp: lem/config.lisp
+    ~/.config/nyxt/config.lisp: nyxt/config.lisp
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

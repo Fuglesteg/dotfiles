@@ -20,7 +20,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-if [ -x /usr/bin/exa ]; then
+if [[ -x /usr/bin/exa || -x $HOME/.guix-profile/bin/exa ]]; then
    alias ls='exa -l --icons'
 fi
 

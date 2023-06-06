@@ -1,6 +1,7 @@
 font:
   normal:
-    family: "mononoki Nerd Font Mono"
+    family: "Mononoki"
+      # family: "mononoki Nerd Font Mono"
     style: "Bold"
 selection:
   save_to_clipboard: true
@@ -21,8 +22,10 @@ colors:
     magenta: '0xc678dd'
     cyan:    '0x46d9ff'
     white:   '0xbbc2cf'
+  transparent_background_colors: true
 env:
   TERM: alacritty
 window:
   decorations: none
   startup_mode: Maximized
+  opacity: 0.1

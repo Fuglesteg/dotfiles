@@ -23,6 +23,16 @@ local term = require("fuglesteg.terminal")
 nmap("j", "gj")
 nmap("k", "gk")
 
+-- Norwegian keys
+imap("<M-;>", "ø")
+imap("<M-:>", "Ø")
+
+imap("<M-[>", "å")
+imap("<M-{>", "Å")
+
+imap("<M-'>", "æ")
+imap("<M-\">", "Æ")
+
 -- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")

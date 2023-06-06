@@ -9,6 +9,8 @@ PATH="$PATH:~/.local/bin"
 PATH="$PATH:~/.cargo/bin"
 PATH="$PATH:/usr/local/texlive/2023/bin/x86_64-linux"
 
+export LD_LIBRARY_PATH=~/.guix-profile/lib
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -79,8 +81,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-export EDITOR=/usr/bin/vim
-export VISUAL=/usr/bin/vim
+export EDITOR='/usr/bin/env vim'
+export VISUAL='/usr/bin/env vim'
 export JAVA_HOME=/usr/bin/java
 
 # Zoxide support
@@ -91,11 +93,11 @@ SSH_ENV="$HOME/.ssh/agent-environment"
 # Start SSH agent automatically on login
 function start_agent {
     echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    /usr/bin/env ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
     echo succeeded
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
+    /usr/bin/env ssh-add;
 }
 
 # Source SSH settings, if applicable
