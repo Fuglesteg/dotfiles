@@ -16,10 +16,6 @@
   "Map to leader"
   (nmap (format nil "~a ~a" *leader* key) action))
 
-(defun hello ()
-  "Test"
-  (format t "Hello"))
-
 (lmap "w v" 'lem:split-active-window-horizontally)
 (lmap "w s" 'lem:split-active-window-vertically)
 (lmap "w h" 'lem:window-move-left)
@@ -27,6 +23,8 @@
 (lmap "w k" 'lem:window-move-up)
 (lmap "w l" 'lem:window-move-right)
 (lmap "w d" 'lem:delete-active-window)
+
+(lem/language-mode::comment-region)
 
 (lmap "b" 'lem/list-buffers:list-buffers)
 
@@ -37,13 +35,11 @@
 
 (lmap "Tab" 'lem:switch-to-buffer)
 
-;(lmap ";" 'lem:comment)
+(lmap ";" 'lem/language-mode::comment-or-uncomment-region)
 
 (lmap "e r" 'lem-lisp-mode:lisp-eval-defun)
 (lmap "e e" 'lem-lisp-mode:lisp-eval-last-expression)
-;(lmap "e f" (lambda () (lem-lisp-mode:lisp-load-file (lem:buffer-filename))))
-;(lmap "e d" (lambda () (lem:execute-command "lisp-load-file")))
-(lmap "l" 'lem-paredit-mode:paredit-forward)
-(lmap "h" 'lem-paredit-mode:paredit-backward)
-(lmap "L" 'lem-paredit-mode:paredit-slurp)
-(lmap "H" 'lem-paredit-mode:paredit-barf)
+(lmap "e f" 'lem-lisp-mode:lisp-compile-and-load-file)
+
+(nmap "c-L" 'lem-paredit-mode:paredit-slurp)
+(nmap "c-H" 'lem-paredit-mode:paredit-barf)
