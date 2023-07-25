@@ -17,6 +17,7 @@
     ~/.lem/init.lisp: lem/init.lisp
     ~/.lem/config.lisp: lem/config.lisp
     ~/.config/nyxt/config.lisp: nyxt/config.lisp
+    ~/.config/guix: guix
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
