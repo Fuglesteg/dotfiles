@@ -10,7 +10,7 @@
 
 (defun nmap (key action)
   "Map to normal mode"
-  (define-key lem-vi-mode:*command-keymap* key action))
+  (define-key lem-vi-mode:*normal-keymap* key action))
 
 (defun lmap (key action)
   "Map to leader"
@@ -23,8 +23,6 @@
 (lmap "w k" 'lem:window-move-up)
 (lmap "w l" 'lem:window-move-right)
 (lmap "w d" 'lem:delete-active-window)
-
-(lem/language-mode::comment-region)
 
 (lmap "b" 'lem/list-buffers:list-buffers)
 
