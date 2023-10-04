@@ -4,6 +4,13 @@
 ;; TODO: Override screen timeout when media is playing
 ;; TODO: Norwegian keys
 
+;; Fonts
+(require :ttf-fonts)
+(setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
+(setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
+(xft:cache-fonts)
+(set-font (make-instance 'xft:font :family "DejaVu Sans Mono" :subfamily "Book" :size 11))
+
 ;; General settings
 (setf *message-window-gravity* :center
       *input-window-gravity* :center
@@ -20,14 +27,15 @@
 ;; Colors
 (setf *colors*
       '("#ffffff"        ; ^0 ; White
-	"#131220"        ; ^1 ; Dark Blue
-	"#f72f33"        ; ^2 ; Red
-	"#689d6a"        ; ^3 ; Light Green
-	"#62bfef"        ; ^4 ; Light Blue
+	"#282c34"        ; ^1 ; Dark Blue
+        ;; "#131220"        ; ^1 ; Dark Blue
+        "#e0c675"        ; ^2 ; Red
+        "#91ba74"        ; ^3 ; Light Green
+	"#61afef"        ; ^4 ; Light Blue
         "#fabd2f"        ; ^5 ; Yellow / Help map keys
-	"#a644bf"        ; ^6 ; Magenta
+	"#c678dd"        ; ^6 ; Magenta
 	"#cc4a0e"        ; ^7 ; Brown
-	"#56b6c2"))      ; ^8 ; Cyan
+	"#693d42"))      ; ^8 ; Cyan
 
 (update-color-map (current-screen))
 
@@ -61,7 +69,7 @@
   *mode-line-media-string*)
 
 (setf *screen-mode-line-format*
-      (list "^8[%g]^n "       ; groups
+      (list "^6[%g]^n "       ; groups
 	    "%W"              ; windows
 	    "^>"              ; right align
 ;;	    "%S"              ; swank status

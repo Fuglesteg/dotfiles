@@ -18,6 +18,7 @@
     ~/.lem/config.lisp: lem/config.lisp
     ~/.config/nyxt/config.lisp: nyxt/config.lisp
     ~/.config/guix: guix
+    ~/.gitconfig: gitconfig
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

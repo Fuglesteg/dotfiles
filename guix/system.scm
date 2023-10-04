@@ -56,7 +56,7 @@
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
                     (list nyxt firefox) ; Browser
-		    ;;sbcl-ttf-fonts font-dejavu
+		    (list sbcl-stumpwm-ttf-fonts font-dejavu)
                     %base-packages))
 
   ;; Below is the list of system services.  To search for available
