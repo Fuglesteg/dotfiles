@@ -25,7 +25,6 @@
   (gnu packages image)
   (gnu packages compton)
   (gnu packages web-browsers)
-  (nongnu packages mozilla)
   (nongnu packages linux))
 
 (use-service-modules cups desktop networking ssh)
@@ -52,28 +51,27 @@
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
   (packages (append (list (specification->package "nss-certs"))
-		    (list sbcl stumpwm `(,stumpwm "lib"))
+		    (list stumpwm `(,stumpwm "lib"))
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
-                    (list nyxt firefox) ; Browser
-		    (list sbcl-stumpwm-ttf-fonts font-dejavu)
+                    (list sbcl-stumpwm-ttf-fonts font-dejavu font-mononoki)
                     %base-packages))
 
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.
   (services
    (append (list
-
                  ;; To configure OpenSSH, pass an 'openssh-configuration'
                  ;; record as a second argument to 'service' below.
                  (service openssh-service-type)
                  ;(service network-manager-service-type)
                  ;(service wpa-supplicant-service-type)
                  ;(service ntp-service-type)
+                 ; (service alsa-service-type)
                  (service cups-service-type)
                  (service bluetooth-service-type)
                  (service docker-service-type))
-		 ;(service gdm-service-type))
+                 ;(service gdm-service-type))
 
            ;; This is the default list of services we
            ;; are appending to.

@@ -1,21 +1,51 @@
-;; TODO: Pull window from all windows
-;; TODO: Font
 ;; TODO: Hide mouse
 ;; TODO: Override screen timeout when media is playing
 ;; TODO: Norwegian keys
 
-;; Fonts
-(require :ttf-fonts)
-(setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
-(setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
-(xft:cache-fonts)
-(set-font (make-instance 'xft:font :family "DejaVu Sans Mono" :subfamily "Book" :size 11))
+
+;; Quicklisp
+(when *initializing*
+    (load (merge-pathnames "quicklisp/setup.lisp"
+			   (user-homedir-pathname))))
+
+(setf *group-format* " %t ")
+(setf *window-format* " %n %20t%m")
+
+(require :asdf)
+(asdf:clear-output-translations)
+(asdf:initialize-output-translations
+ '(:output-translations
+   :enable-user-cache
+   :ignore-inherited-configuration))
+
+(require :clx-truetype)
+(set-module-dir "~/.stumpwm.d/modules")
+(init-load-path *module-dir*)
+(load-module "ttf-fonts")
+(when *initializing*
+    ;; Fonts
+    ; (require :ttf-fonts)
+    ; ; (setf xft:*font-dirs* '(concat (getenv "HOME") "/.guix-profile/share/fonts/"))
+    (setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
+    ; ; (setf xft:*font-dirs* '("/usr/share/fonts/"))
+    (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
+    (xft:cache-fonts)
+    (set-font (make-instance 'xft:font :family "mononoki" :subfamily "Italic" :size 12)))
+
+;; Tray
+(ql:quickload :xembed)
+(load-module "stumptray")
+(when *initializing*
+    (stumptray:stumptray))
 
 ;; General settings
 (setf *message-window-gravity* :center
       *input-window-gravity* :center
       *mouse-focus-policy* :click
-      stumpwm::*window-number-map* "123456789asdfjkl;")
+      *message-window-padding* 10
+      *message-window-y-padding* 10
+      stumpwm::*window-number-map* "qwertyuiop"
+      stumpwm::*group-number-map* "123456789")
 
 ;; Groups
 (when *initializing*
@@ -24,18 +54,21 @@
     (gnewbg "General")
     (gnewbg "Gaming"))
 
+(if *initializing*
+  (print "Initializing")
+  (print "Not Initializing"))
+
 ;; Colors
 (setf *colors*
-      '("#ffffff"        ; ^0 ; White
-	"#282c34"        ; ^1 ; Dark Blue
-        ;; "#131220"        ; ^1 ; Dark Blue
-        "#e0c675"        ; ^2 ; Red
-        "#91ba74"        ; ^3 ; Light Green
-	"#61afef"        ; ^4 ; Light Blue
-        "#fabd2f"        ; ^5 ; Yellow / Help map keys
-	"#c678dd"        ; ^6 ; Magenta
-	"#cc4a0e"        ; ^7 ; Brown
-	"#693d42"))      ; ^8 ; Cyan
+      '("#ffffff"        ;
+	"#111111"        ;
+        "#adadad"        ;
+        "#91ba74"        ;
+	"#61afef"        ;
+        "#fabd2f"        ;
+	"#c678dd"        ;
+	"#cc4a0e"        ;
+	"#259fb6"))      ;
 
 (update-color-map (current-screen))
 
@@ -43,7 +76,6 @@
 (defparameter *msg-fg-color* (nth 0 *colors*))
 (defparameter *msg-border-color* (nth 0 *colors*))
 
-(setf *window-format* "%m%n%s%20t")
 
 ;; Mode Line
 (defparameter *mode-line-bg-color* (nth 1 *colors*))
@@ -65,18 +97,18 @@
 	(let ((volume-string (remove #\Newline (run-shell-command "pamixer --get-volume-human" t)))
 	       (player-status (remove #\Newline (run-shell-command "playerctl status" t)))
 	       (media-title (remove #\Newline (run-shell-command "playerctl metadata title" t))))
-	    (setf *mode-line-media-string* (format nil "[^5 Volume: ~a ^n|^3 ~a:^4 ~a ^n]" volume-string player-status media-title)))))
+	    (setf *mode-line-media-string* (format nil "^2[^n Volume: ~a ^2|^n ~a:^n ~a ^2]" volume-string player-status media-title)))))
   *mode-line-media-string*)
 
 (setf *screen-mode-line-format*
-      (list "^6[%g]^n "       ; groups
+      (list "^2[^n%g^2]^n "       ; groups
 	    "%W"              ; windows
 	    "^>"              ; right align
 ;;	    "%S"              ; swank status
 ;;	    "%B"              ; battery percentage
 	    "%d "
 	    '(:eval (set-mode-line-media-string))
-))            ; time/date
+	    "    "))
 
 ;; Enable the mode line
 (enable-mode-line (current-screen) (current-head) t)
@@ -93,6 +125,11 @@
     image=$(find $wallpaper_directory/* | sort -R | tail --lines=1)
     feh --bg-max \"$image\""))
 
+;; Hooks
+(defun on-window-destroy (frame-to-frame)
+  (repack-window-numbers))
+
+(add-hook *destroy-window-hook* 'on-window-destroy)
 ; Source x profile
 (run-shell-command "source ~/.xprofile")
 
@@ -145,16 +182,39 @@
 
 ;; Menus of all windows in all groups
 ;; Use title-re-p to check
-(defun find-window-native ()
+(defun get-all-windows ()
+  (act-on-matching-windows (w) (stumpwm::title-re-p w "") w))
+
+(defun format-window (window)
+  (format nil "~a | ~a" (group-name (slot-value window 'group)) (slot-value window 'title)))
+
+(defcommand find-window () ()
   (let* (
-	 (windows (act-on-matching-windows (w) (stumpwm::title-re-p w "") w)) 
+	 (windows (get-all-windows)) 
 	 (window-titles (loop for window in windows collect (slot-value window 'title)))
 	 (selected-window-title (select-from-menu (current-screen) window-titles)))
-    ; (selected-window (find windows :test (lambda (title window) (string= (car title) (slot-value window 'title))))))
     (run-or-raise "" `(:title ,(format nil "~a" selected-window-title)) T T)))
+
+(defcommand pull-window () ()
+  (let* (
+	 (windows (get-all-windows))
+	 (window-titles (loop for window in windows collect (list (format-window window) window)))
+	 (selected-window-title (select-from-menu (current-screen) window-titles)))
+    (when selected-window-title
+	(move-windows-to-group (list (second selected-window-title)) (current-group))
+	(focus-window (second selected-window-title)))))
+
+(defcommand start-replay-buffer () ()
+	    (run-shell-command "obs --startreplaybuffer --minimize-to-tray"))
+
+(defcommand toggle-float () ()
+  (if (subtypep (class-of (current-window)) 'stumpwm::float-window)
+    (unfloat-this)
+    (float-this)))
 
 ;; Key bindings
 (set-prefix-key (kbd "s-space"))
+
 
 ; top level prefix keys
 (defun r-define-key (key command)
@@ -174,19 +234,31 @@
     (tr-define-key up "move-focus up")
     (tr-define-key right "move-focus right"))
 
+(defun set-window-move-keys (prefix left down up right)
+  (flet ((prepend-prefix (value) (format nil "~a-~a" prefix value)))
+  (tr-define-key (prepend-prefix left) "move-window left")
+  (tr-define-key (prepend-prefix down) "move-window down")
+  (tr-define-key (prepend-prefix up) "move-window up")
+  (tr-define-key (prepend-prefix right) "move-window right")))
+
 (defmacro set-gselect-prefix (prefix)
   `(progn
-      ,@(loop for i from 1 to 9
-            collect `(t-define-key ,(format nil "~a-F~a" prefix i) ,(format nil "gselect ~a" i)))))
+      ,@(loop for i across stumpwm::*group-number-map*
+            collect `(t-define-key ,(format nil "~a-~a" prefix i) ,(format nil "gselect ~a" i)))))
 
 (defmacro set-wselect-prefix (prefix)
   `(progn
-      ,@(loop for i from 1 to 9
+      ,@(loop for i across stumpwm::*window-number-map*
             collect `(t-define-key ,(format nil "~a-~a" prefix i) ,(format nil "select-window-by-number ~a" i)))))
+
+(defcommand hello () ()
+	    (window-send-string "ø"))
+
 
 (set-gselect-prefix "M")
 (set-wselect-prefix "M")
 (set-window-focus-keys "h" "j" "k" "l")
+(set-window-move-keys "M" "h" "j" "k" "l")
 (tr-define-key "s" "vsplit")
 (tr-define-key "v" "hsplit")
 (tr-define-key "d" "remove-split")
@@ -199,3 +271,17 @@
 (tr-define-key "F2" "decrease-volume")
 (tr-define-key "F1" "toggle-mute")
 (t-define-key "s-x" "screenshot")
+(tr-define-key "p" "pull-window")
+(tr-define-key "f" "toggle-float")
+(tr-define-key "a" "toggle-always-on-top")
+(r-define-key "F10" "hello")
+
+(defprogram-shortcut term
+		     :command "exec alacritty"
+		     :map *root-map*
+		     :key (kbd "t"))
+
+(defprogram-shortcut browser
+		     :command "exec firefox"
+		     :map *root-map*
+		     :key (kbd "b"))
