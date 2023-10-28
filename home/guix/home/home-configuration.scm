@@ -14,15 +14,16 @@
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
   (packages (specifications->packages (list "curl"
-                                            "font-mononoki"
                                             "python"
                                             "obs"
                                             "emacs"
                                             "syncthing"
                                             "mesa"
+                                            "feh"
+                                            "vlc"
                                             "rlwrap"
                                             "xclip"
-                                            "xpdf"
+                                            "zathura"
                                             "zathura-pdf-mupdf"
                                             "mupdf"
                                             "ungoogled-chromium"
@@ -32,7 +33,6 @@
                                             "nyxt"
                                             "firefox"
                                             "pavucontrol"
-                                            "pulseaudio-qt"
                                             "pulseaudio"
                                             "neovim"
                                             "fzf"
@@ -50,7 +50,14 @@
   ;; Below is the list of Home services.  To search for available
   ;; services, run 'guix home search KEYWORD' in a terminal.
   (services
-   (list (service home-bash-service-type
+   (list (simple-service 'set-environment-variables
+                         home-environment-variables-service-type
+                         `(("BROWSER" . "firefox")
+                           ("TERMINAL" . "alacritty")
+                           ("XDG_DATA_DIRS" . "$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share")))
+         (home-files-service-type
+           `(()))
+         (service home-bash-service-type
                   (home-bash-configuration
                    (aliases '(("apt" . "sudo apt")
                               ("apti" . "sudo apt install")

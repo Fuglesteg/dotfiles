@@ -134,15 +134,15 @@
 (run-shell-command "source ~/.xprofile")
 
 ; Environment variables
-(defun setenv (var value)
-  (setf (getenv var) value))
+; (defun setenv (var value)
+;   (setf (getenv var) value))
 
-(setenv "BROWSER" "firefox")
-(setenv "TERMINAL" "alacritty")
-(setenv "XDG_DATA_DIRS" 
-	(format nil "~a:~a" 
-		(getenv "XDG_DATA_DIRS") 
-		(format nil "~a~a" (getenv "HOME") "/.local/share/flatpak/exports/share")))
+; (setenv "BROWSER" "firefox")
+; (setenv "TERMINAL" "alacritty")
+; (setenv "XDG_DATA_DIRS" 
+; 	(format nil "~a:~a" 
+; 		(getenv "XDG_DATA_DIRS") 
+; 		(format nil "~a~a" (getenv "HOME") "/.local/share/flatpak/exports/share")))
 
 (when *initializing*
     (set-random-wallpaper))
