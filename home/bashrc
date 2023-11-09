@@ -2,16 +2,9 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# PATH
-PATH="$PATH:~/.local/share/bob/nvim-bin"
-PATH="$PATH:~/.local/share/bob/"
-PATH="$PATH:~/.local/bin"
-PATH="$PATH:~/.cargo/bin"
-PATH="$PATH:/usr/local/texlive/2023/bin/x86_64-linux"
-
-export LD_LIBRARY_PATH=~/.guix-profile/lib
-
 # If not running interactively, don't do anything
+
+# source ./.bash_profile
 case $- in
     *i*) ;;
       *) return;;
@@ -52,7 +45,6 @@ color_prompt=yes
 # should be on the output of commands, not on the prompt
 #force_color_prompt=yes
 
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 unset color_prompt force_color_prompt
 
 # PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
@@ -81,15 +73,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-export EDITOR='/usr/bin/env vim'
-export VISUAL='/usr/bin/env vim'
-export JAVA_HOME=/usr/bin/java
 
 # Zoxide support
 eval "$(zoxide init bash)"
 
-SSH_ENV="$HOME/.ssh/agent-environment"
 
+SSH_ENV="$HOME/.ssh/agent-environment"
 # Start SSH agent automatically on login
 function start_agent {
     echo "Initialising new SSH agent..."
@@ -112,3 +101,18 @@ else
     start_agent;
 fi
 . "$HOME/.cargo/env"
+
+# PATH
+PATH="$PATH:$HOME/.local/share/bob/nvim-bin"
+PATH="$PATH:$HOME/.local/share/bob/"
+PATH="$PATH:$HOME/.local/bin"
+PATH="$PATH:$HOME/.cargo/bin"
+PATH="$PATH:/usr/local/texlive/2023/bin/x86_64-linux"
+
+export LD_LIBRARY_PATH=$HOME/.guix-profile/lib
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+# export EDITOR='/usr/bin/env vim'
+# export VISUAL='/usr/bin/env vim'
+export JAVA_HOME=/usr/bin/java
+trap 'echo -ne "\033]0;${PWD}: (${BASH_COMMAND})\007"' DEBUG
+

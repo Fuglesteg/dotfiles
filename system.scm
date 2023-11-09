@@ -10,8 +10,10 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu)
+  (gnu services)
   (gnu services docker)
   (gnu services desktop)
+  (gnu system setuid)
   (gnu services xorg)
   (gnu packages lisp)
   (gnu packages tmux)
@@ -27,8 +29,8 @@
   (gnu packages web-browsers)
   (nongnu packages linux))
 
-(use-service-modules cups desktop networking ssh)
-(use-package-modules fonts wm vim video certs version-control)
+(use-service-modules cups desktop networking ssh linux)
+(use-package-modules fonts wm vim video certs version-control linux)
 
 (operating-system
   (kernel linux)
@@ -39,12 +41,14 @@
   (host-name "K80")
 
   ;; The list of user accounts ('root' is implicit).
+  (groups (cons* (user-group (name "sudo"))
+                 %base-groups))
   (users (cons* (user-account
                   (name "andy")
                   (comment "Andreas Fuglesteg Dale")
                   (group "users")
                   (home-directory "/home/andy")
-                  (supplementary-groups '("wheel" "netdev" "audio" "video" "docker")))
+                  (supplementary-groups '("wheel" "netdev" "audio" "video" "docker" "sudo")))
                 %base-user-accounts))
 
   ;; Packages installed system-wide.  Users can also install packages
@@ -52,17 +56,25 @@
   ;; for packages and 'guix install PACKAGE' to install a package.
   (packages (append (list (specification->package "nss-certs"))
 		    (list stumpwm `(,stumpwm "lib"))
+                    (list v4l2loopback-linux-module)
+                    (list amdgpu-firmware xf86-video-amdgpu)
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
                     (list sbcl-stumpwm-ttf-fonts font-dejavu font-mononoki)
                     %base-packages))
+  ; (setuid-programs
+  ;   (append (list (setuid-program (program obs)))
+  ;           %setuid-programs))
 
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.
+  (kernel-loadable-modules (list v4l2loopback-linux-module))
   (services
    (append (list
                  ;; To configure OpenSSH, pass an 'openssh-configuration'
                  ;; record as a second argument to 'service' below.
+                 (service kernel-module-loader-service-type
+                          '("v4l2loopback-linux-module" "amdgpu-firmware"))
                  (service openssh-service-type)
                  ;(service network-manager-service-type)
                  ;(service wpa-supplicant-service-type)

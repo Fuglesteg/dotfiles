@@ -15,7 +15,7 @@ alias l='ls -CF'
 alias cc=gcc
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
+if command -v "dircolors"; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls -lh --color=auto'
     alias grep='grep --color=auto'
@@ -23,8 +23,12 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-if [[ -x /usr/bin/exa || -x $HOME/.guix-profile/bin/exa ]]; then
+if command -v "exa"; then
    alias ls='exa -l --icons'
+fi
+
+if command -v "google-chrome"; then
+   alias chrome=google-chrome
 fi
 
 # SSH

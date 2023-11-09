@@ -2,15 +2,26 @@
 ;; TODO: Override screen timeout when media is playing
 ;; TODO: Norwegian keys
 
+;; Colors
+(setf *colors*
+      '("#ffffff"
+	"#111111"
+        "#adadad"
+        "#91ba74"
+	"#61afef"
+        "#fabd2f"
+	"#c678dd"
+	"#cc4a0e"
+	"#259fb6"))
+
+(update-color-map (current-screen))
 
 ;; Quicklisp
 (when *initializing*
     (load (merge-pathnames "quicklisp/setup.lisp"
 			   (user-homedir-pathname))))
 
-(setf *group-format* " %t ")
-(setf *window-format* " %n %20t%m")
-
+; Fixes problem in Guix
 (require :asdf)
 (asdf:clear-output-translations)
 (asdf:initialize-output-translations
@@ -18,25 +29,21 @@
    :enable-user-cache
    :ignore-inherited-configuration))
 
-(require :clx-truetype)
 (set-module-dir "~/.stumpwm.d/modules")
 (init-load-path *module-dir*)
+
+;; Fonts
+(require :clx-truetype)
 (load-module "ttf-fonts")
 (when *initializing*
-    ;; Fonts
     ; (require :ttf-fonts)
-    ; ; (setf xft:*font-dirs* '(concat (getenv "HOME") "/.guix-profile/share/fonts/"))
     (setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
+    (setf xft:*font-dirs* (list (concat (getenv "HOME") "/.guix-profile/share/fonts/")))
     ; ; (setf xft:*font-dirs* '("/usr/share/fonts/"))
     (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
     (xft:cache-fonts)
-    (set-font (make-instance 'xft:font :family "mononoki" :subfamily "Italic" :size 12)))
+    (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
 
-;; Tray
-(ql:quickload :xembed)
-(load-module "stumptray")
-(when *initializing*
-    (stumptray:stumptray))
 
 ;; General settings
 (setf *message-window-gravity* :center
@@ -49,28 +56,14 @@
 
 ;; Groups
 (when *initializing*
-    (grename "Web")
-    (gnewbg "Code")
-    (gnewbg "General")
-    (gnewbg "Gaming"))
+    (grename "󰖟 Web")
+    (gnewbg "󰯂 Code")
+    (gnewbg "󰗃 General")
+    (gnewbg " Gaming"))
 
 (if *initializing*
   (print "Initializing")
   (print "Not Initializing"))
-
-;; Colors
-(setf *colors*
-      '("#ffffff"        ;
-	"#111111"        ;
-        "#adadad"        ;
-        "#91ba74"        ;
-	"#61afef"        ;
-        "#fabd2f"        ;
-	"#c678dd"        ;
-	"#cc4a0e"        ;
-	"#259fb6"))      ;
-
-(update-color-map (current-screen))
 
 (defparameter *msg-bg-color* (nth 1 *colors*))
 (defparameter *msg-fg-color* (nth 0 *colors*))
@@ -84,33 +77,66 @@
 (setf *mode-line-border-color* *mode-line-bg-color*)
 (setf *mode-line-foreground-color* *mode-line-fg-color*)
 ; Default value: %a %b %e %K:%M%S
-;(setf *time-modeline-string* "^2^f1^f0^n %H:%M")
-(setf *time-modeline-string* "%a %b %e %k:%M:%S")
+(setf *time-modeline-string* "^2󰸗 %a %b %e | ^n %k:%M:%S")
+(setf *mode-line-highlight-template* "^R~A^r")
+(setf *group-format* " %t ")
+(setf *window-format* " %n %20t%m")
 
 (setf *mode-line-timeout* 1)
 
 (defvar *mode-line-media-string* "")
 
+(defun get-volume-icon (volume)
+  (or
+    (cdr
+      (assoc
+	volume
+	'(("0%" . "󰝟")
+	  ("muted" . "󰝟")
+	  ("100%" . "󰕾"))
+	:test #'equal))
+    "󰖀"))
+
+(defun format-volume (volume)
+  (format nil "~a ~a" (get-volume-icon volume) volume))
+
+(defun get-playing-status-icon (status)
+  (or
+    (cdr
+      (assoc
+	status
+	'(("Playing" . "")
+	  ("Paused" . ""))
+	:test #'equal))
+    ""))
+
+(defun trim-string (string-to-trim desired-length)
+  (if (< (length string-to-trim) desired-length)
+    string-to-trim
+    (concat (subseq string-to-trim 0 desired-length) "-")))
+
 (defun set-mode-line-media-string ()
   (sb-thread:make-thread 
     (lambda ()
-	(let ((volume-string (remove #\Newline (run-shell-command "pamixer --get-volume-human" t)))
-	       (player-status (remove #\Newline (run-shell-command "playerctl status" t)))
-	       (media-title (remove #\Newline (run-shell-command "playerctl metadata title" t))))
-	    (setf *mode-line-media-string* (format nil "^2[^n Volume: ~a ^2|^n ~a:^n ~a ^2]" volume-string player-status media-title)))))
+	(let ((volume-string 
+		(format-volume (remove #\Newline (run-shell-command "pamixer --get-volume-human" t))))
+	       (player-status (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))))
+	       (media-title (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20)))
+	    (setf *mode-line-media-string* 
+		  (format nil "^2[^n ~a ^2|^n ^2~a ^n ~a ^2]" volume-string player-status media-title)))))
   *mode-line-media-string*)
 
 (setf *screen-mode-line-format*
-      (list "^2[^n%g^2]^n "       ; groups
+      (list "^2[ ^n%g^2 ]^n "       ; groups
 	    "%W"              ; windows
 	    "^>"              ; right align
 ;;	    "%S"              ; swank status
 ;;	    "%B"              ; battery percentage
 	    "%d "
 	    '(:eval (set-mode-line-media-string))
-	    "    "))
+	    "%T"))
 
-;; Enable the mode line
+; Enable the mode line
 (enable-mode-line (current-screen) (current-head) t)
 
 (setf *startup-message* "^5 Welcome Home :)
@@ -132,17 +158,6 @@
 (add-hook *destroy-window-hook* 'on-window-destroy)
 ; Source x profile
 (run-shell-command "source ~/.xprofile")
-
-; Environment variables
-; (defun setenv (var value)
-;   (setf (getenv var) value))
-
-; (setenv "BROWSER" "firefox")
-; (setenv "TERMINAL" "alacritty")
-; (setenv "XDG_DATA_DIRS" 
-; 	(format nil "~a:~a" 
-; 		(getenv "XDG_DATA_DIRS") 
-; 		(format nil "~a~a" (getenv "HOME") "/.local/share/flatpak/exports/share")))
 
 (when *initializing*
     (set-random-wallpaper))
@@ -186,23 +201,24 @@
   (act-on-matching-windows (w) (stumpwm::title-re-p w "") w))
 
 (defun format-window (window)
-  (format nil "~a | ~a" (group-name (slot-value window 'group)) (slot-value window 'title)))
+  (format nil "~9,a | ~a" (group-name (slot-value window 'group)) (slot-value window 'title)))
+
+(defun select-from-windows ()
+  (let* ((windows (get-all-windows)) 
+	 (windows-list (loop for window in windows collect (list (format-window window) window))))
+    (second (select-from-menu (current-screen) windows-list))))
 
 (defcommand find-window () ()
-  (let* (
-	 (windows (get-all-windows)) 
-	 (window-titles (loop for window in windows collect (slot-value window 'title)))
-	 (selected-window-title (select-from-menu (current-screen) window-titles)))
-    (run-or-raise "" `(:title ,(format nil "~a" selected-window-title)) T T)))
+    (let ((selected-window (select-from-windows)))
+      (when selected-window
+	(gselect (slot-value (slot-value selected-window 'group) 'stumpwm::name))
+	(really-raise-window selected-window))))
 
 (defcommand pull-window () ()
-  (let* (
-	 (windows (get-all-windows))
-	 (window-titles (loop for window in windows collect (list (format-window window) window)))
-	 (selected-window-title (select-from-menu (current-screen) window-titles)))
-    (when selected-window-title
-	(move-windows-to-group (list (second selected-window-title)) (current-group))
-	(focus-window (second selected-window-title)))))
+  (let ((selected-window (select-from-windows)))
+    (when selected-window
+	(move-windows-to-group (list selected-window) (current-group))
+	(focus-window selected-window))))
 
 (defcommand start-replay-buffer () ()
 	    (run-shell-command "obs --startreplaybuffer --minimize-to-tray"))
@@ -285,3 +301,21 @@
 		     :command "exec firefox"
 		     :map *root-map*
 		     :key (kbd "b"))
+
+(defcommand loadguixrc () ()
+	(load (merge-pathnames ".config/guix/home/stumpwm/init.lisp"
+			   (user-homedir-pathname))))
+
+;; Tray
+(ql:quickload :xembed)
+(load-module "stumptray")
+(setf stumptray::*tray-win-background* (second *colors*))
+(setf stumptray::*tray-viwin-background* (second *colors*))
+(setf stumptray::*tray-hiwin-background* (second *colors*))
+(setf stumptray::*tray-cursor-color* (first *colors*))
+(when *initializing*
+    (stumptray:stumptray))
+
+;; Gaps
+(load-module "swm-gaps")
+(swm-gaps:toggle-gaps-on)

@@ -20,3 +20,7 @@
                          (define-keyscheme-map "vim" (list :import %slot-value%)
                                                nkeymaps/keyscheme:vi-normal
                                                (list "C-d" 'scroll-page-up)))))
+
+(define-configuration browser
+  ((theme theme:+dark-theme+ :doc "Setting dark theme.
+The default is theme:+light-theme+.")))
