@@ -39,6 +39,10 @@
   (timezone "Europe/Oslo")
   (keyboard-layout (keyboard-layout "us"))
   (host-name "K80")
+  (hosts-file
+    (plain-file  "hosts"
+                 (string-append (local-host-entries host-name)
+                                "127.0.0.1 www.youtube.com")))
 
   ;; The list of user accounts ('root' is implicit).
   (groups (cons* (user-group (name "sudo"))
@@ -74,7 +78,7 @@
                  ;; To configure OpenSSH, pass an 'openssh-configuration'
                  ;; record as a second argument to 'service' below.
                  (service kernel-module-loader-service-type
-                          '("v4l2loopback-linux-module" "amdgpu-firmware"))
+                          '("v4l2loopback" "amdgpu"))
                  (service openssh-service-type)
                  ;(service network-manager-service-type)
                  ;(service wpa-supplicant-service-type)
@@ -83,11 +87,23 @@
                  (service cups-service-type)
                  (service bluetooth-service-type)
                  (service docker-service-type))
-                 ;(service gdm-service-type))
-
-           ;; This is the default list of services we
-           ;; are appending to.
-           %desktop-services))
+           (modify-services %desktop-services
+                 (gdm-service-type
+                   config =>
+                    (gdm-configuration
+                      (inherit config)
+                      (xorg-configuration 
+                        (xorg-configuration
+                          (drivers '())
+                          (extra-config '(
+"Section \"Device\"
+        Identifier \"AMD\"
+        Driver \"amdgpu\"
+        Option \"TearFree\" \"true\"
+        Option \"DRI\" \"3\"
+        Option \"VariableRefresh\" \"true\"
+EndSection")))))))))
+                                             ; Option \"TearFree\" \"true\"
   (bootloader (bootloader-configuration
                 (bootloader grub-efi-bootloader)
                 (targets (list "/boot/efi"))

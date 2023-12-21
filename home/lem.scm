@@ -157,7 +157,7 @@
           (build-system asdf-build-system/source))))
 
 (define-public sbcl-micros
-    (let ((commit "ed264a27262baeed493cdde338873bf4afc3721c"))
+    (let ((commit "6caada08e3e0f6e9389142d7a96f8685923a9e81"))
         (package
           (version "1.0")
           (synopsis "thing")
@@ -172,9 +172,17 @@
                      (url "https://github.com/lem-project/micros")
                      (commit commit)))
               (sha256 
-                (base32 "0qqn0hqm9ppgn3wic4ln9b9gss5njgc8fdwmsqiflqy338m383ln"))
+                (base32 "1amf1n5n72gc1pns59g3lq36nghcgif5ipsahjx1m9pmy0xpvhcz"))
               (file-name (git-file-name "sbcl-micros" version))))
-          (build-system asdf-build-system/source))))
+          (arguments
+            (list
+              #:phases
+              #~(modify-phases %standard-phases
+                 (add-after 'unpack 'override-ql
+                   (lambda* _
+                        (substitute* (find-files (getcwd) "\\.lisp$")
+                                     (("ql:quickload") "asdf:load-system")))))))
+          (build-system asdf-build-system/sbcl))))
 
 (define-public sbcl-inquisitor
     (let ((commit "423fa9bdd4a68a6ae517b18406d81491409ccae8"))
@@ -234,7 +242,7 @@
           (build-system asdf-build-system/sbcl))))
 
 (define-public lem
-    (let ((commit ""))
+    (let ((commit "7aadfce7f308e2808c24076c785ec05132598a4f"))
       (package
         (name "lem")
         (version "1.2")
@@ -248,46 +256,26 @@
                   (sha256 
                     (base32 "0a1n1jznc0hc8lngmn5vlpnmw1xmw2vv1cgxp3a59f7qc5bd0smr"))
                   (file-name (git-file-name "sbcl-lem" version))))
-        (build-system copy-build-system)
+        (build-system asdf-build-system/sbcl)
+        (outputs '("out" "lib"))
         (arguments
           (list
-              #:phases
-              #~(modify-phases %standard-phases
-                    (add-after 'unpack 'build
-                        (lambda _
-                          (setenv "HOME" "/tmp")
-                          (invoke "sbcl" "--noinform" "--non-interactive" "--no-userinit" "--no-sysinit"
-                                  "--eval" "(require 'asdf)"
-                                  ; "--eval" "(setf asdf:*central-registry* (append '(*default-pathname-defaults*) asdf:*central-registry*))"
-                                  "--eval" "(asdf:initialize-source-registry `(:source-registry (:tree ,*default-pathname-defaults*) :inherit-configuration))"
-                                  "--eval" "(defpackage :ql (:use :cl) (:export :quickload))"
-                                  "--eval" "(in-package :ql)"
-                                  "--eval" "(setf (fdefinition 'quickload) #'asdf:load-system)"
-                                  "--eval" "(in-package :cl-user)"
-                                  ; "--eval" "(asdf:load-system 'lem-base)"
-                                  "--eval" "(asdf:load-system 'lem-sdl2)"
-                                  "--eval" "(lem:init-at-build-time)"
-                                  "--eval" "(sb-ext:save-lisp-and-die \"lem\" :toplevel #'lem:main :executable t)"))))
-
-
-; sbcl --eval "(require 'asdf)" --eval "(setf asdf:*central-registry* (append '(*default-pathname-defaults*) asdf:*central-registry*))" --eval "(asdf:initialize-source-registry \`(:source-registry (:tree ,*default-pathname-defaults*) :inherit-configuration))" --eval "(defpackage :ql (:use :cl) (:export :quickload))" --eval "(in-package :ql)" --eval "(setf (fdefinition 'quickload) #'asdf:load-system)" --eval "(in-package :cl-user)" --eval "(asdf:load-system 'lem-sdl2)" --eval "(lem:init-at-build-time)" --eval "(sb-ext:save-lisp-and-die \"lem\" :toplevel #'lem:main :executable t)"
-
-
-; sbcl 
-; (require 'asdf) 
-; (setf asdf:*central-registry* (append '(*default-pathname-defaults*) asdf:*central-registry*)) 
-; (asdf:initialize-source-registry `(:source-registry (:tree ,*default-pathname-defaults*) :inherit-configuration)) 
-; (defpackage :ql (:use :cl) (:export :quickload)) 
-; (in-package :ql) 
-; (setf (fdefinition 'quickload) #'asdf:load-system) 
-; (in-package :cl-user) 
-; (asdf:load-system 'lem-sdl2) 
-; (lem:init-at-build-time) 
-; (sb-ext:save-lisp-and-die "lem" :toplevel #'lem:main :executable t)
-
-            #:install-plan
-            ''(("lem" "bin/")))
-            )
+            #:asd-systems (list "lem-sdl2" "lem-base")
+            #:phases
+            #~(modify-phases %standard-phases
+                             (add-after 'unpack 'override-ql
+                                        (lambda* _
+                                                 (substitute* (find-files (getcwd) "\\.lisp$")
+                                                              (("ql:quickload") "asdf:load-system"))))
+                             (add-after 'override-ql 'redirect-home
+                                        (lambda _
+                                          (setenv "HOME" "/tmp")))
+                             (add-after 'create-asdf-configuration 'build-program
+                                        (lambda* (#:key outputs #:allow-other-keys)
+                                                 (build-program
+                                                   (string-append (assoc-ref outputs "out") "/bin/lem")
+                                                   outputs
+                                                   #:entry-program '((lem:main) 0)))))))
         (inputs
           (list cl-sdl2
                 cl-sdl2-image
@@ -340,7 +328,11 @@
                 sbcl-dexador
                 sbcl-sblint))
         (propagated-inputs
-          (list sbcl))
+          (list 
+            sbcl
+            cl-sdl2
+            cl-sdl2-image
+            cl-sdl2-ttf))
         (synopsis "Lem is an IDE for common lisp")
         (description "IDE for common lisp yay")
         (home-page "https://www.gnu.org/software/hello/")
