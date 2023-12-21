@@ -70,7 +70,7 @@
                         (".tmux-set-colors.conf" ,(local-file "./tmux-set-colors.conf"))
                         (".vimrc" ,(local-file "./vimrc"))
                         (".latexmkrc" ,(local-file "./latexmkrc"))
-                        (".lem" ,(local-file "./lem" #:recursive? #t))
+                        (".lem/init.lisp" ,(local-file "./lem/init.lisp"))
                         (".gitconfig" ,(local-file "./gitconfig"))
                         (".bash_aliases" ,(local-file "./bash_aliases"))
                         ; (".bashrc" ,(local-file "./bashrc"))

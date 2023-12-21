@@ -37,3 +37,5 @@ alias sshf='ssh andy@fuglesteg.mywire.org'
 # Apt
 alias apt='sudo apt'
 alias apti='sudo apt install'
+
+alias fehdir='feh --thumbnail --index-info ""'

@@ -16,6 +16,7 @@ vim.opt.updatetime = 300
 
 -- Basic settings
 -- set number
+vim.opt.title = true
 vim.opt.number = true
 vim.opt.syntax = "on"
 
