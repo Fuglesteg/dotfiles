@@ -27,6 +27,7 @@
   (gnu packages image)
   (gnu packages compton)
   (gnu packages web-browsers)
+  (gnu packages lisp-xyz)
   (nongnu packages linux))
 
 (use-service-modules cups desktop networking ssh linux)
@@ -39,10 +40,10 @@
   (timezone "Europe/Oslo")
   (keyboard-layout (keyboard-layout "us"))
   (host-name "K80")
-  (hosts-file
-    (plain-file  "hosts"
-                 (string-append (local-host-entries host-name)
-                                "127.0.0.1 www.youtube.com")))
+  ;(hosts-file
+    ;(plain-file  "hosts"
+                 ;(string-append (local-host-entries host-name)
+                                ;"127.0.0.1 www.youtube.com")))
 
   ;; The list of user accounts ('root' is implicit).
   (groups (cons* (user-group (name "sudo"))
@@ -64,7 +65,7 @@
                     (list amdgpu-firmware xf86-video-amdgpu)
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
-                    (list sbcl-stumpwm-ttf-fonts font-dejavu font-mononoki)
+                    (list sbcl-stumpwm-ttf-fonts sbcl-clx-truetype font-dejavu font-mononoki)
                     %base-packages))
   ; (setuid-programs
   ;   (append (list (setuid-program (program obs)))
@@ -105,7 +106,7 @@
 EndSection")))))))))
                                              ; Option \"TearFree\" \"true\"
   (bootloader (bootloader-configuration
-                (bootloader grub-efi-bootloader)
+                (bootloader grub-efi-removable-bootloader)
                 (targets (list "/boot/efi"))
                 (keyboard-layout keyboard-layout)))
   (swap-devices (list (swap-space
