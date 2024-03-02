@@ -1,5 +1,8 @@
 (in-package :lem-user)
 
+;(sdl2-ffi.functions:sdl-set-window-opacity
+ ;(lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 0.1)
+
 (lem-vi-mode:vi-mode)
 
 (defvar *leader* "Space")
@@ -31,7 +34,8 @@
 (lmap "f s" 'lem:save-current-buffer)
 (lmap "f S" 'lem:save-some-buffers)
 
-(lmap "Tab" 'lem:switch-to-buffer)
+
+(lmap "Tab" 'lem:previous-buffer)
 
 (lmap ";" 'lem/language-mode::comment-or-uncomment-region)
 
