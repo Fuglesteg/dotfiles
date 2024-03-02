@@ -33,7 +33,7 @@
 (init-load-path *module-dir*)
 
 ;; Fonts
-(require :clx-truetype)
+(asdf:load-system "clx-truetype")
 (load-module "ttf-fonts")
 (when *initializing*
     ; (require :ttf-fonts)
@@ -61,14 +61,9 @@
     (gnewbg "󰗃 General")
     (gnewbg " Gaming"))
 
-(if *initializing*
-  (print "Initializing")
-  (print "Not Initializing"))
-
 (defparameter *msg-bg-color* (nth 1 *colors*))
 (defparameter *msg-fg-color* (nth 0 *colors*))
 (defparameter *msg-border-color* (nth 0 *colors*))
-
 
 ;; Mode Line
 (defparameter *mode-line-bg-color* (nth 1 *colors*))
@@ -110,6 +105,25 @@
 	:test #'equal))
     ""))
 
+(defmacro string-case (expression &rest forms)
+  `(cond
+      ,@(loop for form in forms collect
+          `((string= ,expression ,(first form)) ,(second form)))))
+
+(defun get-microphone-icon (status)
+  (string-case status
+	  ("no" "")
+	  ("yes" "")))
+
+(defun get-default-source ()
+  (remove #\Newline (run-shell-command "pactl get-default-source" t)))
+
+(defun get-microphone-status ()
+  (string-left-trim "Mute: " (remove #\Newline (run-shell-command (format nil "pactl get-source-mute ~a" (get-default-source)) t))))
+
+(defcommand toggle-mic-mute () ()
+      (run-shell-command (format nil "pactl set-source-mute ~a toggle" (get-default-source))))
+
 (defun trim-string (string-to-trim desired-length)
   (if (< (length string-to-trim) desired-length)
     string-to-trim
@@ -121,13 +135,14 @@
 	(let ((volume-string 
 		(format-volume (remove #\Newline (run-shell-command "pamixer --get-volume-human" t))))
 	       (player-status (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))))
+	       (microphone-icon (get-microphone-icon (get-microphone-status)))
 	       (media-title (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20)))
 	    (setf *mode-line-media-string* 
-		  (format nil "^2[^n ~a ^2|^n ^2~a ^n ~a ^2]" volume-string player-status media-title)))))
+		  (format nil "^2(^n ~a ~a ^2|^n ^2~a ^n ~a ^2)" microphone-icon volume-string player-status media-title)))))
   *mode-line-media-string*)
 
 (setf *screen-mode-line-format*
-      (list "^2[ ^n%g^2 ]^n "       ; groups
+      (list "^2( ^n%g^2 )^n "       ; groups
 	    "%W"              ; windows
 	    "^>"              ; right align
 ;;	    "%S"              ; swank status
@@ -270,7 +285,16 @@
 (defcommand hello () ()
 	    (window-send-string "ø"))
 
+(defcommand window-send-keyname (keyname) (:rest)
+  "hello"
+  (stumpwm::send-fake-key (current-window) 
+	(stumpwm::make-key :keysym (stumpwm::stumpwm-name->keysym keyname))))
 
+(defun send-ae ()
+  (stumpwm::send-fake-key (current-window)
+	(stumpwm::make-key :keysym (stumpwm::stumpwm-name->keysym "ae"))))
+
+(t-define-key "M-'" "window-send-keyname ae")
 (set-gselect-prefix "M")
 (set-wselect-prefix "M")
 (set-window-focus-keys "h" "j" "k" "l")
@@ -291,6 +315,7 @@
 (tr-define-key "f" "toggle-float")
 (tr-define-key "a" "toggle-always-on-top")
 (r-define-key "F10" "hello")
+(t-define-key "s-F4" "toggle-mic-mute")
 
 (defprogram-shortcut term
 		     :command "exec alacritty"
