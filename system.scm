@@ -76,35 +76,44 @@
   (kernel-loadable-modules (list v4l2loopback-linux-module))
   (services
    (append (list
-                 ;; To configure OpenSSH, pass an 'openssh-configuration'
-                 ;; record as a second argument to 'service' below.
-                 (service kernel-module-loader-service-type
-                          '("v4l2loopback" "amdgpu"))
-                 (service openssh-service-type)
-                 ;(service network-manager-service-type)
-                 ;(service wpa-supplicant-service-type)
-                 ;(service ntp-service-type)
-                 ; (service alsa-service-type)
-                 (service cups-service-type)
-                 (service bluetooth-service-type)
-                 (service docker-service-type))
+            ;; To configure OpenSSH, pass an 'openssh-configuration'
+            ;; record as a second argument to 'service' below.
+            (service kernel-module-loader-service-type
+                     '("v4l2loopback" "amdgpu"))
+            (service openssh-service-type)
+            ;(service network-manager-service-type)
+            ;(service wpa-supplicant-service-type)
+            ;(service ntp-service-type)
+            ; (service alsa-service-type)
+            (service cups-service-type)
+            (service bluetooth-service-type)
+            (service docker-service-type))
            (modify-services %desktop-services
-                 (gdm-service-type
-                   config =>
-                    (gdm-configuration
-                      (inherit config)
-                      (xorg-configuration 
-                        (xorg-configuration
-                          (drivers '())
-                          (extra-config '(
-"Section \"Device\"
+                            (gdm-service-type
+                             config =>
+                             (gdm-configuration
+                              (inherit config)
+                              (xorg-configuration 
+                               (xorg-configuration
+                                (drivers '())
+                                (extra-config '(
+                                                "Section \"Device\"
         Identifier \"AMD\"
         Driver \"amdgpu\"
         Option \"TearFree\" \"true\"
         Option \"DRI\" \"3\"
         Option \"VariableRefresh\" \"true\"
-EndSection")))))))))
-                                             ; Option \"TearFree\" \"true\"
+EndSection"))))))
+                            (guix-service-type 
+                             config => 
+                             (guix-configuration
+                              (inherit config)
+                              (substitute-urls
+                               (append (list "https://substitutes.nonguix.org")
+                                       %default-substitute-urls))
+                              (authorized-keys
+                               (append (list (local-file "nonguix-signing-key.pub"))
+                                       %default-authorized-guix-keys)))))))
   (bootloader (bootloader-configuration
                 (bootloader grub-efi-removable-bootloader)
                 (targets (list "/boot/efi"))
