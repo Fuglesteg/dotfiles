@@ -36,9 +36,11 @@ return {
         lsp.set_server_config({
             single_file_support = true,
         })
-        lsp.skip_server_setup({"jdtls"})
 
-        lsp.nvim_workspace()
+        -- OLD Version
+        -- lsp.skip_server_setup({"jdtls"})
+
+        -- lsp.nvim_workspace()
 
         local cmp = require("cmp")
         local luasnip = require("luasnip")
