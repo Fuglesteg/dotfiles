@@ -81,11 +81,11 @@ return {
                 completeopt = "menu,menuone,noinsert,noselect",
             },
             sources = {
-                { name = "nvim_lsp" },
+                { name = "nvim_lsp", priority = 8 },
                 -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better, using own plugin for this (ray-x/lsp_signature.nvim)
-                { name = "buffer" },
+                { name = "luasnip", priority = 8 },
+                { name = "buffer", priority = 7},
                 { name = "path" },
-                { name = "luasnip" },
                 { name = "nvim_lua" },
             },
             mapping = cmp.mapping.preset.insert({
