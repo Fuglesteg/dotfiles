@@ -74,11 +74,20 @@ return {
                 fallback()
             end
         end
+        local function next_item()
+            cmp.complete()
+            cmp.select_next_item({behavior = cmp.SelectBehavior.Select})
+        end
+        local function prev_item()
+            cmp.complete()
+            cmp.select_prev_item({behavior = cmp.SelectBehavior.Select})
+        end
         -- lsp.setup_nvim_cmp(
         local cmp_config = {
-            preselect = cmp.PreselectMode.None,
+            -- preselect = cmp.PreselectMode.None,
             completion = {
                 completeopt = "menu,menuone,noinsert,noselect",
+                autocomplete = false
             },
             sources = {
                 { name = "nvim_lsp", priority = 8 },
@@ -89,14 +98,12 @@ return {
                 { name = "nvim_lua" },
             },
             mapping = cmp.mapping.preset.insert({
-                ['<C-s>'] = cmp.mapping.complete(),
-                ['<C-space>'] = cmp.mapping.complete(),
-                ["<Nul>"] = cmp.mapping.complete(),
-                ['<CR>'] = cmp.mapping.confirm({ select = false }),
-                ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
-                ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
-                ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
-                ["<C-k>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
+                -- ['<C-s>'] = cmp.mapping.complete(),
+                -- ['<C-space>'] = cmp.mapping.complete(),
+                -- ["<Nul>"] = cmp.mapping.complete(),
+                ["<C-y>"] = cmp.mapping.confirm({ select = false }),
+                ["<C-n>"] = next_item,
+                ["<C-p>"] = prev_item,
             }),
             snippet = {
                 expand = function(args)
