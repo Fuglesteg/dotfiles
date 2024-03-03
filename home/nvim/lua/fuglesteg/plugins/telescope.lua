@@ -4,9 +4,6 @@ return {
         {
             'nvim-telescope/telescope-fzf-native.nvim',
             build = "make"
-            -- build = [[cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && \
-            --     cmake --build build --config Release && \
-            --     cmake --install build --prefix build]]
         }
     },
     config = function()
@@ -35,7 +32,6 @@ return {
                 }
             },
         }
-        telescope.load_extension("file_browser")
         telescope.load_extension("fzf")
         telescope.load_extension("possession")
     end,
