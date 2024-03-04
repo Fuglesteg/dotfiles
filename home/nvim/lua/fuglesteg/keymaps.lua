@@ -169,6 +169,11 @@ wk.register({
         m = { term.setTermAsMain, "Set current terminal as main" },
         e = { term.executeSelection, "Execute selection" },
     },
+    h = {
+        name = "+Http",
+        s = { require("rest-nvim").run, "Send request" },
+        e = { require("rest-nvim").select_env, "Select environment" }
+    },
     p = {
         name = "+Projects",
         p = { ":Telescope projects<cr>", "Recent projects" }
