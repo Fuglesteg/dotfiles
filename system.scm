@@ -27,6 +27,7 @@
   (gnu packages image)
   (gnu packages compton)
   (gnu packages web-browsers)
+  (gnu packages lisp-xyz)
   (nongnu packages linux))
 
 (use-service-modules cups desktop networking ssh linux)
@@ -39,10 +40,10 @@
   (timezone "Europe/Oslo")
   (keyboard-layout (keyboard-layout "us"))
   (host-name "K80")
-  (hosts-file
-    (plain-file  "hosts"
-                 (string-append (local-host-entries host-name)
-                                "127.0.0.1 www.youtube.com")))
+  ;(hosts-file
+    ;(plain-file  "hosts"
+                 ;(string-append (local-host-entries host-name)
+                                ;"127.0.0.1 www.youtube.com")))
 
   ;; The list of user accounts ('root' is implicit).
   (groups (cons* (user-group (name "sudo"))
@@ -64,7 +65,7 @@
                     (list amdgpu-firmware xf86-video-amdgpu)
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
-                    (list sbcl-stumpwm-ttf-fonts font-dejavu font-mononoki)
+                    (list sbcl-stumpwm-ttf-fonts sbcl-clx-truetype font-dejavu font-mononoki)
                     %base-packages))
   ; (setuid-programs
   ;   (append (list (setuid-program (program obs)))
@@ -75,37 +76,46 @@
   (kernel-loadable-modules (list v4l2loopback-linux-module))
   (services
    (append (list
-                 ;; To configure OpenSSH, pass an 'openssh-configuration'
-                 ;; record as a second argument to 'service' below.
-                 (service kernel-module-loader-service-type
-                          '("v4l2loopback" "amdgpu"))
-                 (service openssh-service-type)
-                 ;(service network-manager-service-type)
-                 ;(service wpa-supplicant-service-type)
-                 ;(service ntp-service-type)
-                 ; (service alsa-service-type)
-                 (service cups-service-type)
-                 (service bluetooth-service-type)
-                 (service docker-service-type))
+            ;; To configure OpenSSH, pass an 'openssh-configuration'
+            ;; record as a second argument to 'service' below.
+            (service kernel-module-loader-service-type
+                     '("v4l2loopback" "amdgpu"))
+            (service openssh-service-type)
+            ;(service network-manager-service-type)
+            ;(service wpa-supplicant-service-type)
+            ;(service ntp-service-type)
+            ; (service alsa-service-type)
+            (service cups-service-type)
+            (service bluetooth-service-type)
+            (service docker-service-type))
            (modify-services %desktop-services
-                 (gdm-service-type
-                   config =>
-                    (gdm-configuration
-                      (inherit config)
-                      (xorg-configuration 
-                        (xorg-configuration
-                          (drivers '())
-                          (extra-config '(
-"Section \"Device\"
+                            (gdm-service-type
+                             config =>
+                             (gdm-configuration
+                              (inherit config)
+                              (xorg-configuration 
+                               (xorg-configuration
+                                (drivers '())
+                                (extra-config '(
+                                                "Section \"Device\"
         Identifier \"AMD\"
         Driver \"amdgpu\"
         Option \"TearFree\" \"true\"
         Option \"DRI\" \"3\"
         Option \"VariableRefresh\" \"true\"
-EndSection")))))))))
-                                             ; Option \"TearFree\" \"true\"
+EndSection"))))))
+                            (guix-service-type 
+                             config => 
+                             (guix-configuration
+                              (inherit config)
+                              (substitute-urls
+                               (append (list "https://substitutes.nonguix.org")
+                                       %default-substitute-urls))
+                              (authorized-keys
+                               (append (list (local-file "nonguix-signing-key.pub"))
+                                       %default-authorized-guix-keys)))))))
   (bootloader (bootloader-configuration
-                (bootloader grub-efi-bootloader)
+                (bootloader grub-efi-removable-bootloader)
                 (targets (list "/boot/efi"))
                 (keyboard-layout keyboard-layout)))
   (swap-devices (list (swap-space

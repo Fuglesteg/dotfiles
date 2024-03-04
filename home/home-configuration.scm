@@ -45,7 +45,7 @@
                                             "bibata-cursor-theme"
                                             "tmux"
                                             "unzip"
-                                            "exa"
+                                            "eza"
                                             "alacritty"))
             (list (load "mononoki.scm"))))
 

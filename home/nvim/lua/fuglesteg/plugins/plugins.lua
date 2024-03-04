@@ -9,7 +9,6 @@ return {
     'amadeus/vim-convert-color-to',
     'tpope/vim-surround',
     'tpope/vim-commentary',
-    "nvim-telescope/telescope-file-browser.nvim",
     'mrjones2014/smart-splits.nvim',
     'voldikss/vim-floaterm',
 

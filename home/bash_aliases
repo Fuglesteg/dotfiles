@@ -23,8 +23,8 @@ if command -v "dircolors"; then
     alias egrep='egrep --color=auto'
 fi
 
-if command -v "exa"; then
-   alias ls='exa -l --icons'
+if command -v "eza"; then
+   alias ls='eza -l --icons'
 fi
 
 if command -v "google-chrome"; then

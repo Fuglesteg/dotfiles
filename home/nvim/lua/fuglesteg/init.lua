@@ -13,6 +13,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.updatetime = 300
+vim.opt.conceallevel = 2
 
 -- Basic settings
 -- set number

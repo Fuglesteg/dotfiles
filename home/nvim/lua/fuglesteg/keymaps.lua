@@ -89,6 +89,12 @@ local function loadLastSession()
     possession.load(last_session_name)
 end
 
+oil = require("oil")
+
+local function openCwd()
+    oil.open(vim.fn.getcwd())
+end
+
 -- Which-key config
 local wk = require("which-key")
 wk.register({
@@ -99,8 +105,8 @@ wk.register({
         q = { ":wq<cr>", "Write and quit file" },
         Q = { ":wqall<cr>", "Write and quit all files" },
         t = { ":NvimTreeToggle<cr>", "Open NvimTree" },
-        p = { ":Telescope file_browser<cr>", "Open File Browser in cwd" },
-        f = { ":Telescope file_browser path=%:p:h select_buffer=true<cr>", "Open File Browser in directory of open file" },
+        p = { openCwd, "Open File Browser in cwd" },
+        f = { oil.open, "Open File Browser in directory of open file" },
         r = { ":Telescope oldfiles<cr>", "Open recent files" },
         --! = { ":qall!<cr>", "Quit all files" },
     },
