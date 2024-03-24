@@ -2,6 +2,17 @@
 ;; TODO: Override screen timeout when media is playing
 ;; TODO: Norwegian keys
 
+;; UTIL
+(defmacro string-case (expression &rest forms)
+  `(cond
+     ,@(loop for form in forms collect
+                `((string= ,expression ,(first form)) ,(second form)))))
+
+(defun trim-string (string-to-trim desired-length)
+  (if (< (length string-to-trim) desired-length)
+      string-to-trim
+      (concat (subseq string-to-trim 0 desired-length) "-")))
+
 ;; Colors
 (setf *colors*
       '("#ffffff"
@@ -16,10 +27,12 @@
 
 (update-color-map (current-screen))
 
-;; Quicklisp
 (when *initializing*
-    (load (merge-pathnames "quicklisp/setup.lisp"
-			   (user-homedir-pathname))))
+  (sb-thread:make-thread (lambda ()
+                           (loop
+                             (sleep 5)
+                             (ml-update-media-title)))
+                         :name "update-media-title"))
 
 ; Fixes problem in Guix
 (require :asdf)
@@ -77,43 +90,30 @@
 (setf *group-format* " %t ")
 (setf *window-format* " %n %20t%m")
 
+(defvar *ml-media-string* "")
+(defvar *ml-volume* "")
+(defvar *ml-mic* "")
+(defvar *ml-player-status* "")
+(defvar *ml-media-title* "")
+
 (setf *mode-line-timeout* 1)
 
-(defvar *mode-line-media-string* "")
 
-(defun get-volume-icon (volume)
-  (or
-    (cdr
-      (assoc
-	volume
-	'(("0%" . "󰝟")
-	  ("muted" . "󰝟")
-	  ("100%" . "󰕾"))
-	:test #'equal))
-    "󰖀"))
-
-(defun format-volume (volume)
-  (format nil "~a ~a" (get-volume-icon volume) volume))
-
-(defun get-playing-status-icon (status)
-  (or
-    (cdr
-      (assoc
-	status
-	'(("Playing" . "")
-	  ("Paused" . ""))
-	:test #'equal))
-    ""))
-
-(defmacro string-case (expression &rest forms)
-  `(cond
-      ,@(loop for form in forms collect
-          `((string= ,expression ,(first form)) ,(second form)))))
-
+;; MIC
 (defun get-microphone-icon (status)
   (string-case status
 	  ("no" "")
 	  ("yes" "")))
+
+(defun ml-mic ()
+  (let ((microphone-icon (get-microphone-icon (get-microphone-status))))
+    (format-with-on-click-id (concat microphone-icon " ") :ml-mic-on-click nil)))
+
+(defun ml-mic-on-click (code id &rest rest)
+  (declare (ignore id rest))
+  (let ((button (stumpwm::decode-button-code code)))
+    (when (eq button :left-button)
+      (toggle-mic-mute))))
 
 (defun get-default-source ()
   (remove #\Newline (run-shell-command "pactl get-default-source" t)))
@@ -121,35 +121,112 @@
 (defun get-microphone-status ()
   (string-left-trim "Mute: " (remove #\Newline (run-shell-command (format nil "pactl get-source-mute ~a" (get-default-source)) t))))
 
-(defcommand toggle-mic-mute () ()
-      (run-shell-command (format nil "pactl set-source-mute ~a toggle" (get-default-source))))
+(defun ml-update-mic ()
+  (setf *ml-mic* (ml-mic))
+  (ml-update-media-string))
 
-(defun trim-string (string-to-trim desired-length)
-  (if (< (length string-to-trim) desired-length)
-    string-to-trim
-    (concat (subseq string-to-trim 0 desired-length) "-")))
+;; VOLUME
+(defun get-volume-icon (volume)
+  (or
+   (cdr
+    (assoc
+     volume
+     '(("0%" . "󰝟")
+       ("muted" . "󰝟")
+       ("100%" . "󰕾"))
+     :test #'equal))
+   "󰖀"))
 
-(defun set-mode-line-media-string ()
-  (sb-thread:make-thread 
-    (lambda ()
-	(let ((volume-string 
-		(format-volume (remove #\Newline (run-shell-command "pamixer --get-volume-human" t))))
-	       (player-status (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))))
-	       (microphone-icon (get-microphone-icon (get-microphone-status)))
-	       (media-title (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20)))
-	    (setf *mode-line-media-string* 
-		  (format nil "^2(^n ~a ~a ^2|^n ^2~a ^n ~a ^2)" microphone-icon volume-string player-status media-title)))))
-  *mode-line-media-string*)
+(defun get-volume ()
+  (remove #\Newline (run-shell-command "pamixer --get-volume-human" t)))
+
+(defun format-volume (volume)
+  (format nil "~a ~a " (get-volume-icon volume) volume))
+
+(defun ml-volume ()
+  (format-with-on-click-id (format-volume (get-volume)) :ml-volume-on-click nil))
+
+(defun ml-volume-on-click (code id &rest rest)
+  (declare (ignore id rest))
+  (let ((button (stumpwm::decode-button-code code)))
+    (case button
+      ((:left-button)
+       (toggle-mute))
+      ((:wheel-up)
+       (increase-volume))
+      ((:wheel-down)
+       (decrease-volume)))))
+
+(defun ml-update-volume ()
+  (setf *ml-volume* (ml-volume))
+  (ml-update-media-string))
+
+;; Player status
+(defun get-playing-status-icon (status)
+  (or
+   (cdr
+    (assoc
+     status
+     '(("Playing" . "")
+       ("Paused" . ""))
+     :test #'equal))
+   ""))
+
+(defun ml-player-status ()
+  (format-with-on-click-id (concat (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))) " ") :ml-player-on-click nil))
+
+(defun ml-update-player-status ()
+  (setf *ml-player-status* (ml-player-status))
+  (ml-update-media-string))
+
+;; Media title
+(defun ml-media-title ()
+  (format-with-on-click-id (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20) :ml-player-on-click nil))
+
+(defun ml-update-media-title ()
+  (setf *ml-media-title* (ml-media-title))
+  (ml-update-media-string))
+
+(defun ml-player-on-click (code id &rest rest)
+  (declare (ignore id rest))
+  (let ((button (stumpwm::decode-button-code code)))
+    (case button
+      ((:left-button)
+       (play-pause))
+      ((:wheel-up)
+       (previous-track))
+      ((:wheel-down)
+       (next-track)))))
+
+;; Media string
+(defun ml-update-media-string ()
+  (setf *ml-media-string* (ml-media-string))
+  (stumpwm::update-all-mode-lines))
+
+(defun ml-media-string ()
+  (format nil "^2(^n ~a~a^2|^n ^2~a^n~a ^2)" *ml-mic* *ml-volume* *ml-player-status* *ml-media-title*))
+
+(defun ml-update-media-string-hard ()
+  (ml-update-volume)
+  (ml-update-mic)
+  (ml-update-player-status)
+  (ml-update-media-title))
+
+;; Register on-click handlers
+(when *initializing*
+  (register-ml-on-click-id :ml-volume-on-click #'ml-volume-on-click)
+  (register-ml-on-click-id :ml-player-on-click #'ml-player-on-click)
+  (register-ml-on-click-id :ml-mic-on-click #'ml-mic-on-click))
+
+(when *initializing* (ml-update-media-string-hard))
 
 (setf *screen-mode-line-format*
       (list "^2( ^n%g^2 )^n "       ; groups
-	    "%W"              ; windows
-	    "^>"              ; right align
-;;	    "%S"              ; swank status
-;;	    "%B"              ; battery percentage
-	    "%d "
-	    '(:eval (set-mode-line-media-string))
-	    "%T"))
+	    "%W"                    ; windows
+	    "^>"                    ; right align
+            "%d "                   ; date and time
+	    '(:eval *ml-media-string*)
+	    "%T"))                  ; stumptray
 
 ; Enable the mode line
 (enable-mode-line (current-screen) (current-head) t)
@@ -187,22 +264,32 @@
   (run-shell-command "rofi -show drun"))
 
 (defcommand play-pause () ()
-    (run-shell-command "playerctl play-pause"))
+  (run-shell-command "playerctl play-pause")
+  (ml-update-player-status))
 
 (defcommand next-track () ()
-    (run-shell-command "playerctl next"))
+  (run-shell-command "playerctl next")
+  (ml-update-media-title))
 
 (defcommand previous-track () ()
-    (run-shell-command "playerctl previous"))
+  (run-shell-command "playerctl previous")
+  (ml-update-media-title))
 
 (defcommand increase-volume () ()
-    (run-shell-command "pamixer --increase 1"))
+  (run-shell-command "pamixer --increase 1")
+  (ml-update-volume))
 
 (defcommand decrease-volume () ()
-    (run-shell-command "pamixer --decrease 1"))
+  (run-shell-command "pamixer --decrease 1")
+  (ml-update-volume))
 
 (defcommand toggle-mute () ()
-    (run-shell-command "pamixer --toggle-mute"))
+  (run-shell-command "pamixer --toggle-mute")
+  (ml-update-volume))
+
+(defcommand toggle-mic-mute () ()
+  (run-shell-command (format nil "pactl set-source-mute ~a toggle" (get-default-source)))
+  (ml-update-mic))
 
 (defcommand screenshot () ()
     (sb-thread:make-thread (lambda () 
@@ -332,7 +419,7 @@
 			   (user-homedir-pathname))))
 
 ;; Tray
-(ql:quickload :xembed)
+(asdf:load-system :xembed)
 (load-module "stumptray")
 (setf stumptray::*tray-win-background* (second *colors*))
 (setf stumptray::*tray-viwin-background* (second *colors*))
