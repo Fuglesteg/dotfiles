@@ -65,6 +65,7 @@
                     (list amdgpu-firmware xf86-video-amdgpu)
                     (list neovim tmux zoxide alacritty git) ; Terminal tools
                     (list feh xrandr rofi pamixer playerctl xscreensaver flameshot picom) ; Desktop utils
+                    (list sbcl-clx-xembed) ; Stumptray
                     (list sbcl-stumpwm-ttf-fonts sbcl-clx-truetype font-dejavu font-mononoki)
                     %base-packages))
   ; (setuid-programs
