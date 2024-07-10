@@ -7,6 +7,14 @@
 (use-modules (gnu home)
              (gnu home services)
              (gnu packages)
+             (gnu packages vim)
+             (gnu packages curl)
+             (gnu packages base)
+             (gnu packages tmux)
+             (gnu packages admin)
+             (gnu packages readline)
+             (gnu packages terminals)
+             (gnu packages rust-apps)
              (gnu services)
              (gnu home services syncthing)
              (guix gexp)
@@ -15,39 +23,18 @@
 (home-environment
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
-  (packages (append (specifications->packages (list "curl"
-                                            "obs"
-                                            "zoxide"
-                                            "syncthing"
-                                            "mesa"
-                                            "feh"
-                                            "vlc"
-                                            "rlwrap"
-                                            "xclip"
-                                            "zathura"
-                                            "zathura-pdf-mupdf"
-                                            "mupdf"
-                                            "ungoogled-chromium"
-                                            "ripgrep"
-                                            "htop"
-                                            "xrandr"
-                                            "nyxt"
-                                            "firefox"
-                                            "pavucontrol"
-                                            "pulseaudio"
-                                            "neovim"
-                                            "fzf"
-                                            "flatpak-xdg-utils"
-                                            "flatpak"
-                                            "xsetroot"
-                                            "hackneyed-x11-cursors"
-                                            "xdg-utils"
-                                            "bibata-cursor-theme"
-                                            "tmux"
-                                            "unzip"
-                                            "eza"
-                                            "alacritty"))
-            (list (load "mononoki.scm"))))
+  (packages (list curl
+                  zoxide
+                  rlwrap
+                  ripgrep
+                  htop
+                  neovim
+                  fzf
+                  tmux
+                  eza
+                  alacritty
+                  glibc-locales
+                  (load "mononoki.scm")))
 
   ;; Below is the list of Home services.  To search for available
   ;; services, run 'guix home search KEYWORD' in a terminal.
@@ -60,6 +47,7 @@
                         ("TERMINAL" . "alacritty")
                         ("XDG_DATA_DIRS" . "$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share")
                         ("VISUAL" . "nvim")
+                        ("GUIX_LOCPATH" . "$HOME/.guix-home/profile/lib/locale")
                         ("PATH" . ,(string-append "$PATH:" "$HOME/.local/bin:"
                                           "$HOME/.cargo/bin:"
                                           "$HOME/.local/share/bob/nvim-bin"))
@@ -72,10 +60,7 @@
                         (".latexmkrc" ,(local-file "./latexmkrc"))
                         (".lem/init.lisp" ,(local-file "./lem/init.lisp"))
                         (".gitconfig" ,(local-file "./gitconfig"))
-                        (".bash_aliases" ,(local-file "./bash_aliases"))
-                        ; (".bashrc" ,(local-file "./bashrc"))
-                        ; (".bash_profile" ,(local-file "./bash_profile"))
-                        ))
+                        (".bash_aliases" ,(local-file "./bash_aliases"))))
       (simple-service 'config-files 
                       home-xdg-configuration-files-service-type
                       `(("nvim" ,(local-file "./nvim" #:recursive? #t))
@@ -85,18 +70,6 @@
                         ("picom" ,(local-file "./picom" #:recursive? #t))))
       (service home-bash-service-type
                (home-bash-configuration
-                 ;           ; (aliases '(("apt" . "sudo apt")
-                 ;           ;            ("apti" . "sudo apt install")
-                 ;           ;            ("cc" . "gcc")
-                 ;           ;            ("dcd" . "docker compose down")
-                 ;           ;            ("dcu" . "docker compose up")
-                 ;           ;            ("dps" . "docker ps")
-                 ;           ;            ("l" . "ls -CF")
-                 ;           ;            ("la" . "ls -A")
-                 ;           ;            ("ll" . "ls -alF")
-                 ;           ;            ("ls" . "exa -l --icons")
-                 ;           ;            ("neovide" . "neovide --multigrid")
-                 ;           ;            ("sshf" . "ssh andy@fuglesteg.mywire.org")))
                  (bashrc (list (local-file "./bashrc" "bashrc")))
                  (bash-profile (list (local-file
                                        "./bash_profile"
