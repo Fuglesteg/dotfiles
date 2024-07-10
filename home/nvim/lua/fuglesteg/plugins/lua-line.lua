@@ -2,7 +2,7 @@ return {
     "nvim-lualine/lualine.nvim",
     config = function()
         local function session_name()
-            return require("possession.session").session_name or ""
+            return require("possession.session").get_session_name() or ""
         end
 
         local function show_buffers()
