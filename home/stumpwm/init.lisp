@@ -2,6 +2,11 @@
 ;; TODO: Override screen timeout when media is playing
 ;; TODO: Norwegian keys
 
+(in-package :stumpwm-user)
+
+;; Require sb-cltl2 with pathname because some weird reason
+(require :sb-cltl2 '(#P"/home/andy/.guix-profile/lib/sbcl/contrib/sb-cltl2.fasl"))
+
 ;; UTIL
 (defmacro string-case (expression &rest forms)
   `(cond
@@ -31,32 +36,37 @@
   (sb-thread:make-thread (lambda ()
                            (loop
                              (sleep 5)
-                             (ml-update-media-title)))
+                             (ml-update-media-title)
+                             (ml-update-player-status)))
                          :name "update-media-title"))
 
 ; Fixes problem in Guix
 (require :asdf)
 (asdf:clear-output-translations)
-(asdf:initialize-output-translations
- '(:output-translations
-   :enable-user-cache
-   :ignore-inherited-configuration))
 
-(set-module-dir "~/.stumpwm.d/modules")
-(init-load-path *module-dir*)
+(asdf:initialize-output-translations
+  '(:output-translations
+     :enable-user-cache
+     :ignore-inherited-configuration))
+
+(asdf:initialize-source-registry
+  '(:source-registry
+    (:tree "/home/andy/.guix-home/profile/share/common-lisp/")
+    ;(:tree "/run/current-system/profile/share/common-lisp/")
+    ;(:tree "/home/andy/.guix-profile/share/common-lisp/")
+     :inherit-configuration))
 
 ;; Fonts
-(asdf:load-system "clx-truetype")
-(load-module "ttf-fonts")
-(when *initializing*
-    ; (require :ttf-fonts)
-    (setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
-    (setf xft:*font-dirs* (list (concat (getenv "HOME") "/.guix-profile/share/fonts/")))
-    ; ; (setf xft:*font-dirs* '("/usr/share/fonts/"))
-    (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
-    (xft:cache-fonts)
-    (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
+; ASDF throws a bunch of errors for some reason
+(handler-bind ((uiop/lisp-build:compile-file-error (lambda (condition) 
+                                                     (invoke-restart 'asdf:accept))))
+  (asdf:load-system :ttf-fonts :force t))
 
+(when *initializing*
+    (setf xft:*font-dirs* `(,(concat (getenv "HOME") "/.guix-home/profile/share/fonts")))
+    (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
+    (xft:cache-fonts) 
+    (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
 
 ;; General settings
 (setf *message-window-gravity* :center
@@ -97,7 +107,6 @@
 (defvar *ml-media-title* "")
 
 (setf *mode-line-timeout* 1)
-
 
 ;; MIC
 (defun get-microphone-icon (status)
@@ -333,7 +342,6 @@
 ;; Key bindings
 (set-prefix-key (kbd "s-space"))
 
-
 ; top level prefix keys
 (defun r-define-key (key command)
     (define-key *root-map* (kbd key) command))
@@ -403,6 +411,7 @@
 (tr-define-key "a" "toggle-always-on-top")
 (r-define-key "F10" "hello")
 (t-define-key "s-F4" "toggle-mic-mute")
+(r-define-key "=" "balance-frames")
 
 (defprogram-shortcut term
 		     :command "exec alacritty"
@@ -419,8 +428,7 @@
 			   (user-homedir-pathname))))
 
 ;; Tray
-(asdf:load-system :xembed)
-(load-module "stumptray")
+(require "stumptray")
 (setf stumptray::*tray-win-background* (second *colors*))
 (setf stumptray::*tray-viwin-background* (second *colors*))
 (setf stumptray::*tray-hiwin-background* (second *colors*))
@@ -429,5 +437,18 @@
     (stumptray:stumptray))
 
 ;; Gaps
-(load-module "swm-gaps")
+(require "swm-gaps")
+;; Head gaps run along the 4 borders of the monitor(s)
+(setf swm-gaps:*head-gaps-size* 0)
+
+;; Inner gaps run along all the 4 borders of a window
+(setf swm-gaps:*inner-gaps-size* 5)
+
+;; Outer gaps add more padding to the outermost borders of a window (touching the screen border)
+(setf swm-gaps:*outer-gaps-size* 20)
+
 (swm-gaps:toggle-gaps-on)
+
+
+; initial keycode 47 (semicolon)
+; (59 58 59 58 0 0 0)
