@@ -6,9 +6,9 @@
              (gnu)
              (gnu home)
              (gnu home services)
+             (gnu home services syncthing)
              (gnu packages)
              (gnu services)
-             (gnu home services syncthing)
              (guix gexp)
              (guix profiles)
              (guix packages)
@@ -16,7 +16,7 @@
              (nongnu packages mozilla)
              (gnu home services shells))
 
-(use-package-modules fonts wm vim video certs version-control linux
+(use-package-modules fonts wm vim video certs version-control linux base
                      gl lisp tmux rust-apps terminals image-viewers
                      xdisorg xorg pulseaudio music image compton
                      web-browsers lisp-xyz pdf freedesktop
@@ -34,7 +34,7 @@
 
 (define development-packages (list curl zoxide syncthing
                                    feh rlwrap ripgrep
-                                   htop neovim fzf
+                                   htop neovim fzf glibc-locales
                                    git zoxide xrandr
                                    tmux unzip eza))
 
@@ -56,6 +56,7 @@
                         ("TERMINAL" . "alacritty")
                         ("XDG_DATA_DIRS" . "$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share")
                         ("VISUAL" . "nvim")
+                        ("GUIX_LOCPATH" . "$HOME/.guix-home/profile/lib/locale")
                         ("PATH" . ,(string-append "$PATH:" "$HOME/.local/bin:"
                                           "$HOME/.cargo/bin:"
                                           "$HOME/.local/share/bob/nvim-bin"))
@@ -78,19 +79,19 @@
                         ("picom" ,(local-file "./picom" #:recursive? #t))))
       (service home-bash-service-type
                (home-bash-configuration
-                (aliases `(("apt" . "sudo apt")
-                           ("apti" . "sudo apt install")
-                           ("cc" . "gcc")
-                           ("dcd" . "docker compose down")
-                           ("dcu" . "docker compose up")
-                           ("dps" . "docker ps")
-                           ("l" . "ls -CF")
-                           ("la" . "ls -A")
-                           ("ll" . "ls -alF")
-                           ("ls" . "eza -l --icons")
-                           ("neovide" . "neovide --multigrid")
-                           ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))))
-                (bashrc (list (local-file "./bashrc" "bashrc")))
-                (bash-profile (list (local-file
-                                     "./bash_profile"
-                                     "bash_profile"))))))))
+                 (aliases `(("apt" . "sudo apt")
+                            ("apti" . "sudo apt install")
+                            ("cc" . "gcc")
+                            ("dcd" . "docker compose down")
+                            ("dcu" . "docker compose up")
+                            ("dps" . "docker ps")
+                            ("l" . "ls -CF")
+                            ("la" . "ls -A")
+                            ("ll" . "ls -alF")
+                            ("ls" . "eza -l --icons")
+                            ("neovide" . "neovide --multigrid")
+                            ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))))
+                 (bashrc (list (local-file "./bashrc" "bashrc")))
+                 (bash-profile (list (local-file
+                                       "./bash_profile"
+                                       "bash_profile"))))))))

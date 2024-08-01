@@ -55,7 +55,7 @@ vmap("<leader>e", term.executeSelection, "Execute selection")
 
 local possession_session = require("possession.session")
 local function saveSessionPrompt()
-    local session_name = possession_session.session_name or ""
+    local session_name = possession_session.get_session_name() or ""
     session_name = vim.fn.input("Session: ", session_name)
     if session_name ~= "" then
         possession_session.save(session_name)
@@ -64,7 +64,7 @@ end
 
 local possession = require("possession")
 local function renameSessionPrompt()
-    local session_name = possession_session.session_name or ""
+    local session_name = possession_session.get_session_name() or ""
     if session_name == "" then
         print("Error: Not currently in a session")
         return
@@ -174,11 +174,6 @@ wk.register({
         b = { ":term<cr>", "Open new terminal in buffer" },
         m = { term.setTermAsMain, "Set current terminal as main" },
         e = { term.executeSelection, "Execute selection" },
-    },
-    h = {
-        name = "+Http",
-        s = { require("rest-nvim").run, "Send request" },
-        e = { require("rest-nvim").select_env, "Select environment" }
     },
     p = {
         name = "+Projects",

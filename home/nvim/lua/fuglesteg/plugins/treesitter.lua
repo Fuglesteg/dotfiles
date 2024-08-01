@@ -10,10 +10,6 @@ return {
                 enable = true
             }
         }
-        -- vim.cmd([[
-        -- set foldmethod=expr
-        -- set foldexpr=nvim_treesitter#foldexpr()
-        -- set nofoldenable
-        -- ]])
+        require("nvim-treesitter.install").prefer_git = true
     end
 }
