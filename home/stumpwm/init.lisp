@@ -1,6 +1,5 @@
-;; TODO: Hide mouse
+;; TODO: Hide mouse - look at guix home service
 ;; TODO: Override screen timeout when media is playing
-;; TODO: Norwegian keys
 
 (in-package :stumpwm-user)
 
@@ -377,19 +376,6 @@
       ,@(loop for i across stumpwm::*window-number-map*
             collect `(t-define-key ,(format nil "~a-~a" prefix i) ,(format nil "select-window-by-number ~a" i)))))
 
-(defcommand hello () ()
-	    (window-send-string "ø"))
-
-(defcommand window-send-keyname (keyname) (:rest)
-  "hello"
-  (stumpwm::send-fake-key (current-window) 
-	(stumpwm::make-key :keysym (stumpwm::stumpwm-name->keysym keyname))))
-
-(defun send-ae ()
-  (stumpwm::send-fake-key (current-window)
-	(stumpwm::make-key :keysym (stumpwm::stumpwm-name->keysym "ae"))))
-
-(t-define-key "M-'" "window-send-keyname ae")
 (set-gselect-prefix "M")
 (set-wselect-prefix "M")
 (set-window-focus-keys "h" "j" "k" "l")
@@ -412,6 +398,20 @@
 (r-define-key "F10" "hello")
 (t-define-key "s-F4" "toggle-mic-mute")
 (r-define-key "=" "balance-frames")
+
+;; Norwegian keys
+
+(asdf:load-system :stump-regkey)
+(stump-regkey:register-keysym (first (xlib:character->keysyms #\å)))
+(t-define-key "M-[" "window-send-string å")
+(t-define-key "M-{" "window-send-string Å")
+(stump-regkey:register-keysym (first (xlib:character->keysyms #\ø)))
+(t-define-key "M-;" "window-send-string ø")
+(t-define-key "M-:" "window-send-string Ø")
+(stump-regkey:register-keysym (first (xlib:character->keysyms #\æ)))
+(t-define-key "M-'" "window-send-string æ")
+(t-define-key "M-\"" "window-send-string Æ")
+
 
 (defprogram-shortcut term
 		     :command "exec alacritty"
