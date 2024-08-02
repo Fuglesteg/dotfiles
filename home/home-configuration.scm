@@ -1,12 +1,12 @@
-(use-modules (ice-9 binary-ports)
+;(define-module (fuglesteg home-services desktop)
+(use-modules (gnu)
              (ice-9 rdelim)
-             (ice-9 receive)
-             (ice-9 eval-string)
-             (web client)
-             (gnu)
+             (ice-9 binary-ports)
              (gnu home)
              (gnu home services)
+             (gnu home services desktop)
              (gnu home services syncthing)
+             (gnu home services shells)
              (gnu packages)
              (gnu services)
              (guix gexp)
@@ -14,7 +14,9 @@
              (guix packages)
              (nongnu packages chromium)
              (nongnu packages mozilla)
-             (gnu home services shells))
+             (fuglesteg packages fonts)
+             (fuglesteg packages lem)
+             (fuglesteg packages stumpwm))
 
 (use-package-modules fonts wm vim video certs version-control linux base
                      gl lisp tmux rust-apps terminals image-viewers
@@ -25,28 +27,24 @@
 
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
+                               sbcl-stumpwm-stump-regkey
                                zathura zathura-pdf-mupdf mupdf
                                xrandr nyxt firefox pavucontrol pulseaudio
                                pamixer playerctl flameshot icedove
                                picom flatpak-xdg-utils flatpak
                                xsetroot hackneyed-x11-cursors xdg-utils
-                               bibata-cursor-theme alacritty (load "mononoki.scm")))
+                               bibata-cursor-theme alacritty))
 
 (define development-packages (list curl zoxide syncthing
                                    feh rlwrap ripgrep
                                    htop neovim fzf glibc-locales
                                    git zoxide xrandr
-                                   tmux unzip eza))
-
-(define lem-package (receive (_ content)
-                         (http-request "https://raw.githubusercontent.com/Fuglesteg/lem-guix-packaging/main/package.scm")
-                       (eval-string content)))
+                                   tmux unzip eza lem font-nerd-mononoki))
 
 ;; TODO: Service that symlinks ~/.xsession to ~/.guix-home/profile/bin/stumpwm
 (home-environment
  (packages (append development-packages
-                   desktop-packages
-                   (list lem-package)))
+                   desktop-packages))
   (services
     (list 
       (service home-syncthing-service-type)
