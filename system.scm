@@ -58,8 +58,8 @@
         Option \"DRI\" \"3\"
         Option \"VariableRefresh\" \"true\"
 EndSection"))))))
-                            (guix-service-type 
-                             config => 
+                            (guix-service-type
+                             config =>
                              (guix-configuration
                               (inherit config)
                               (substitute-urls
