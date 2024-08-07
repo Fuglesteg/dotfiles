@@ -46,7 +46,11 @@ vmap("<", "<gv")
 nmap("gi", ":Telescope lsp_implementations<cr>")
 nmap("gd", ":Telescope lsp_definitions<cr>")
 nmap("gr", ":Telescope lsp_references<cr>")
-nmap("gh", vim.lsp.buf.hover)
+nmap("gh", function() 
+    if not vim.diagnostic.open_float() then 
+        vim.lsp.buf.hover() 
+    end 
+end)
 
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")
