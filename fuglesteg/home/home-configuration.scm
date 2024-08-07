@@ -22,7 +22,7 @@
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps 
                      terminals image-viewers xdisorg xorg 
                      pulseaudio music image compton
-                     web-browsers pdf freedesktop
+                     web-browsers pdf freedesktop lisp-xyz
                      package-management gnome-xyz syncthing gnuzilla)
 
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts

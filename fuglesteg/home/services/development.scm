@@ -5,17 +5,19 @@
                #:use-module (gnu home services)
                #:use-module (gnu home services shells)
                #:use-module (gnu packages)
+               #:use-module (fuglesteg packages lem)
+               #:use-module (fuglesteg packages fonts)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules vim version-control base
+(use-package-modules vim version-control base rust-apps
                      tmux terminals curl syncthing
                      readline admin compression)
 
 (define (home-development-profile-service config)
-  (list curl zoxide syncthing coreutils
-        feh rlwrap ripgrep
+  (list curl syncthing coreutils
+        rlwrap ripgrep
         htop neovim fzf glibc-locales
-        git zoxide xrandr
+        git zoxide
         tmux unzip eza lem font-nerd-mononoki))
 
 (define (home-development-variables-service config)
@@ -25,18 +27,18 @@
     ("EDITOR" . "nvim")))
 
 (define (home-development-files-service config)
-                      `((".tmux.conf" ,(local-file "./tmux.conf"))
-                        (".tmux-set-colors.conf" ,(local-file "./tmux-set-colors.conf"))
-                        (".vimrc" ,(local-file "./vimrc"))
-                        (".lem/init.lisp" ,(local-file "./lem/init.lisp"))
-                        (".gitconfig" ,(local-file "./gitconfig"))
-                        (".inputrc" ,(local-file "./inputrc"))))
+                      `((".tmux.conf" ,(local-file "../tmux.conf"))
+                        (".tmux-set-colors.conf" ,(local-file "../tmux-set-colors.conf"))
+                        (".vimrc" ,(local-file "../vimrc"))
+                        (".lem/init.lisp" ,(local-file "../lem/init.lisp"))
+                        (".gitconfig" ,(local-file "../gitconfig"))
+                        (".inputrc" ,(local-file "../inputrc"))))
 
 (define (home-development-xdg-configuration-files-service config)
-  `(("nvim" ,(local-file "./nvim" #:recursive? #t))))
+  `(("nvim" ,(local-file "../nvim" #:recursive? #t))))
 
 (define (home-development-bash-configuration config)
-  (home-bash-configuration
+  (home-bash-extension
     (aliases `(("apt" . "sudo apt")
                ("apti" . "sudo apt install")
                ("cc" . "gcc")
@@ -49,9 +51,10 @@
                ("ls" . "eza -l --icons")
                ("neovide" . "neovide --multigrid")
                ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))))
-    (bashrc (list (local-file "./bashrc" "bashrc")))
+    ;(environment-variables '(("test" . "t")))
+    (bashrc (list (local-file "../bashrc" "bashrc")))
     (bash-profile (list (local-file
-                          "./bash_profile"
+                          "../bash_profile"
                           "bash_profile")))))
 
 (define fuglesteg-development-service-type
