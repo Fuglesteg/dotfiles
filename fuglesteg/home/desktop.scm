@@ -26,7 +26,7 @@
                      package-management gnome-xyz syncthing gnuzilla)
 
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
-                               sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
+                               sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray ;sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey
                                zathura zathura-pdf-mupdf mupdf
                                xrandr nyxt firefox pavucontrol pulseaudio

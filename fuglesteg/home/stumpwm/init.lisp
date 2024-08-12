@@ -403,9 +403,11 @@
 
 (asdf:load-system :stump-regkey)
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\å)))
+(xlib:display-finish-output *display*)
 (t-define-key "M-[" "window-send-string å")
 (t-define-key "M-{" "window-send-string Å")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\ø)))
+(xlib:display-finish-output *display*)
 (t-define-key "M-;" "window-send-string ø")
 (t-define-key "M-:" "window-send-string Ø")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\æ)))
