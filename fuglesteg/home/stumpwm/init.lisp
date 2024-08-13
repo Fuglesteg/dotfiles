@@ -40,6 +40,7 @@
                          :name "update-media-title"))
 
 ; Fixes problem in Guix
+#|
 (require :asdf)
 (asdf:clear-output-translations)
 
@@ -47,6 +48,7 @@
   '(:output-translations
      :enable-user-cache
      :ignore-inherited-configuration))
+|#
 
 (asdf:initialize-source-registry
   '(:source-registry
