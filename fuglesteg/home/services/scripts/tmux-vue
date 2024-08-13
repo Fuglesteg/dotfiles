@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Sets up tmux with one editor window and one server process window
+
+session_name=$(basename $PWD)
+
+if ! tmux has-session -t $session_name 2> /dev/null; then
+    tmux new-session -ds $session_name -c $PWD -n $session_name
+    tmux new-window -t $session_name:2 -n 'server' 'npm run serve'
+fi
+
+tmux attach-session -t $session_name
