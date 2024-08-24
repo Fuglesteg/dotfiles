@@ -30,17 +30,19 @@
                                  (comment "Andreas Fuglesteg Dale")
                                  (group "users")
                                  (home-directory "/home/andy")
-                                 (supplementary-groups '("wheel" "netdev" "audio"
-                                                         "video" #;"docker" "sudo")))
+                                 (supplementary-groups '("wheel" "netdev" "audio" "kvm"
+                                                         "video" "docker" "sudo")))
                                %base-user-accounts))
-                 (packages (cons* git vim v4l2loopback-linux-module
+                 (packages (cons* git vim
+                                  v4l2loopback-linux-module ; Used for virtual camera in OBS
                                   amdgpu-firmware xf86-video-amdgpu mesa
                                   %base-packages))
                  (kernel-loadable-modules (list v4l2loopback-linux-module))
+                 (initrd-modules (cons "kvm_amd" %base-initrd-modules)) ; Virual machine kernel module
                  (services
                    (append (list
                              (service kernel-module-loader-service-type
-                                      '("v4l2loopback" "amdgpu"))
+                                      '("v4l2loopback" "amdgpu" "kvm"))
                              (service openssh-service-type)
                              (service cups-service-type)
                              (service bluetooth-service-type)

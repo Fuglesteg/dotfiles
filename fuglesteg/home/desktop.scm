@@ -13,6 +13,7 @@
                #:use-module (guix profiles)
                #:use-module (guix packages)
                #:use-module (nongnu packages chromium)
+               #:use-module (nongnu packages chrome)
                #:use-module (nongnu packages mozilla)
                #:use-module (fuglesteg packages fonts)
                #:use-module (fuglesteg packages lem)
@@ -21,17 +22,18 @@
 
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps 
                      terminals image-viewers xdisorg xorg 
-                     pulseaudio music image compton
+                     pulseaudio music image compton glib
                      web-browsers pdf freedesktop lisp-xyz
                      package-management gnome-xyz syncthing gnuzilla)
 
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
-                               sbcl-stumpwm-stump-regkey feh
+                               sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf
                                xrandr nyxt firefox pavucontrol pulseaudio
                                pamixer playerctl flameshot icedove
                                picom flatpak-xdg-utils flatpak
+                               xdg-desktop-portal xdg-dbus-proxy xdg-utils
                                xsetroot hackneyed-x11-cursors xdg-utils
                                bibata-cursor-theme alacritty))
 
