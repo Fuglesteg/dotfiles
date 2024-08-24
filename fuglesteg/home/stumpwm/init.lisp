@@ -1,12 +1,17 @@
-;; TODO: Hide mouse - look at guix home service
-;; TODO: Override screen timeout when media is playing
+;;;; Config file for stumpwm
+;;;; TODO: Hide mouse - look at guix home service
+;;;; TODO: Override screen timeout when media is playing
 
 (in-package :stumpwm-user)
 
-;; Require sb-cltl2 with pathname because some weird reason
+; Require sb-cltl2 with pathname because some weird reason
 (require :sb-cltl2 '(#P"/home/andy/.guix-profile/lib/sbcl/contrib/sb-cltl2.fasl"))
 
-;; UTIL
+(defcommand start-micros () ()
+  (asdf:load-system :micros)
+  (micros:create-server :port 7777))
+
+;;; UTIL
 (defmacro string-case (expression &rest forms)
   `(cond
      ,@(loop for form in forms collect
@@ -31,6 +36,7 @@
 
 (update-color-map (current-screen))
 
+; Background thread for updating mode-line elements
 (when *initializing*
   (sb-thread:make-thread (lambda ()
                            (loop
@@ -405,11 +411,11 @@
 
 (asdf:load-system :stump-regkey)
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\å)))
-(xlib:display-finish-output *display*)
+(xlib:display-force-output *display*)
 (t-define-key "M-[" "window-send-string å")
 (t-define-key "M-{" "window-send-string Å")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\ø)))
-(xlib:display-finish-output *display*)
+(xlib:display-force-output *display*)
 (t-define-key "M-;" "window-send-string ø")
 (t-define-key "M-:" "window-send-string Ø")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\æ)))
@@ -440,7 +446,7 @@
 (when *initializing*
     (stumptray:stumptray))
 
-;; Gaps
+;;; Gaps
 (require "swm-gaps")
 ;; Head gaps run along the 4 borders of the monitor(s)
 (setf swm-gaps:*head-gaps-size* 0)
@@ -453,6 +459,45 @@
 
 (swm-gaps:toggle-gaps-on)
 
+;;; Group templates
 
-; initial keycode 47 (semicolon)
-; (59 58 59 58 0 0 0)
+(defclass group-template ()
+  ((name
+    :accessor group-template-name
+    :initarg :name
+    :initform "group"
+    :type string)
+   (group
+    :accessor group-template-group
+    :initarg :group)))
+
+(defmethod initialize-instance :after ((group-template group-template) &key &allow-other-keys)
+  (initialize-group group-template))
+
+(defgeneric initialize-group (group-template))
+
+(defmethod initialize-group :before ((group-template group-template))
+  (with-accessors ((name group-template-name) (group group-template-group)) group-template
+    (setf group (gnew name))))
+
+(defclass nif-vue (group-template) ())
+
+(defmethod initialize-group ((nif-vue nif-vue))
+  (with-accessors ((name group-template-name)) nif-vue
+  (run-shell-command (format nil "alacritty -e guix shell node -- bash -sc 'cd ~~/code/NIF/~a && ~~/.dotfiles/fuglesteg/home/services/scripts/tmux-vue'" name))
+  (run-shell-command "firefox --new-window https://miportaldev.azureedge.net")
+  (hsplit)))
+
+(defun group-templates ()
+  (sb-mop:class-direct-subclasses (find-class 'group-template)))
+
+(defcommand gnew-from-template () ()
+  (let ((template (cdr (select-from-menu (current-screen) (mapcar
+                                                      (lambda (template)
+                                                        `(,(string (class-name template)) . ,template))
+                                                      (group-templates))))))
+    (make-instance template :name (read-one-line (current-screen) "Group name: "))))
+
+   ; Command for starting alacritty with guix shell and tmux setup
+   #+nil
+"alacritty -e guix shell node -- bash -sc 'cd ~/code/NIF/app-role && ~/.dotfiles/fuglesteg/home/services/scripts/tmux-vue'"
