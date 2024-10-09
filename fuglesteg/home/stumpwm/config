@@ -1,1 +1,1 @@
-(with-restarts-menu (load "~/.config/stumpwm/init.lisp"))
+(load "~/.config/stumpwm/init.lisp")
