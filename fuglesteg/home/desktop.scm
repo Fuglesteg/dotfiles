@@ -29,9 +29,9 @@
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
-                               zathura zathura-pdf-mupdf mupdf
+                               zathura zathura-pdf-mupdf mupdf sbcl
                                xrandr nyxt firefox pavucontrol pulseaudio
-                               pamixer playerctl flameshot icedove
+                               pamixer playerctl flameshot
                                picom flatpak-xdg-utils flatpak
                                xdg-desktop-portal xdg-dbus-proxy xdg-utils
                                xsetroot hackneyed-x11-cursors xdg-utils
