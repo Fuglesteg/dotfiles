@@ -1,12 +1,18 @@
-;; TODO: Hide mouse - look at guix home service
-;; TODO: Override screen timeout when media is playing
+;;;; Config file for stumpwm
+;;;; TODO: Hide mouse - look at guix home service
+;;;; TODO: Override screen timeout when media is playing
 
 (in-package :stumpwm-user)
 
-;; Require sb-cltl2 with pathname because some weird reason
-(require :sb-cltl2 '(#P"/home/andy/.guix-profile/lib/sbcl/contrib/sb-cltl2.fasl"))
+; Require sb-cltl2 with pathname because some weird reason
+(require :sb-cltl2 '(#P"/home/andy/.guix-home/profile/lib/sbcl/contrib/sb-cltl2.fasl"))
 
-;; UTIL
+;(asdf:load-system :micros)
+
+;(defcommand start-micros () ()
+  ;(micros:create-server :port 7777))
+
+;;; UTIL
 (defmacro string-case (expression &rest forms)
   `(cond
      ,@(loop for form in forms collect
@@ -17,20 +23,21 @@
       string-to-trim
       (concat (subseq string-to-trim 0 desired-length) "-")))
 
-;; Colors
+;;; Colors
 (setf *colors*
       '("#ffffff"
-	"#111111"
+        "#111111"
         "#adadad"
         "#91ba74"
-	"#61afef"
+        "#61afef"
         "#fabd2f"
-	"#c678dd"
-	"#cc4a0e"
-	"#259fb6"))
+        "#c678dd"
+        "#cc4a0e"
+        "#259fb6"))
 
 (update-color-map (current-screen))
 
+; Background thread for updating mode-line elements
 (when *initializing*
   (sb-thread:make-thread (lambda ()
                            (loop
@@ -39,29 +46,14 @@
                              (ml-update-player-status)))
                          :name "update-media-title"))
 
-; Fixes problem in Guix
-#|
-(require :asdf)
-(asdf:clear-output-translations)
-
-(asdf:initialize-output-translations
-  '(:output-translations
-     :enable-user-cache
-     :ignore-inherited-configuration))
-|#
-
+; Initialize asdf source to guix home dependencies
 (asdf:initialize-source-registry
   '(:source-registry
-    (:tree "/home/andy/.guix-home/profile/share/common-lisp/")
-    ;(:tree "/run/current-system/profile/share/common-lisp/")
-    ;(:tree "/home/andy/.guix-profile/share/common-lisp/")
+    (:tree (concat (getenv "HOME") "/.guix-home/profile/share/common-lisp/"))
      :inherit-configuration))
 
-;; Fonts
-; ASDF throws a bunch of errors for some reason
-(handler-bind ((uiop/lisp-build:compile-file-error (lambda (condition) 
-                                                     (invoke-restart 'asdf:accept))))
-  (asdf:load-system :ttf-fonts :force t))
+;;; Fonts
+(asdf:load-system :ttf-fonts)
 
 (when *initializing*
     (setf xft:*font-dirs* `(,(concat (getenv "HOME") "/.guix-home/profile/share/fonts")))
@@ -69,7 +61,7 @@
     (xft:cache-fonts) 
     (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
 
-;; General settings
+;;; General settings
 (setf *message-window-gravity* :center
       *input-window-gravity* :center
       *mouse-focus-policy* :click
@@ -78,7 +70,7 @@
       stumpwm::*window-number-map* "qwertyuiop"
       stumpwm::*group-number-map* "123456789")
 
-;; Groups
+;;; Groups
 (when *initializing*
     (grename "󰖟 Web")
     (gnewbg "󰯂 Code")
@@ -89,7 +81,7 @@
 (defparameter *msg-fg-color* (nth 0 *colors*))
 (defparameter *msg-border-color* (nth 0 *colors*))
 
-;; Mode Line
+;;; Mode Line
 (defparameter *mode-line-bg-color* (nth 1 *colors*))
 (defparameter *mode-line-fg-color* (nth 0 *colors*))
 (setf *mode-line-background-color* *mode-line-bg-color*)
@@ -109,11 +101,11 @@
 
 (setf *mode-line-timeout* 1)
 
-;; MIC
+;;; MIC
 (defun get-microphone-icon (status)
   (string-case status
-	  ("no" "")
-	  ("yes" "")))
+               ("no" "")
+               ("yes" "")))
 
 (defun ml-mic ()
   (let ((microphone-icon (get-microphone-icon (get-microphone-status))))
@@ -135,7 +127,7 @@
   (setf *ml-mic* (ml-mic))
   (ml-update-media-string))
 
-;; VOLUME
+;;; VOLUME
 (defun get-volume-icon (volume)
   (or
    (cdr
@@ -171,7 +163,7 @@
   (setf *ml-volume* (ml-volume))
   (ml-update-media-string))
 
-;; Player status
+;;; Player status
 (defun get-playing-status-icon (status)
   (or
    (cdr
@@ -189,7 +181,7 @@
   (setf *ml-player-status* (ml-player-status))
   (ml-update-media-string))
 
-;; Media title
+;;; Media title
 (defun ml-media-title ()
   (format-with-on-click-id (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20) :ml-player-on-click nil))
 
@@ -208,7 +200,7 @@
       ((:wheel-down)
        (next-track)))))
 
-;; Media string
+;;; Media string
 (defun ml-update-media-string ()
   (setf *ml-media-string* (ml-media-string))
   (stumpwm::update-all-mode-lines))
@@ -222,7 +214,7 @@
   (ml-update-player-status)
   (ml-update-media-title))
 
-;; Register on-click handlers
+;;; Register on-click handlers
 (when *initializing*
   (register-ml-on-click-id :ml-volume-on-click #'ml-volume-on-click)
   (register-ml-on-click-id :ml-player-on-click #'ml-player-on-click)
@@ -253,11 +245,12 @@
     image=$(find $wallpaper_directory/* | sort -R | tail --lines=1)
     feh --bg-max \"$image\""))
 
-;; Hooks
+;;; Hooks
 (defun on-window-destroy (frame-to-frame)
   (repack-window-numbers))
 
 (add-hook *destroy-window-hook* 'on-window-destroy)
+
 ; Source x profile
 (run-shell-command "source ~/.xprofile")
 
@@ -307,9 +300,8 @@
 	(fclear)
 	(pull-hidden-other))))
 
-;; Menus of all windows in all groups
-;; Use title-re-p to check
 (defun get-all-windows ()
+  "Get all windows in all groups"
   (act-on-matching-windows (w) (stumpwm::title-re-p w "") w))
 
 (defun format-window (window)
@@ -340,14 +332,14 @@
     (unfloat-this)
     (float-this)))
 
-;; Key bindings
+;;; Key bindings
 (set-prefix-key (kbd "s-space"))
 
-; top level prefix keys
+;; top level prefix keys
 (defun r-define-key (key command)
     (define-key *root-map* (kbd key) command))
 
-; top level keys
+;; top level keys
 (defun t-define-key (key command)
     (define-key *top-map* (kbd key) command))
 
@@ -401,21 +393,22 @@
 (t-define-key "s-F4" "toggle-mic-mute")
 (r-define-key "=" "balance-frames")
 
-;; Norwegian keys
+;;; Norwegian keys
 
 (asdf:load-system :stump-regkey)
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\å)))
-(xlib:display-finish-output *display*)
+(xlib:display-force-output *display*)
 (t-define-key "M-[" "window-send-string å")
 (t-define-key "M-{" "window-send-string Å")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\ø)))
-(xlib:display-finish-output *display*)
+(xlib:display-force-output *display*)
 (t-define-key "M-;" "window-send-string ø")
 (t-define-key "M-:" "window-send-string Ø")
 (stump-regkey:register-keysym (first (xlib:character->keysyms #\æ)))
 (t-define-key "M-'" "window-send-string æ")
 (t-define-key "M-\"" "window-send-string Æ")
 
+;;; Programs
 
 (defprogram-shortcut term
 		     :command "exec alacritty"
@@ -431,7 +424,7 @@
 	(load (merge-pathnames ".config/guix/home/stumpwm/init.lisp"
 			   (user-homedir-pathname))))
 
-;; Tray
+;;; Tray
 (require "stumptray")
 (setf stumptray::*tray-win-background* (second *colors*))
 (setf stumptray::*tray-viwin-background* (second *colors*))
@@ -440,19 +433,55 @@
 (when *initializing*
     (stumptray:stumptray))
 
-;; Gaps
+;;; Gaps
 (require "swm-gaps")
-;; Head gaps run along the 4 borders of the monitor(s)
+
+; Head gaps run along the 4 borders of the monitor(s)
 (setf swm-gaps:*head-gaps-size* 0)
 
-;; Inner gaps run along all the 4 borders of a window
+; Inner gaps run along all the 4 borders of a window
 (setf swm-gaps:*inner-gaps-size* 5)
 
-;; Outer gaps add more padding to the outermost borders of a window (touching the screen border)
+; Outer gaps add more padding to the outermost borders of a window (touching the screen border)
 (setf swm-gaps:*outer-gaps-size* 20)
 
 (swm-gaps:toggle-gaps-on)
 
+;;; Group templates
 
-; initial keycode 47 (semicolon)
-; (59 58 59 58 0 0 0)
+(defclass group-template ()
+  ((name
+    :accessor group-template-name
+    :initarg :name
+    :initform "group"
+    :type string)
+   (group
+    :accessor group-template-group
+    :initarg :group)))
+
+(defmethod initialize-instance :after ((group-template group-template) &key &allow-other-keys)
+  (initialize-group group-template))
+
+(defgeneric initialize-group (group-template))
+
+(defmethod initialize-group :before ((group-template group-template))
+  (with-accessors ((name group-template-name) (group group-template-group)) group-template
+    (setf group (gnew name))))
+
+(defclass nif-vue (group-template) ())
+
+(defmethod initialize-group ((nif-vue nif-vue))
+  (with-accessors ((name group-template-name)) nif-vue
+  (run-shell-command (format nil "alacritty -e guix shell node -- bash -sc 'cd ~~/code/NIF/~a && ~~/.dotfiles/fuglesteg/home/services/scripts/tmux-vue'" name))
+  (run-shell-command "firefox --new-window https://miportaldev.azureedge.net")
+  (hsplit)))
+
+(defun group-templates ()
+  (sb-mop:class-direct-subclasses (find-class 'group-template)))
+
+(defcommand gnew-from-template () ()
+  (let ((template (cdr (select-from-menu (current-screen) (mapcar
+                                                      (lambda (template)
+                                                        `(,(string (class-name template)) . ,template))
+                                                      (group-templates))))))
+    (make-instance template :name (read-one-line (current-screen) "Group name: "))))
