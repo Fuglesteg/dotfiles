@@ -12,13 +12,17 @@
 (use-service-modules cups desktop networking ssh linux
                      docker xorg)
 
-(use-package-modules fonts vim video certs docker
+(use-package-modules fonts vim video certs docker networking
                      gl xorg version-control linux)
 
 (define-public k80
                (operating-system
                  (kernel linux)
-                 (firmware (list linux-firmware))
+                 (firmware (cons* linux-firmware
+                                  broadcom-bt-firmware
+                                  amd-microcode
+                                  amdgpu-firmware 
+                                  %base-firmware))
                  (locale "en_US.utf8")
                  (timezone "Europe/Oslo")
                  (keyboard-layout (keyboard-layout "us"))
@@ -35,7 +39,7 @@
                                %base-user-accounts))
                  (packages (cons* git vim
                                   v4l2loopback-linux-module ; Used for virtual camera in OBS
-                                  amdgpu-firmware xf86-video-amdgpu mesa
+                                  xf86-video-amdgpu mesa
                                   %base-packages))
                  (kernel-loadable-modules (list v4l2loopback-linux-module))
                  (initrd-modules (cons "kvm_amd" %base-initrd-modules)) ; Virual machine kernel module
