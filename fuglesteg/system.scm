@@ -54,51 +54,36 @@
                      (service containerd-service-type)
                      (service guix-home-service-type
                               `(("andy" ,desktop-home)))
-                     (service slim-service-type (slim-configuration
-                                                  (display ":0")
-                                                  (vt "vt7")
-                                                  (xorg-configuration 
-                                                    (xorg-configuration
-                                                      (resolutions '((3840 2160) (1920 1080)))
-                                                      (extra-config '(
-                                                                      "Section \"Device\"
-                                                                      Identifier \"AMD\"
-                                                                      Driver \"amdgpu\"
-                                                                      Option \"TearFree\" \"true\"
-                                                                      Option \"DRI\" \"3\"
-                                                                      Option \"VariableRefresh\" \"true\"
-                                                                      EndSection"))))))
-                     (service slim-service-type (slim-configuration
-                                                  (display ":0")
-                                                  (vt "vt8")
-                                                  (xorg-configuration 
-                                                    (xorg-configuration
-                                                      (resolutions '((3840 2160) (1920 1080)))
-                                                      (extra-config '(
-                                                                      "Section \"Device\"
-                                                                      Identifier \"AMD\"
-                                                                      Driver \"amdgpu\"
-                                                                      Option \"TearFree\" \"true\"
-                                                                      Option \"DRI\" \"3\"
-                                                                      Option \"VariableRefresh\" \"true\"
-                                                                      EndSection"))))))
                      (modify-services %desktop-services
-                                      (delete gdm-service-type)
-                                             (guix-service-type
-                                               config =>
-                                               (guix-configuration
-                                                 (inherit config)
-                                                 (substitute-urls
-                                                   (append (list "https://substitutes.nonguix.org")
-                                                           %default-substitute-urls))
-                                                 (authorized-keys
-                                                   (append (list (plain-file "non-guix.pub" 
-                                                                             "(public-key 
+                                      (gdm-service-type
+                                       config =>
+                                       (gdm-configuration
+                                        (inherit config)
+                                        (xorg-configuration 
+                                         (xorg-configuration
+                                          (resolutions '((3840 2160) (1920 1080)))
+                                          (extra-config '("Section \"Device\""
+                                                          "Identifier \"AMD\""
+                                                          "Driver \"amdgpu\""
+                                                          "Option \"TearFree\" \"true\""
+                                                          "Option \"DRI\" \"3\""
+                                                          "Option \"VariableRefresh\" \"true\""
+                                                          "EndSection"))))))
+                                      (guix-service-type
+                                       config =>
+                                       (guix-configuration
+                                        (inherit config)
+                                        (substitute-urls
+                                         (append (list "https://substitutes.nonguix.org")
+                                                 %default-substitute-urls))
+                                        (authorized-keys
+                                         (append (list (plain-file "non-guix.pub" 
+                                                                   "(public-key 
                                                                              (ecc 
                                                                                (curve Ed25519)
                                                                                (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
-                                                           %default-authorized-guix-keys)))))))
-                             (bootloader (bootloader-configuration
+                                                 %default-authorized-guix-keys)))))))
+                     (bootloader (bootloader-configuration
                                            (bootloader grub-efi-removable-bootloader)
                                            (targets (list "/boot/efi"))
                                            (keyboard-layout keyboard-layout)))
