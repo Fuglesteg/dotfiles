@@ -48,8 +48,8 @@
 
 ; Initialize asdf source to guix home dependencies
 (asdf:initialize-source-registry
-  '(:source-registry
-    (:tree (concat (getenv "HOME") "/.guix-home/profile/share/common-lisp/"))
+  `(:source-registry
+    (:tree ,(concat (getenv "HOME") "/.guix-home/profile/share/common-lisp/"))
      :inherit-configuration))
 
 ;;; Fonts
