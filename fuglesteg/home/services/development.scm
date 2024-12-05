@@ -8,8 +8,9 @@
                #:use-module (fuglesteg packages fonts)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules vim version-control base rust-apps tmux terminals curl
-                     syncthing readline admin compression text-editors)
+(use-package-modules vim version-control base rust-apps
+                     tmux terminals curl syncthing text-editors
+                     readline admin compression)
 
 (define (home-development-profile-service config)
   (list curl syncthing coreutils

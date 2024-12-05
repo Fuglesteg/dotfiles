@@ -16,7 +16,6 @@
                #:use-module (nongnu packages chrome)
                #:use-module (nongnu packages mozilla)
                #:use-module (fuglesteg packages fonts)
-               #:use-module (fuglesteg packages lem)
                #:use-module (fuglesteg packages stumpwm)
                #:use-module (fuglesteg home services development))
 

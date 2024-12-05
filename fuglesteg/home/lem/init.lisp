@@ -47,8 +47,8 @@
 (nmap "c-H" 'lem-paredit-mode:paredit-barf)
 
 ;; Font
-(let ((font-regular #P"/home/andy/.guix-profile/share/fonts/truetype/MononokiNerdFont-Regular.ttf")
-      (font-bold #P"/home/andy/.guix-profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
+(let ((font-regular #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Regular.ttf")
+      (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
   (when (and (uiop:file-exists-p font-regular)
              (uiop:file-exists-p font-bold))
     (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
