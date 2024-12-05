@@ -6,17 +6,6 @@
                #:use-module (gnu packages)
                #:use-module (gnu services)
                #:use-module (fuglesteg home services development))
-#|
-(use-modules (fuglesteg home services development)
-             (gnu)
-             (gnu home)
-             (gnu home services)
-             (gnu home services syncthing)
-             (gnu packages)
-             (gnu services))
-|#
-
-(use-modules (fuglesteg home services development))
 
 (define-public wsl-home 
                (home-environment
