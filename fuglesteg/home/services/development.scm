@@ -5,13 +5,11 @@
                #:use-module (gnu home services)
                #:use-module (gnu home services shells)
                #:use-module (gnu packages)
-               #:use-module (fuglesteg packages lem)
                #:use-module (fuglesteg packages fonts)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules vim version-control base rust-apps
-                     tmux terminals curl syncthing
-                     readline admin compression)
+(use-package-modules vim version-control base rust-apps tmux terminals curl
+                     syncthing readline admin compression text-editors)
 
 (define (home-development-profile-service config)
   (list curl syncthing coreutils
