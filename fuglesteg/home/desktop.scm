@@ -31,9 +31,8 @@
                                zathura zathura-pdf-mupdf mupdf sbcl
                                xrandr nyxt firefox pavucontrol pulseaudio
                                pamixer playerctl flameshot
-                               picom flatpak-xdg-utils flatpak
-                               xdg-desktop-portal xdg-dbus-proxy xdg-utils
-                               xsetroot hackneyed-x11-cursors xdg-utils
+                               picom flatpak-xdg-utils flatpak xdg-utils
+                               xsetroot hackneyed-x11-cursors
                                bibata-cursor-theme alacritty))
 
 ;; TODO: Service that symlinks ~/.xsession to ~/.guix-home/profile/bin/stumpwm
