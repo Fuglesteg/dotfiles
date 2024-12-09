@@ -7,8 +7,6 @@
                #:use-module (gnu services)
                #:use-module (fuglesteg home services development))
 
-(use-modules (fuglesteg home services development))
-
 (define-public wsl-home 
                (home-environment
                  (services
