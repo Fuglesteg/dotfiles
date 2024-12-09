@@ -29,3 +29,13 @@ save_to_clipboard = true
 decorations = "none"
 opacity = 0.7
 startup_mode = "Maximized"
+
+[[keyboard.bindings]]
+key = "A"
+mods = "Control"
+command = { program = "alacritty", args = ["msg", "config", "window.opacity=1.0"] }
+
+[[keyboard.bindings]]
+key = "A"
+mods = "Control | Shift"
+command = { program = "alacritty", args = ["msg", "config", "window.opacity=0.7"] }
