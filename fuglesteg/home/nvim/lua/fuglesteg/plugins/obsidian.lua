@@ -21,5 +21,8 @@ return {
         path = "~/Drive",
       }
     },
+    follow_url_func = function(url)
+      vim.fn.jobstart({"firefox", url})
+    end,
   },
 }
