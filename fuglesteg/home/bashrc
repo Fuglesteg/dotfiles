@@ -100,7 +100,7 @@ tmux-vue() {
 
     if ! tmux has-session -t $session_name 2> /dev/null; then
         tmux new-session -ds $session_name -c $PWD -n $session_name 'guix shell node'
-        tmux new-window -t $session_name:2 -n 'server' 'guix shell node -- npm run serve'
+        tmux new-window -t $session_name:2 -n 'server' 'guix shell node -- npm run dev'
     fi
 
     tmux attach-session -t $session_name

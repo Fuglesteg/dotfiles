@@ -1,0 +1,3 @@
+(declaim (optimize (debug 3) (speed 0) (safety 3)))
+(pushnew :dev *features*)
+(format t "Optimized for debug.~%Happy hacking :)~%")
