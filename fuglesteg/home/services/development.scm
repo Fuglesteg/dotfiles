@@ -31,7 +31,8 @@
                         (".vimrc" ,(local-file "../vimrc"))
                         (".lem/init.lisp" ,(local-file "../lem/init.lisp"))
                         (".gitconfig" ,(local-file "../gitconfig"))
-                        (".inputrc" ,(local-file "../inputrc"))))
+                        (".inputrc" ,(local-file "../inputrc"))
+                        (".sbclrc" ,(local-file "../sbclrc"))))
 
 (define (home-development-xdg-configuration-files-service config)
   `(("nvim" ,(local-file "../nvim" #:recursive? #t))))
@@ -49,14 +50,14 @@
                ("ll" . "ls -alF")
                ("ls" . "eza -l --icons")
                ("neovide" . "neovide --multigrid")
-               ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))))
-    ;(environment-variables '(("test" . "t")))
+               ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))
+               ("sbcl" . "rlwrap sbcl --noinform")))
     (bashrc (list (local-file "../bashrc" "bashrc")))
     (bash-profile (list (local-file
                           "../bash_profile"
                           "bash_profile")))))
 
-(define fuglesteg-development-service-type
+(define-public fuglesteg-development-service-type
                (service-type
                   (name 'fuglesteg-development)
                   (default-value #f)

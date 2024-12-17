@@ -71,14 +71,18 @@
 (nmap "c-L" 'lem-paredit-mode:paredit-slurp)
 (nmap "c-H" 'lem-paredit-mode:paredit-barf)
 
+(defun lem-sdl2-p ()
+  (boundp 'lem-sdl2/display::*display*))
+
 ;; Font
-(let ((font-regular #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Regular.ttf")
-      (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
-  (when (and (uiop:file-exists-p font-regular)
-             (uiop:file-exists-p font-bold))
-    (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
-                                  (lem-sdl2/font:make-font-config 
-                                   :latin-normal-file font-regular
-                                   :latin-bold-file font-bold
-                                   :cjk-normal-file font-regular
-                                   :cjk-bold-file font-bold))))
+(when (lem-sdl2-p)
+  (let ((font-regular #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Regular.ttf")
+        (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
+    (when (and (uiop:file-exists-p font-regular)
+               (uiop:file-exists-p font-bold))
+      (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
+                                    (lem-sdl2/font:make-font-config 
+                                     :latin-normal-file font-regular
+                                     :latin-bold-file font-bold
+                                     :cjk-normal-file font-regular
+                                     :cjk-bold-file font-bold)))))

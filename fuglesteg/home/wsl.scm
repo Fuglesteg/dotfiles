@@ -7,10 +7,10 @@
                #:use-module (gnu services)
                #:use-module (fuglesteg home services development))
 
-(define-public wsl-home 
+(define-public wsl-home
                (home-environment
                  (services
-                   (list 
+                   (list
                      (service home-syncthing-service-type)
                      (service fuglesteg-development-service-type)))))
 
