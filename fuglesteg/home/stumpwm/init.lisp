@@ -1,6 +1,7 @@
 ;;;; Config file for stumpwm
 ;;;; TODO: Hide mouse - look at guix home service
 ;;;; TODO: Override screen timeout when media is playing
+;;;; TODO: TV mode, set audio, set primary display, set timeout of monitor to short time, set audio output
 
 (in-package :stumpwm-user)
 
@@ -245,14 +246,29 @@
     image=$(find $wallpaper_directory/* | sort -R | tail --lines=1)
     feh --bg-max \"$image\""))
 
+(defcommand connect-tv () ()
+  (run-shell-command "xrandr --output HDMI-A-0 --mode 3840x2160 --rate 120 --left-of DisplayPort-2" t)
+  (run-shell-command "set-default-sink 11" t)
+  (sleep 4)
+  (refresh-heads))
+
+(defcommand disconnect-tv () ()
+  (run-shell-command "xrandr --output HDMI-A-0 --off" t)
+  (sleep 4)
+  (refresh-heads))
+
 ;;; Hooks
 (defun on-window-destroy (frame-to-frame)
   (repack-window-numbers))
 
 (add-hook *destroy-window-hook* 'on-window-destroy)
 
-; Source x profile
-(run-shell-command "source ~/.xprofile")
+; X profile
+(when *initializing*
+  (run-shell-command "picom -b &
+xsetroot -cursor_name left_ptr &
+xrandr --output DisplayPort-2 --rate 144 --primary --output HDMI-A-0 --off &
+xrdb -merge ~/.Xresources" t))
 
 (when *initializing*
     (set-random-wallpaper))
@@ -396,15 +412,23 @@
 ;;; Norwegian keys
 
 (asdf:load-system :stump-regkey)
-(stump-regkey:register-keysym (first (xlib:character->keysyms #\å)))
-(xlib:display-force-output *display*)
+
+(defcommand register-norwegian-keys () ()
+  (stump-regkey:register-keysym (first (xlib:character->keysyms #\å))) 
+  (sleep 1)
+  (stump-regkey:register-keysym (first (xlib:character->keysyms #\ø))) 
+  (sleep 1)
+  (stump-regkey:register-keysym (first (xlib:character->keysyms #\æ))) 
+  (sleep 1)
+  (xlib:display-force-output *display*))
+
+(when *initializing*
+  (register-norwegian-keys))
+
 (t-define-key "M-[" "window-send-string å")
 (t-define-key "M-{" "window-send-string Å")
-(stump-regkey:register-keysym (first (xlib:character->keysyms #\ø)))
-(xlib:display-force-output *display*)
 (t-define-key "M-;" "window-send-string ø")
 (t-define-key "M-:" "window-send-string Ø")
-(stump-regkey:register-keysym (first (xlib:character->keysyms #\æ)))
 (t-define-key "M-'" "window-send-string æ")
 (t-define-key "M-\"" "window-send-string Æ")
 
@@ -421,7 +445,7 @@
 		     :key (kbd "b"))
 
 (defcommand loadguixrc () ()
-	(load (merge-pathnames ".config/guix/home/stumpwm/init.lisp"
+	(load (merge-pathnames ".dotfiles/fuglesteg/home/stumpwm/init.lisp"
 			   (user-homedir-pathname))))
 
 ;;; Tray

@@ -29,7 +29,7 @@
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf sbcl
-                               xrandr nyxt firefox pavucontrol pulseaudio
+                               xrandr nyxt firefox pavucontrol pulseaudio xrdb
                                pamixer playerctl flameshot
                                picom flatpak-xdg-utils flatpak xdg-utils
                                xsetroot hackneyed-x11-cursors
