@@ -199,7 +199,8 @@ wk.register({
     ["<tab>"] = { "<c-6>", "Switch buffer"},
     n = {
         name = "+Nif",
-        t = { nif.openTranslationTabpage, "Open the translations in tabpage"},
+        T = { nif.openTranslationTabpage, "Open the translations in tabpage"},
+        t = { nif.testsSwitch, "Switch between tests and implementation"},
     },
 }, { prefix = "<leader>" })
 
