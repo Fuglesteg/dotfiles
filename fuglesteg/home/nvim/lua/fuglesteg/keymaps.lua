@@ -19,6 +19,7 @@ local function tmap(binding, command, desc)
 end
 
 local term = require("fuglesteg.terminal")
+local nif = require("fuglesteg.nif")
 
 nmap("j", "gj")
 nmap("k", "gk")
@@ -196,5 +197,10 @@ wk.register({
     ["9"] = { function() vim.cmd.tabnext(9) end, "Tab 9"},
     z = { ":TZAtaraxis<cr>", "Zen" },
     ["<tab>"] = { "<c-6>", "Switch buffer"},
+    n = {
+        name = "+Nif",
+        T = { nif.openTranslationTabpage, "Open the translations in tabpage"},
+        t = { nif.testsSwitch, "Switch between tests and implementation"},
+    },
 }, { prefix = "<leader>" })
 

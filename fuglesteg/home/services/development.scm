@@ -16,7 +16,7 @@
   (list curl syncthing coreutils
         rlwrap ripgrep
         htop neovim fzf glibc-locales
-        git zoxide
+        git zoxide fd
         tmux unzip eza lem font-nerd-mononoki))
 
 (define (home-development-variables-service config)
