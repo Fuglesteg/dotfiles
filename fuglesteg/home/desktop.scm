@@ -21,7 +21,7 @@
 
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps 
                      terminals image-viewers xdisorg xorg 
-                     pulseaudio music image compton glib
+                     pulseaudio music image compton glib linux
                      web-browsers pdf freedesktop lisp-xyz
                      package-management gnome-xyz syncthing gnuzilla)
 
@@ -30,7 +30,7 @@
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf sbcl
                                xrandr nyxt firefox pavucontrol pulseaudio xrdb
-                               pamixer playerctl flameshot
+                               pamixer playerctl flameshot bluez
                                picom flatpak-xdg-utils flatpak xdg-utils
                                xsetroot hackneyed-x11-cursors
                                bibata-cursor-theme alacritty))
