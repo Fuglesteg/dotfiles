@@ -1,8 +1,5 @@
 (in-package :lem-user)
 
-;(sdl2-ffi.functions:sdl-set-window-opacity
-; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
-
 (lem-vi-mode:vi-mode)
 
 (defvar *leader* "Space")
@@ -71,8 +68,26 @@
 (nmap "c-L" 'lem-paredit-mode:paredit-slurp)
 (nmap "c-H" 'lem-paredit-mode:paredit-barf)
 
+;;; Search
+
+(defvar *last-used-collector*)
+
+(defmethod initialize-instance :after ((collector lem/peek-source::collector) &key)
+  (setf *last-used-collector* collector))
+
+(define-command open-last-search () ()
+  (lem/peek-source::display *last-used-collector*))
+
+(lmap "s r" 'open-last-search)
+(lmap "s g" 'lem/grep::project-grep)
+
+;;; SDL2 frontend
+
 (defun lem-sdl2-p ()
   (boundp 'lem-sdl2/display::*display*))
+
+;(sdl2-ffi.functions:sdl-set-window-opacity
+; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
 
 ;; Font
 (when (lem-sdl2-p)
