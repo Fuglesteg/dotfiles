@@ -79,7 +79,6 @@ fi
 
 # PATH
 PATH="$PATH:$HOME/.local/bin"
-PATH="$PATH:$HOME/.cargo/bin"
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 trap 'echo -ne "\033]0;${PWD}: (${BASH_COMMAND})\007"' DEBUG
