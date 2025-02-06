@@ -80,7 +80,38 @@ fi
 # PATH
 PATH="$PATH:$HOME/.local/bin"
 
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+set_color() {
+    local fg=$1
+    local bg=$2
+
+    if [ ! -z "$bg" ]; then
+        echo "\[\033[38;5;${fg}m\]"
+    else
+        echo "\[\033[38;5;${fg}m\033[48;5;${bg}m\]"
+    fi
+}
+
+export -f set_color
+
+host_color=10
+
+case $(hostname -s) in
+    EPC-5CG3214891*)
+        host_color=193
+        ;;
+    K80*)
+        host_color=161
+        ;;
+    K8*)
+        host_color=203
+        ;;
+esac
+
+host_color=$(set_color $host_color)
+user_color=$(set_color 10)
+grey=$(set_color 250)
+
+PS1="${user_color}\u${grey}@${host_color}\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
 trap 'echo -ne "\033]0;${PWD}: (${BASH_COMMAND})\007"' DEBUG
 
 # Csharp
