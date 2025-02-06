@@ -1,7 +1,10 @@
 ;;;; Config file for stumpwm
 ;;;; TODO: Hide mouse - look at guix home service
 ;;;; TODO: Override screen timeout when media is playing
-;;;; TODO: TV mode, set audio, set primary display, set timeout of monitor to short time, set audio output
+;;;; TODO: Group templates
+;;;; TODO: Guix integrations:
+;;;;     - Profile per group
+;;;;     - Load packages into group
 
 (in-package :stumpwm-user)
 
@@ -70,6 +73,9 @@
       *message-window-y-padding* 10
       stumpwm::*window-number-map* "qwertyuiop"
       stumpwm::*group-number-map* "123456789")
+
+(setf *window-border-style* :tight
+      *normal-border-width* 2)
 
 ;;; Groups
 (when *initializing*
@@ -234,6 +240,14 @@
 ; Enable the mode line
 (enable-mode-line (current-screen) (current-head) t)
 
+#+nil
+(let ((*message-window-gravity* :top-right)
+      (*message-window-margin* 100)
+      (*message-window-padding* 20)
+      (*message-window-y-padding* 20)
+      (*message-window-y-margin* 100))
+  (message "Whatsapp:~%New Message from .."))
+
 (setf *startup-message* "^5 Welcome Home :)
 ^0 Happy Hacking!")
 
@@ -247,15 +261,21 @@
     feh --bg-max \"$image\""))
 
 (defcommand connect-tv () ()
-  (run-shell-command "xrandr --output HDMI-A-0 --mode 3840x2160 --rate 120 --left-of DisplayPort-2" t)
-  (run-shell-command "set-default-sink 11" t)
+  (run-shell-command "xrandr --output HDMI-A-0 --primary --mode 3840x2160 --rate 120 --left-of DisplayPort-2" t)
+  (run-shell-command "pacmd set-default-sink 11" t)
+  (run-shell-command "bluetoothctl power on" t)
   (sleep 4)
+  (refresh-heads)
   (refresh-heads))
 
 (defcommand disconnect-tv () ()
   (run-shell-command "xrandr --output HDMI-A-0 --off" t)
   (sleep 4)
   (refresh-heads))
+
+(defcommand steam-big-picture () ()
+  (run-shell-command "flatpak kill com.valvesoftware.Steam" t)
+  (run-shell-command "flatpak run com.valvesoftware.Steam -bigpicture"))
 
 ;;; Hooks
 (defun on-window-destroy (frame-to-frame)
@@ -414,13 +434,9 @@ xrdb -merge ~/.Xresources" t))
 (asdf:load-system :stump-regkey)
 
 (defcommand register-norwegian-keys () ()
-  (stump-regkey:register-keysym (first (xlib:character->keysyms #\å))) 
-  (sleep 1)
-  (stump-regkey:register-keysym (first (xlib:character->keysyms #\ø))) 
-  (sleep 1)
-  (stump-regkey:register-keysym (first (xlib:character->keysyms #\æ))) 
-  (sleep 1)
-  (xlib:display-force-output *display*))
+  (stump-regkey:register-character #\å)
+  (stump-regkey:register-character #\ø)
+  (stump-regkey:register-character #\æ))
 
 (when *initializing*
   (register-norwegian-keys))
@@ -496,9 +512,9 @@ xrdb -merge ~/.Xresources" t))
 
 (defmethod initialize-group ((nif-vue nif-vue))
   (with-accessors ((name group-template-name)) nif-vue
-  (run-shell-command (format nil "alacritty -e guix shell node -- bash -sc 'cd ~~/code/NIF/~a && ~~/.dotfiles/fuglesteg/home/services/scripts/tmux-vue'" name))
-  (run-shell-command "firefox --new-window https://miportaldev.azureedge.net")
-  (hsplit)))
+    (run-shell-command (format nil "alacritty -e guix shell node -- bash -sc 'cd ~~/code/NIF/~a && ~~/.dotfiles/fuglesteg/home/services/scripts/tmux-vue'" name))
+    (run-shell-command "firefox --new-window https://dev.minidrett.no")
+    (hsplit)))
 
 (defun group-templates ()
   (sb-mop:class-direct-subclasses (find-class 'group-template)))
@@ -509,3 +525,17 @@ xrdb -merge ~/.Xresources" t))
                                                         `(,(string (class-name template)) . ,template))
                                                       (group-templates))))))
     (make-instance template :name (read-one-line (current-screen) "Group name: "))))
+
+;;; Input
+
+(define-key *input-map* (kbd "Tab") 'stumpwm::input-complete-forward)
+(define-key *input-map* (kbd "S-Tab") 'stumpwm::input-complete-backward)
+(define-key *input-map* (kbd "C-j") 'stumpwm::input-complete-forward)
+(define-key *input-map* (kbd "C-k") 'stumpwm::input-complete-backward)
+(define-key *input-map* (kbd "C-h") 'stumpwm::input-backward-char)
+(define-key *input-map* (kbd "C-l") 'stumpwm::input-forward-char)
+
+(define-key *menu-map* (kbd "C-j") 'stumpwm::menu-down)
+(define-key *menu-map* (kbd "C-k") 'stumpwm::menu-up)
+(define-key *menu-map* (kbd "Tab") 'stumpwm::menu-down)
+(define-key *menu-map* (kbd "S-Tab") 'stumpwm::menu-up)

@@ -39,3 +39,8 @@
     line-numbers-right-format = "{np:^4}│ "
 [diff]
     tool = vimdiff
+[sendemail]
+        smtpEncryption = tls
+        smtpServer = smtp.gmail.com
+        smtpUser = andreasfdale@gmail.com
+        smtpServerPort = 587
