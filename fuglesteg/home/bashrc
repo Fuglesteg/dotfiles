@@ -119,3 +119,8 @@ tmux-csharp() {
 
     tmux attach-session -t "$session_name"
 }
+
+guix-run() {
+    guix shell $1 -- $@
+}
+
