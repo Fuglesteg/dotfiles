@@ -34,7 +34,6 @@ imap("<M-{>", "Å")
 imap("<M-'>", "æ")
 imap("<M-\">", "Æ")
 
--- nmap <silent><Esc> :nohl<cr>
 nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
 tmap("<Esc><Esc>", "<C-\\><C-n>")
@@ -47,11 +46,8 @@ vmap("<", "<gv")
 nmap("gi", ":Telescope lsp_implementations<cr>")
 nmap("gd", ":Telescope lsp_definitions<cr>")
 nmap("gr", ":Telescope lsp_references<cr>")
-nmap("gh", function() 
-    if not vim.diagnostic.open_float() then 
-        vim.lsp.buf.hover() 
-    end 
-end)
+nmap("gh", vim.lsp.buf.hover)
+nmap("gH", vim.diagnostic.open_float)
 
 nmap("<F1>", require("dap").continue, "Start or continue debug session")
 nmap("<F2>", require("dap").step_over, "Step over")

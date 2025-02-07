@@ -15,7 +15,6 @@ return {
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/cmp-nvim-lua' },
         { "rcarriga/cmp-dap" },
-        -- { 'hrsh7th/cmp-nvim-lsp-signature-help' },
 
         -- Snippets
         { 'L3MON4D3/LuaSnip' },
@@ -36,11 +35,6 @@ return {
         lsp.set_server_config({
             single_file_support = true,
         })
-
-        -- OLD Version
-        -- lsp.skip_server_setup({"jdtls"})
-
-        -- lsp.nvim_workspace()
 
         local cmp = require("cmp")
         local luasnip = require("luasnip")
@@ -81,10 +75,9 @@ return {
                 completeopt = "menu,menuone,noinsert,noselect",
             },
             sources = {
-                { name = "nvim_lsp", priority = 8 },
-                -- { name = "nvim_lsp_signature_help" }, -- Disabled because Noice has it's own signature help, enabled again, because noice disappears immediately, disabled again, because it isn't better, using own plugin for this (ray-x/lsp_signature.nvim)
-                { name = "luasnip", priority = 8 },
-                { name = "buffer", priority = 7},
+                { name = "nvim_lsp" },
+                { name = "luasnip" },
+                { name = "buffer" },
                 { name = "path" },
                 { name = "nvim_lua" },
             },
@@ -171,18 +164,6 @@ return {
                 }
             }
         })
-
-        -- lsp.configure("jdtls", {
-        --     root_dir = require("lspconfig").util.root_pattern(".project", '.gradlew', '.git', 'mvnw'),
-        --     settings = {
-        --         java = {
-        --             checksums = {
-        --                 "{'sha256': 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', 'allowed': true}",
-        --                 {sha256 = 'e2b82129ab64751fd40437007bd2f7f2afb3c6e41a9198e628650b22d5824a14', allowed = true}
-        --             }
-        --         }
-        --     },
-        -- })
 
         lsp.setup()
 
