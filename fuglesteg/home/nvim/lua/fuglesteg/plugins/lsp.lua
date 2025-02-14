@@ -1,9 +1,8 @@
 return {
-    'VonHeikemen/lsp-zero.nvim',
+    'neovim/nvim-lspconfig',
     dependencies = {
-        -- LSP Support
-        { 'neovim/nvim-lspconfig' },
-        { 'williamboman/mason.nvim' },
+        -- LSP installation
+        { 'williamboman/mason.nvim', opts = {} },
         { 'williamboman/mason-lspconfig.nvim' },
 
         -- Autocompletion
@@ -15,6 +14,10 @@ return {
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/cmp-nvim-lua' },
         { "rcarriga/cmp-dap" },
+        { "GustavEikaas/easy-dotnet.nvim" },
+
+        -- Useful status updates for LSP.
+        { 'j-hui/fidget.nvim', opts = {} },
 
         -- Snippets
         { 'L3MON4D3/LuaSnip' },
@@ -22,21 +25,8 @@ return {
         { 'rafamadriz/friendly-snippets' },
     },
     config = function()
-        local lsp = require('lsp-zero')
-
-        lsp.preset({
-            -- name = 'recommended',
-            name = 'minimal',
-            set_lsp_keymaps = true,
-            suggest_lsp_servers = true,
-            manage_nvim_cmp = false,
-        })
-        -- lsp.preset('lsp-compe')
-        lsp.set_server_config({
-            single_file_support = true,
-        })
-
         local cmp = require("cmp")
+        require("luasnip.loaders.from_vscode").lazy_load()
         local luasnip = require("luasnip")
 
         local has_words_before = function()
@@ -45,34 +35,24 @@ return {
         end
 
         vim.opt.completeopt = { "menu", "menuone", "noselect" }
-        local function superTab(fallback)
-            if cmp.visible() then
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                -- they way you will only jump inside the snippet region
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback()
-            end
+
+        local function next_item()
+            cmp.complete()
+            cmp.select_next_item({behavior = cmp.SelectBehavior.Select})
         end
 
-        local function superSTab(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-            elseif luasnip.jumpable( -1) then
-                luasnip.jump( -1)
-            else
-                fallback()
-            end
+        local function prev_item()
+            cmp.complete()
+            cmp.select_prev_item({behavior = cmp.SelectBehavior.Select})
         end
-        -- lsp.setup_nvim_cmp(
+
+        cmp.register_source("easy-dotnet", require("easy-dotnet").package_completion_source)
+
         local cmp_config = {
             preselect = cmp.PreselectMode.None,
             completion = {
                 completeopt = "menu,menuone,noinsert,noselect",
+                autocomplete = false
             },
             sources = {
                 { name = "nvim_lsp" },
@@ -82,14 +62,9 @@ return {
                 { name = "nvim_lua" },
             },
             mapping = cmp.mapping.preset.insert({
-                ['<C-s>'] = cmp.mapping.complete(),
-                ['<C-space>'] = cmp.mapping.complete(),
-                ["<Nul>"] = cmp.mapping.complete(),
-                ['<CR>'] = cmp.mapping.confirm({ select = false }),
-                ['<Tab>'] = cmp.mapping(superTab, { "i", "s", "c", }),
-                ["<S-Tab>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
-                ["<C-j>"] = cmp.mapping(superTab, { "i", "s", "c", }),
-                ["<C-k>"] = cmp.mapping(superSTab, { "i", "s", "c", }),
+                ["<C-y>"] = cmp.mapping.confirm({ select = false }),
+                ["<C-n>"] = next_item,
+                ["<C-p>"] = prev_item,
             }),
             snippet = {
                 expand = function(args)
@@ -125,15 +100,17 @@ return {
             sources = cmp.config.sources({
                 { name = "path" }
             },
+            {
                 {
-                    {
-                        name = "cmdline",
-                        option = {
-                            ignore_cmds = { "Man", "!" }
-                        }
+                    name = "cmdline",
+                    option = {
+                        ignore_cmds = { "Man", "!" }
                     }
-                })
+                }
+            })
         })
+
+
 
         -- Completion in command line buffer (<C-f>)
         cmp.setup.filetype("vim", {
@@ -151,26 +128,55 @@ return {
                 })
         })
 
+        cmp.setup.filetype({ "xml" }, {
+            sources = {
+                { name = "easy-dotnet" },
+                { name = "buffer" },
+                { name = "path" },
+            }
+        })
+
         cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
             sources = {
                 { name = "dap" },
             }
         })
 
-        lsp.configure("ltex", {
-            settings = {
-                ltex = {
-                    language = "nb-NO"
-                }
-            }
-        })
-
-        lsp.setup()
-
         vim.diagnostic.config({
             virtual_text = true,
             signs = true,
         })
 
+        -- Gutter signs
+        local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+        local diagnostic_signs = {}
+        for type, icon in pairs(signs) do
+            diagnostic_signs[vim.diagnostic.severity[type]] = icon
+        end
+        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+        -- LSP Server settings
+        local servers = {}
+
+        -- Servers that are configured elsewhere
+        local disabledServerConfigs = {
+            omnisharp = true
+        }
+
+        require('mason-lspconfig').setup({
+            handlers = {
+                function(server_name)
+                    -- if disabledServerConfigs[server_name] ~= nil then
+                    --     return
+                    -- end
+                    local server = servers[server_name] or {}
+                    server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+                    require('lspconfig')[server_name].setup(server)
+                end,
+            }
+        })
     end,
 }
