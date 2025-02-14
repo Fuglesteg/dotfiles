@@ -49,10 +49,6 @@ nmap("gr", ":Telescope lsp_references<cr>")
 nmap("gh", vim.lsp.buf.hover)
 nmap("gH", vim.diagnostic.open_float)
 
-nmap("<F1>", require("dap").continue, "Start or continue debug session")
-nmap("<F2>", require("dap").step_over, "Step over")
-nmap("<F3>", require("dap").step_into, "Step into")
-
 vmap("<leader>e", term.executeSelection, "Execute selection")
 
 local possession_session = require("possession.session")
@@ -91,10 +87,20 @@ local function loadLastSession()
     possession.load(last_session_name)
 end
 
-oil = require("oil")
+local oil = require("oil")
+local dap = require("dap")
+local dap_widgets = require("dap.ui.widgets")
 
 local function openCwd()
     oil.open(vim.fn.getcwd())
+end
+
+local function toggleInlayHints()
+    for i, client in pairs(vim.lsp.buf_get_clients()) do
+        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = vim.api.nvim_get_current_buf() })
+        end
+    end
 end
 
 -- Which-key config
@@ -131,6 +137,7 @@ wk.register({
         d = { ":Telescope lsp_definitions<cr>", "Go to definition" },
         r = { ":Telescope lsp_references<cr>", "Go to references" },
         f = { ":Telescope lsp_document_symbols<cr>", "Find symbols in file" },
+        h = { toggleInlayHints, "Toggle inlay hints" },
     },
     g = {
         name = "+Git",
@@ -198,5 +205,22 @@ wk.register({
         T = { nif.openTranslationTabpage, "Open the translations in tabpage"},
         t = { nif.testsSwitch, "Switch between tests and implementation"},
     },
+    d = {
+        name = "+Debug",
+        s = { dap.continue, "Start/Continue" },
+        i = { dap.step_into, "Step into" },
+        o = { dap.step_over, "Step over" },
+        b = { dap.toggle_breakpoint, "Toggle breakpoint" },
+        O = { dap.step_out, "Step out" },
+        h = { dap_widgets.hover, "Hover" },
+        p = { dap_widgets.preview, "Preview" },
+        r = { dap.repl.open, "Open REPL" },
+        v = {
+            name = "+View",
+            s = { function() dap_widgets.centered_float(dap_widgets.scopes) end, "View Scopes" },
+            f = { function() dap_widgets.centered_float(dap_widgets.frames) end, "View Frames" },
+            t = { function() dap_widgets.centered_float(dap_widgets.threads) end, "View Threads" },
+        }
+    }
 }, { prefix = "<leader>" })
 
