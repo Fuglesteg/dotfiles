@@ -45,17 +45,13 @@ return {
             sections = {
                 lualine_a = { "mode" },
                 lualine_b = {
-                    -- {
-                    --     -- "branch",
-                    --     -- separator = { left = "", right = "" },
-                    -- }
                 },
                 lualine_c = {
                     {
                         "filename",
                         path = 1,
                         color = { bg = bg_color, fg = fg_color },
-                        separator = { left = "", right = "" },
+                        separator = { left = "", right = "" },
                     },
                     {
                         "filetype",
@@ -64,17 +60,6 @@ return {
                         separator = { left = "", right = "" },
                     },
                     "diff", "diagnostics",
-                    function()
-                        local navic = require("nvim-navic")
-                        if navic.is_available() then
-                            return navic.get_location()
-                        else
-                            return ""
-                        end
-                    end,
-                    -- function()
-                    --     return "%="
-                    -- end,
                 },
                 lualine_x = {
                     {
