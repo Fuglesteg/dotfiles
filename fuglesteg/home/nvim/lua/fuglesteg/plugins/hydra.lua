@@ -66,28 +66,5 @@ return {
                 }
             },
         })
-
-        hydra({
-            name = "Debug",
-            mode = "n",
-            body = "<leader>d",
-            heads = {
-                { "<F10>", require("dap").step_over,         { desc = "Step over" } },
-                { "<F11>", require("dap").step_into,         { desc = "Step into" } },
-                { "<F12>", require("dap").step_out,         { desc = "Step out" } },
-                { "<F5>", require("dap").continue,          { desc = "Start or continue" } },
-                { "<F9>", require("dap").toggle_breakpoint, { desc = "Toggle breakpoint" } },
-                { "<F1>", require("dap.ui.widgets").hover, { desc = "Inspect" } },
-                { "<F2>", require("dap.ui.widgets").preview, { desc = "Preview" } },
-            },
-            config = {
-                invoke_on_body = true,
-                color = "pink",
-                hint = {
-                    position = "top",
-                    type = "window",
-                }
-            }
-        })
     end
 }

@@ -6,9 +6,10 @@
                #:use-module (gnu home services shells)
                #:use-module (gnu packages)
                #:use-module (fuglesteg packages fonts)
+               #:use-module (fuglesteg packages vim)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules vim version-control base rust-apps
+(use-package-modules version-control base rust-apps web
                      tmux terminals curl syncthing text-editors
                      readline admin compression)
 
@@ -50,7 +51,10 @@
                ("ll" . "ls -alF")
                ("ls" . "eza -l --icons")
                ("neovide" . "neovide --multigrid")
-               ("sshf" . ,(string-append "ssh " (call-with-input-file "./fuglesteg-server-ip.secret" read-line)))
+               ("sshf" . ,(let ((filename "./fuglesteg-server-ip.secret"))
+                            (if (file-exists? filename)
+                                (string-append "ssh " (call-with-input-file filename read-line))
+                                "echo \"Not configured with server address\"")))
                ("sbcl" . "rlwrap sbcl --noinform")))
     (bashrc (list (local-file "../bashrc" "bashrc")))
     (bash-profile (list (local-file
