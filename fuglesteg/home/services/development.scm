@@ -6,9 +6,10 @@
                #:use-module (gnu home services shells)
                #:use-module (gnu packages)
                #:use-module (fuglesteg packages fonts)
+               #:use-module (fuglesteg packages vim)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules vim version-control base rust-apps
+(use-package-modules version-control base rust-apps web
                      tmux terminals curl syncthing text-editors
                      readline admin compression)
 
