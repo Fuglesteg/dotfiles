@@ -1,5 +1,9 @@
 (in-package :lem-user)
 
+(import options-value
+        get-option
+        :package :lem-vi-mode/options)
+
 (lem-vi-mode:vi-mode)
 
 (defvar *leader* "Space")
@@ -25,6 +29,9 @@
           (lem:current-major-mode-at-point (current-point)))
       (lem-lisp-mode/internal::describe-symbol (symbol-string-at-point (current-point)))
       (lem-lsp-mode::lsp-hover)))
+
+;scrolloff
+(setf (option-value (get-option "scrolloff")) 8)
 
 (lmap "w v" 'lem:split-active-window-horizontally)
 (lmap "w s" 'lem:split-active-window-vertically)
