@@ -260,10 +260,16 @@
     image=$(find $wallpaper_directory/* | sort -R | tail --lines=1)
     feh --bg-max \"$image\""))
 
+(defcommand bluetooth-off () ()
+  (run-shell-command "bluetoothctl power off" t))
+
+(defcommand bluetooth-on () ()
+  (run-shell-command "bluetoothctl power on" t))
+
 (defcommand connect-tv () ()
   (run-shell-command "xrandr --output HDMI-A-0 --primary --mode 3840x2160 --rate 120 --left-of DisplayPort-2" t)
   (run-shell-command "pacmd set-default-sink 11" t)
-  (run-shell-command "bluetoothctl power on" t)
+  (bluetooth-on)
   (sleep 4)
   (refresh-heads)
   (refresh-heads))
