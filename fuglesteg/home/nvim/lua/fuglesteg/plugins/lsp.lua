@@ -6,14 +6,80 @@ return {
         { 'williamboman/mason-lspconfig.nvim' },
 
         -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'hrsh7th/cmp-cmdline' },
-        { 'saadparwaiz1/cmp_luasnip' },
-        { 'hrsh7th/cmp-nvim-lsp' },
-        { 'hrsh7th/cmp-nvim-lua' },
-        { "rcarriga/cmp-dap" },
+        { 
+            "saghen/blink.cmp",
+            version = "v0.12.4", -- Use release to get prebuilt binaries
+            opts = {
+                keymap = {
+                    preset = "default",
+                    ["<C-n>"] = {
+                        "show",
+                        "select_next"
+                    },
+                    ["<C-p>"] = {
+                        "show",
+                        "select_prev"
+                    }
+                },
+                appearance = {
+                    -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+                    -- Useful for when your theme doesn't support blink.cmp
+                    -- Will be removed in a future release
+                    use_nvim_cmp_as_default = true,
+                    -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+                    -- Adjusts spacing to ensure icons are aligned
+                    nerd_font_variant = 'mono',
+                },
+                completion = {
+                    menu = {
+                        auto_show = false
+                    },
+                    ghost_text = { enabled = true },
+                    documentation = {
+                        auto_show = true,
+                        auto_show_delay_ms = 500,
+                    }
+                },
+                fuzzy = {
+                    prebuilt_binaries = {
+                        download = false
+                    }
+                },
+
+                -- Default list of enabled providers defined so that you can extend it
+                -- elsewhere in your config, without redefining it, due to `opts_extend`
+                sources = {
+                    default = { 'lsp', 'path', 'snippets', 'buffer' },
+                },
+                cmdline = {
+                    enabled = true,
+                    keymap = nil, -- Inherits from top level `keymap` config when not set
+                    sources = function()
+                        local type = vim.fn.getcmdtype()
+                        -- Search forward and backward
+                        if type == '/' or type == '?' then return { 'buffer' } end
+                        -- Commands
+                        if type == ':' or type == '@' then return { 'cmdline' } end
+                        return {}
+                    end,
+                    completion = {
+                        trigger = {
+                            show_on_blocked_trigger_characters = {},
+                            show_on_x_blocked_trigger_characters = nil, -- Inherits from top level `completion.trigger.show_on_blocked_trigger_characters` config when not set
+                        },
+                        menu = {
+                            auto_show = nil, -- Inherits from top level `completion.menu.auto_show` config when not set
+                            draw = {
+                                columns = { { 'label', 'label_description', gap = 1 } },
+                            },
+                        }
+                    }
+                }
+            },
+            opts_extend = {
+                "sources.default"
+            }
+        },
         { "GustavEikaas/easy-dotnet.nvim" },
 
         -- Useful status updates for LSP.
@@ -25,122 +91,12 @@ return {
         { 'rafamadriz/friendly-snippets' },
     },
     config = function()
-        local cmp = require("cmp")
-        require("luasnip.loaders.from_vscode").lazy_load()
-        local luasnip = require("luasnip")
-
-        local has_words_before = function()
-            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-            return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-        end
-
         vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
-        local function next_item()
-            cmp.complete()
-            cmp.select_next_item({behavior = cmp.SelectBehavior.Select})
-        end
-
-        local function prev_item()
-            cmp.complete()
-            cmp.select_prev_item({behavior = cmp.SelectBehavior.Select})
-        end
-
-        cmp.register_source("easy-dotnet", require("easy-dotnet").package_completion_source)
-
-        local cmp_config = {
-            preselect = cmp.PreselectMode.None,
-            completion = {
-                completeopt = "menu,menuone,noinsert,noselect",
-                autocomplete = false
-            },
-            sources = {
-                { name = "nvim_lsp" },
-                { name = "luasnip" },
-                { name = "buffer" },
-                { name = "path" },
-                { name = "nvim_lua" },
-            },
-            mapping = cmp.mapping.preset.insert({
-                ["<C-y>"] = cmp.mapping.confirm({ select = false }),
-                ["<C-n>"] = next_item,
-                ["<C-p>"] = prev_item,
-            }),
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body)
-                end,
-            },
-            -- Formatting of completion menu, adding symbols like vscode
-            formatting = {
-                format = function(entry, vim_item)
-                    if vim.tbl_contains({ 'path' }, entry.source.name) then
-                        local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
-                        if icon then
-                            vim_item.kind = icon
-                            vim_item.kind_hl_group = hl_group
-                            return vim_item
-                        end
-                    end
-                    return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
-                end
-            },
-            experimental = { ghost_text = true },
-        }
-        cmp.setup(cmp_config)
-
-        cmp.setup.cmdline({ "/", "?" }, {
-            mapping = cmp.mapping.preset.cmdline(),
-            sources = {
-                { name = "buffer" }
-            }
-        })
-        cmp.setup.cmdline(":", {
-            mapping = cmp.mapping.preset.cmdline(),
-            sources = cmp.config.sources({
-                { name = "path" }
-            },
-            {
-                {
-                    name = "cmdline",
-                    option = {
-                        ignore_cmds = { "Man", "!" }
-                    }
-                }
-            })
-        })
-
-
+        local blink = require("blink.cmp")
 
         -- Completion in command line buffer (<C-f>)
-        cmp.setup.filetype("vim", {
-            mapping = cmp.mapping.preset.cmdline(),
-            sources = cmp.config.sources({
-                { name = "path" }
-            },
-                {
-                    {
-                        name = "cmdline",
-                        option = {
-                            ignore_cmds = { "Man", "!" }
-                        }
-                    }
-                })
-        })
-
-        cmp.setup.filetype({ "xml" }, {
-            sources = {
-                { name = "easy-dotnet" },
-                { name = "buffer" },
-                { name = "path" },
-            }
-        })
-
-        cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-            sources = {
-                { name = "dap" },
-            }
-        })
+        -- DAP
 
         vim.diagnostic.config({
             virtual_text = true,
@@ -155,8 +111,7 @@ return {
         end
         vim.diagnostic.config { signs = { text = diagnostic_signs } }
 
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+        capabilities = blink.get_lsp_capabilities()
 
         -- LSP Server settings
         local servers = {}
