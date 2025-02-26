@@ -2,6 +2,8 @@
                #:use-module (ice-9 binary-ports)
                #:use-module (ice-9 rdelim)
                #:use-module (gnu)
+               #:use-module (guix packages)
+               #:use-module (guix download)
                #:use-module (gnu home services)
                #:use-module (gnu home services shells)
                #:use-module (gnu packages)
@@ -37,6 +39,14 @@
 
 (define (home-development-xdg-configuration-files-service config)
   `(("nvim" ,(local-file "../nvim" #:recursive? #t))))
+
+(define blink-cmp-fuzzy
+  (origin (method url-fetch)
+          (uri "https://github.com/Saghen/blink.cmp/releases/download/v0.12.4/x86_64-unknown-linux-gnu.so")
+          (sha256 (base32 "1sjbhg1rxwsr610yx44sskbj4j0dqb8b7qc1q8k1qm7705a387rd"))))
+
+(define (home-development-xdg-data-files-service config)
+  `(("nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so" ,blink-cmp-fuzzy)))
 
 (define (home-development-bash-configuration config)
   (home-bash-extension
@@ -79,6 +89,9 @@
                           (service-extension
                             home-xdg-configuration-files-service-type
                             home-development-xdg-configuration-files-service)
+                          (service-extension
+                            home-xdg-data-files-service-type
+                            home-development-xdg-data-files-service)
                           (service-extension
                             home-bash-service-type
                             home-development-bash-configuration)))))
