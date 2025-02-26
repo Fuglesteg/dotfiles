@@ -19,7 +19,7 @@
   (list curl syncthing coreutils
         rlwrap ripgrep
         htop neovim fzf glibc-locales
-        git zoxide fd
+        git zoxide fd nvim-telescope-fzf-native
         tmux unzip eza lem font-nerd-mononoki))
 
 (define (home-development-variables-service config)
@@ -46,7 +46,9 @@
           (sha256 (base32 "1sjbhg1rxwsr610yx44sskbj4j0dqb8b7qc1q8k1qm7705a387rd"))))
 
 (define (home-development-xdg-data-files-service config)
-  `(("nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so" ,blink-cmp-fuzzy)))
+  `(("nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so" ,blink-cmp-fuzzy)
+    ("nvim/lazy/telescope-fzf-native.nvim/build/libfzf.so"
+       ,(file-append nvim-telescope-fzf-native "/share/lib/libfzf.so"))))
 
 (define (home-development-bash-configuration config)
   (home-bash-extension
