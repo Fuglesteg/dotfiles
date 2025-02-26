@@ -168,3 +168,15 @@ guix-run() {
     guix shell $1 -- $@
 }
 
+sbcl-micros-server() {
+    local port=$1
+    local create_server_args=":dont-close t"
+    if ! [ -z $port ]; then
+        create_server_args="$create_server_args :port $port"
+    fi
+
+    sbcl --eval "(require :asdf)" \
+        --eval "(asdf:load-system :micros)" \
+        --eval "(micros:create-server $create_server_args)"
+}
+
