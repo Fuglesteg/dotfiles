@@ -20,7 +20,7 @@
                #:use-module (fuglesteg home services development))
 
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps 
-                     terminals image-viewers xdisorg xorg 
+                     terminals image-viewers xdisorg xorg tls
                      pulseaudio music image compton glib linux
                      web-browsers pdf freedesktop lisp-xyz
                      package-management gnome-xyz syncthing gnuzilla)
@@ -31,6 +31,7 @@
                                zathura zathura-pdf-mupdf mupdf sbcl
                                xrandr nyxt firefox pavucontrol pulseaudio xrdb
                                pamixer playerctl flameshot bluez
+                               p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
                                picom flatpak-xdg-utils flatpak xdg-utils
                                xsetroot hackneyed-x11-cursors
                                bibata-cursor-theme alacritty))
