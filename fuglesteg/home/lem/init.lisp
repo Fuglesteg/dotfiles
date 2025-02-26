@@ -1,8 +1,7 @@
 (in-package :lem-user)
 
-(import options-value
-        get-option
-        :package :lem-vi-mode/options)
+(import 'lem-vi-mode/options:option-value)
+(import 'lem-vi-mode/options:get-option)
 
 (lem-vi-mode:vi-mode)
 
