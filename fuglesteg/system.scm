@@ -54,6 +54,7 @@
                      (service containerd-service-type)
                      (service guix-home-service-type
                               `(("andy" ,desktop-home)))
+                     (service gnome-keyring-service-type)
                      (modify-services %desktop-services
                                       (gdm-service-type
                                        config =>
