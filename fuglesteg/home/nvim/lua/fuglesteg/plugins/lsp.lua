@@ -111,15 +111,33 @@ return {
         end
         vim.diagnostic.config { signs = { text = diagnostic_signs } }
 
-        capabilities = blink.get_lsp_capabilities()
+        local capabilities = blink.get_lsp_capabilities()
+
+        local mason_registry = require('mason-registry')
+        local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
 
         -- LSP Server settings
-        local servers = {}
+        local servers = {
+            ts_ls = {
+                filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+                init_options = {
+                    plugins = {
+                        {
+                            name = "@vue/typescript-plugin",
+                            location = vue_language_server_path,
+                            languages = {"javascript", "typescript", "vue"},
+                        }
+                    }
+                }
+            }
+        }
 
         -- Servers that are configured elsewhere
         local disabledServerConfigs = {
             omnisharp = true
         }
+
+        require('lspconfig').volar.setup({})
 
         require('mason-lspconfig').setup({
             handlers = {
