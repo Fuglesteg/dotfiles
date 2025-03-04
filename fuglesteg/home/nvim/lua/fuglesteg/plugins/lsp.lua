@@ -8,7 +8,7 @@ return {
         -- Autocompletion
         { 
             "saghen/blink.cmp",
-            version = "v0.12.4", -- Use release to get prebuilt binaries
+            version = "v0.12.4", -- Use release to match prebuilt binaries downloaded with guix
             opts = {
                 keymap = {
                     preset = "default",
@@ -95,8 +95,8 @@ return {
 
         local blink = require("blink.cmp")
 
-        -- Completion in command line buffer (<C-f>)
-        -- DAP
+        -- TODO: Completion in command line buffer (<C-f>)
+        -- TODO: DAP completion
 
         vim.diagnostic.config({
             virtual_text = true,

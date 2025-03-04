@@ -5,7 +5,6 @@ return {
             highlight = {
                 enable = true,
                 additional_vim_regex_highlighting = false,
-                disable = { "vue" } -- Disable in vue because it causes crash smh
             },
             indent = {
                 enable = true
