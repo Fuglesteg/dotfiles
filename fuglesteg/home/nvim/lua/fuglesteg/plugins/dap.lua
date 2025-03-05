@@ -26,6 +26,21 @@ return {
                                 }
                             },
                             sourceMaps = true
+                        },
+                        {
+                            name = 'Firefox: Attach',
+                            type = 'firefox',
+                            request = 'attach',
+                            reAttach = true,
+                            url = "dev.minidrett.no",
+                            webRoot = "${workspaceFolder}/src",
+                            pathMappings = {
+                                {
+                                    url = "webpack://nif/${workspaceFolderBasename}/src",
+                                    path = "${webRoot}"
+                                }
+                            },
+                            sourceMaps = true
                         }
                     }
                     config.filetypes = 	{ 'javascriptreact', 'typescriptreact', 'typescript', 'javascript', 'vue' }
