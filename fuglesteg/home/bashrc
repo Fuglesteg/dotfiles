@@ -52,6 +52,9 @@ fi
 
 # Zoxide support
 eval "$(zoxide init bash)"
+    
+# FZF
+eval "$(fzf --bash)"
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 # Start SSH agent automatically on login
@@ -79,6 +82,9 @@ fi
 
 # PATH
 PATH="$PATH:$HOME/.local/bin"
+
+
+# PROMPT
 
 set_color() {
     local fg=$1
