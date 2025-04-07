@@ -34,7 +34,7 @@ imap("<M-{>", "Å")
 imap("<M-'>", "æ")
 imap("<M-\">", "Æ")
 
-nmap("<Esc>", ":FloatermHide<cr>:nohl<cr>")
+nmap("<Esc>", ":nohl<cr>")
 nmap("<leader><leader>", ":Telescope find_files<cr>")
 tmap("<Esc><Esc>", "<C-\\><C-n>")
 nmap("<C-j>", "<Tab>")
@@ -116,7 +116,6 @@ wk.register({
         p = { openCwd, "Open File Browser in cwd" },
         f = { oil.open, "Open File Browser in directory of open file" },
         r = { ":Telescope oldfiles<cr>", "Open recent files" },
-        --! = { ":qall!<cr>", "Quit all files" },
     },
     w = {
         name = "+Window",
@@ -168,18 +167,8 @@ wk.register({
         o = { loadLastSession, "Open last session"},
         c = { ":PossessionClose<cr>", "Close Session"},
     },
-    C = {
-        name = "+Configure",
-        c = {":e ~/.config/nvim/init.lua | cd ~/.config/nvim<cr>", "Open config file" },
-        -- Add quick options hydra
-    },
     t = {
         name = "+Terminal",
-        t = { ":FloatermToggle<cr>", "Toggle floating terminal" },
-        h = { ":FloatermNext<cr>", "Next floating terminal" },
-        l = { ":FloatermPrev<cr>", "Previous floating terminal" },
-        d = { ":FloatermKill<cr>", "Kill floating terminal" },
-        n = { ":FloatermNew<cr>", "New floating terminal" },
         b = { ":term<cr>", "Open new terminal in buffer" },
         m = { term.setTermAsMain, "Set current terminal as main" },
         e = { term.executeSelection, "Execute selection" },
