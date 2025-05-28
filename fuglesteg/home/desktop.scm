@@ -44,7 +44,7 @@
                    (list 
                      (service home-syncthing-service-type)
                      (service fuglesteg-development-service-type)
-                     (simple-service 'set-environment-variables
+                     (simple-service 'desktop-environment-variables
                                      home-environment-variables-service-type
                                      `(("BROWSER" . "firefox")
                                        ("TERMINAL" . "alacritty")
