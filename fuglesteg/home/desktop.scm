@@ -44,6 +44,12 @@
                    (list 
                      (service home-syncthing-service-type)
                      (service fuglesteg-development-service-type)
+                     (service home-redshift-service-type
+                              (home-redshift-configuration
+                                (location-provider 'manual)
+                                (latitude 59.91)
+                                (longitude 10.75)))
+                     (service home-dbus-service-type)
                      (simple-service 'desktop-environment-variables
                                      home-environment-variables-service-type
                                      `(("BROWSER" . "firefox")

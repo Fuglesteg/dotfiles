@@ -493,6 +493,17 @@ xrdb -merge ~/.Xresources" t))
 
 (swm-gaps:toggle-gaps-on)
 
+(defcommand repack-group-numbers () ()
+  (let ((groups (sort (copy-seq
+                       (remove-if-not (lambda (group)
+                                        (<= 0 (group-number group)))
+                                      (screen-groups (current-screen))))
+                      #'<
+                      :key #'group-number)))
+    (loop for group in groups
+          for group-number from 1
+          do (setf (group-number group) group-number))))
+
 ;;; Group templates
 
 (defclass group-template ()
