@@ -36,7 +36,6 @@
                                xsetroot hackneyed-x11-cursors
                                bibata-cursor-theme alacritty))
 
-;; TODO: Service that symlinks ~/.xsession to ~/.guix-home/profile/bin/stumpwm
 (define-public desktop-home
                (home-environment
                  (packages desktop-packages)
@@ -57,7 +56,8 @@
                                        ("XDG_DATA_DIRS" . "$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share")))
                      (simple-service 'home-files 
                                      home-files-service-type
-                                     `((".latexmkrc" ,(local-file "./latexmkrc"))))
+                                     `((".latexmkrc" ,(local-file "./latexmkrc"))
+                                       (".xsession" ,(file-append stumpwm "/bin/stumpwm"))))
                      (simple-service 'config-files 
                                      home-xdg-configuration-files-service-type
                                      `(("alacritty" ,(local-file "./alacritty" #:recursive? #t))
