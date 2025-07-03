@@ -263,9 +263,18 @@
 (defcommand bluetooth-on () ()
   (run-shell-command "bluetoothctl power on" t))
 
+(defcommand screensaver-off () ()
+  (run-shell-command "xset -dpms" t)
+  (run-shell-command "xset s off" t))
+
+(defcommand screensaver-on () ()
+  (run-shell-command "xset +dpms" t)
+  (run-shell-command "xset s on" t))
+
 (defcommand connect-tv () ()
   (run-shell-command "xrandr --output HDMI-A-0 --primary --mode 3840x2160 --rate 120 --left-of DisplayPort-2" t)
   (run-shell-command "pacmd set-default-sink 11" t)
+  (screensaver-off)
   (bluetooth-on)
   (sleep 4)
   (refresh-heads)
@@ -297,10 +306,10 @@ xrdb -merge ~/.Xresources" t))
     (set-random-wallpaper))
 
 (defcommand screensaver () ()
-	    (run-shell-command "xscreensaver-command -activate"))
+  (run-shell-command "xscreensaver-command -activate"))
 
 (defcommand find-window () ()
-	    (run-shell-command "rofi -show window"))
+  (run-shell-command "rofi -show window"))
 
 (defcommand run-program () ()
   (run-shell-command "rofi -show drun"))
