@@ -11,13 +11,13 @@
                #:use-module (fuglesteg packages vim)
                #:export (fuglesteg-development-service-type))
 
-(use-package-modules version-control base rust-apps web
+(use-package-modules version-control base rust-apps web ssh
                      tmux terminals curl syncthing text-editors
-                     readline admin compression)
+                     readline admin compression certs)
 
 (define (home-development-profile-service config)
   (list curl syncthing coreutils
-        rlwrap ripgrep
+        rlwrap ripgrep nss-certs openssh
         htop neovim fzf glibc-locales
         git zoxide fd nvim-telescope-fzf-native
         tmux unzip eza lem font-nerd-mononoki))
@@ -52,16 +52,12 @@
 
 (define (home-development-bash-configuration config)
   (home-bash-extension
-    (aliases `(("apt" . "sudo apt")
-               ("apti" . "sudo apt install")
-               ("cc" . "gcc")
-               ("dcd" . "docker compose down")
+    (aliases `(("dcd" . "docker compose down")
                ("dcu" . "docker compose up")
                ("dps" . "docker ps")
-               ("l" . "ls -CF")
-               ("la" . "ls -A")
-               ("ll" . "ls -alF")
+               ("tree" . "eza --icons --tree")
                ("ls" . "eza -l --icons")
+               ("info" . "info --vi-keys")
                ("neovide" . "neovide --multigrid")
                ("sshf" . ,(let ((filename "./fuglesteg-server-ip.secret"))
                             (if (file-exists? filename)

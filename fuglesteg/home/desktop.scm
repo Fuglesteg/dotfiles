@@ -61,7 +61,7 @@
                                 (latitude 59.91)
                                 (longitude 10.75)))
                      (service home-dbus-service-type)
-                     (simple-service 'set-environment-variables
+                     (simple-service 'desktop-environment-variables
                                      home-environment-variables-service-type
                                      `(("BROWSER" . "firefox")
                                        ("TERMINAL" . "alacritty")
