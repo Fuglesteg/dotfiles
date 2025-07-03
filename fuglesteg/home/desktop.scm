@@ -1,25 +1,28 @@
 (define-module (fuglesteg home desktop)
-               #:use-module (gnu)
-               #:use-module (ice-9 rdelim)
-               #:use-module (ice-9 binary-ports)
-               #:use-module (gnu home)
-               #:use-module (gnu home services)
-               #:use-module (gnu home services desktop)
-               #:use-module (gnu home services syncthing)
-               #:use-module (gnu home services shells)
-               #:use-module (gnu packages)
-               #:use-module (gnu services)
-               #:use-module (guix gexp)
-               #:use-module (guix profiles)
-               #:use-module (guix packages)
-               #:use-module (nongnu packages chromium)
-               #:use-module (nongnu packages chrome)
-               #:use-module (nongnu packages mozilla)
-               #:use-module (fuglesteg packages fonts)
-               #:use-module (fuglesteg packages stumpwm)
-               #:use-module (fuglesteg home services development))
+  #:use-module (gnu)
+  #:use-module (ice-9 rdelim)
+  #:use-module (ice-9 binary-ports)
+  #:use-module (gnu home)
+  #:use-module (gnu home services)
+  #:use-module (gnu home services desktop)
+  #:use-module (gnu home services syncthing)
+  #:use-module (gnu home services shells)
+  #:use-module (gnu packages)
+  #:use-module (gnu services)
+  #:use-module (guix gexp)
+  #:use-module (gnu home services shepherd)
+  #:use-module (guix profiles)
+  #:use-module (guix packages)
+  #:use-module (nongnu packages chromium)
+  #:use-module (nongnu packages chrome)
+  #:use-module (nongnu packages mozilla)
+  #:use-module (fuglesteg packages fonts)
+  #:use-module (fuglesteg packages stumpwm)
+  #:use-module (fuglesteg packages packup)
+  #:use-module (fuglesteg home services packup)
+  #:use-module (fuglesteg home services development))
 
-(use-package-modules wm vim video certs base gl lisp tmux rust-apps 
+(use-package-modules wm vim video certs base gl lisp tmux rust-apps
                      terminals image-viewers xdisorg xorg tls
                      pulseaudio music image compton glib linux
                      web-browsers pdf freedesktop lisp-xyz
@@ -28,7 +31,7 @@
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
-                               zathura zathura-pdf-mupdf mupdf sbcl
+                               zathura zathura-pdf-mupdf mupdf sbcl xset
                                xrandr nyxt firefox pavucontrol pulseaudio xrdb
                                pamixer playerctl flameshot bluez
                                p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
