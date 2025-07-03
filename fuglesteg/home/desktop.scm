@@ -46,6 +46,15 @@
                    (list 
                      (service home-syncthing-service-type)
                      (service fuglesteg-development-service-type)
+                     (simple-service 'fuglesteg-packup-service
+                                     home-shepherd-service-type
+                                     (list
+                                      (shepherd-timer '(packup)
+                                                      #~(calendar-event #:hours '(5)
+                                                                        #:minutes '(0)
+                                                                        #:days-of-week '(monday))
+                                                      #~(#$(file-append packup "/bin/packup"))
+                                                      #:documentation "Runs the packup command every week")))
                      (service home-redshift-service-type
                               (home-redshift-configuration
                                 (location-provider 'manual)
