@@ -24,12 +24,13 @@
   (define-key lem-vi-mode:*visual-keymap* key action))
 
 (define-command hover () ()
-  (if (eq 'lem-lisp-mode/internal:lisp-mode 
-          (lem:current-major-mode-at-point (current-point)))
+  (if (or (mode-active-p (current-buffer) 'lem-lisp-mode:lisp-mode)
+          (mode-active-p (current-buffer) 'lem-lisp-mode/internal::lisp-repl-mode))
       (lem-lisp-mode/internal::describe-symbol (symbol-string-at-point (current-point)))
       (lem-lsp-mode::lsp-hover)))
 
-;scrolloff
+(mode-active-p (current-buffer) 'lem-lisp-mode:lisp-mode)
+
 (setf (option-value (get-option "scrolloff")) 8)
 
 (lmap "w v" 'lem:split-active-window-horizontally)
@@ -42,7 +43,7 @@
 
 (lmap "b" 'lem/list-buffers:list-buffers)
 
-(lmap "Space" 'lem:find-file)
+(lmap "Space" 'lem:find-file-recursively)
 
 (lmap "f s" 'lem:save-current-buffer)
 (lmap "f S" 'lem:save-some-buffers)
@@ -74,6 +75,7 @@
 (nmap "c-L" 'lem-paredit-mode:paredit-slurp)
 (nmap "c-H" 'lem-paredit-mode:paredit-barf)
 
+
 ;;; Search
 
 (defvar *last-used-collector*)
@@ -87,11 +89,17 @@
 (lmap "s r" 'open-last-search)
 (lmap "s g" 'lem/grep::project-grep)
 
-;;; SDL2 frontend
+;;; Visual
+
+(load-theme "circus")
+
+(setf (variable-value 'lem-lisp-mode/paren-coloring:paren-coloring :global)
+      t)
 
 (defun lem-sdl2-p ()
   (boundp 'lem-sdl2/display::*display*))
 
+;; Broken opacity
 ;(sdl2-ffi.functions:sdl-set-window-opacity
 ; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
 
@@ -107,3 +115,44 @@
                                      :latin-bold-file font-bold
                                      :cjk-normal-file font-regular
                                      :cjk-bold-file font-bold)))))
+
+#+nil
+(define-command lisp-quickload (system-name)
+    ((prompt-for-symbol-name "System: " (buffer-package (current-buffer))))
+  (check-connection)
+  (eval-with-transcript `(,(uiop:find-symbol* :quickload :quicklisp) ,(string system-name))))
+
+#+nil
+(defmacro with-source-registry (source-tree &body body)
+  `(let (asdf/source-registry:*source-registry*
+         (asdf/system-registry:*registered-systems* (make-hash-table :test 'equal))
+         asdf:*source-registry-parameter*
+         (asdf:*default-source-registries* nil))
+     (asdf:initialize-source-registry ,source-tree)
+     ,@body))
+
+#+nil
+(defun unloaded-systems ()
+  (remove-if (lambda (system)
+               (member system (asdf:already-loaded-systems)
+                       :test #'string=))
+             (asdf:registered-systems)))
+
+#+nil
+(define-command load-local-asdf () ()
+  (lem-lisp-mode:lisp-eval
+   '(progn
+     (require 'asdf)
+     (with-source-registry
+         `(:source-registry
+           (:tree ,(first (directory #P".")))
+           (:ignore-inherited-configuration))
+       (asdf:registered-systems)))))
+
+#+nil
+(let ((asdf:*default-source-registries* nil))
+  (with-source-registry
+      (:source-registry
+       (:directory #P"/home/andy/code/cl-guile")
+       (:ignore-inherited-configuration))
+    (asdf:registered-systems)))
