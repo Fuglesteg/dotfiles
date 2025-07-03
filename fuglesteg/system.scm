@@ -78,7 +78,8 @@
                                        (guix-configuration
                                         (inherit config)
                                         (substitute-urls
-                                         (append (list "https://substitutes.nonguix.org")
+                                         (append #;(list "https://substitutes.nonguix.org")
+                                          (list "https://nonguix-proxy.ditigal.xyz")
                                                  %default-substitute-urls))
                                         (authorized-keys
                                          (append (list (plain-file "non-guix.pub" 
