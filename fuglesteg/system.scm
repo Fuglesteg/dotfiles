@@ -55,6 +55,9 @@
                      (service guix-home-service-type
                               `(("andy" ,desktop-home)))
                      (service gnome-keyring-service-type)
+                     (service pam-limits-service-type
+                              (list
+                               (pam-limits-entry "andy" 'hard 'nofile 524288)))
                      (modify-services %desktop-services
                                       (gdm-service-type
                                        config =>
