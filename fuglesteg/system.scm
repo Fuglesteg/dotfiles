@@ -5,6 +5,7 @@
                #:use-module (gnu services guix)
                #:use-module (gnu system setuid)
                #:use-module (guix packages)
+               #:use-module (guix git-download)
                #:use-module (guix channels)
                #:use-module (nongnu packages linux)
                #:use-module (fuglesteg home desktop))
@@ -15,13 +16,26 @@
 (use-package-modules fonts vim video certs docker networking
                      gl xorg version-control linux)
 
+(define linux-amd-staging
+  (package
+   (inherit linux)
+   (name "linux-amd-staging")
+   (version "6.16")
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference
+                  (url "https://gitlab.freedesktop.org/agd5f/linux.git")
+                  (commit "96236ac46647f06a2b08ab15ced4b8211836f41b")))
+            (sha256 (base32 "0jrcqqzzpjw5hqv66qk7w4dpi9w19yplsc5067z5ldw0hna8yzy4"))
+            (file-name (git-file-name name version))))))
+
 (define-public k80
                (operating-system
-                 (kernel linux)
+                 (kernel linux-amd-staging)
                  (firmware (cons* linux-firmware
                                   broadcom-bt-firmware
                                   amd-microcode
-                                  amdgpu-firmware 
+                                  amdgpu-firmware
                                   %base-firmware))
                  (locale "en_US.utf8")
                  (timezone "Europe/Oslo")
@@ -42,6 +56,9 @@
                                   xf86-video-amdgpu mesa
                                   %base-packages))
                  (kernel-loadable-modules (list v4l2loopback-linux-module))
+                 #;(kernel-arguments (cons*
+                                    "amdgpu.dcdebugmask=0x10" ; Disables PSR, a power saving technique that causes GPU crashes on latest version
+                                    %default-kernel-arguments))
                  (initrd-modules (cons "kvm_amd" %base-initrd-modules)) ; Virual machine kernel module
                  (services
                    (cons*
