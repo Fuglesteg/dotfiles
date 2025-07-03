@@ -19,8 +19,11 @@
 ;;; UTIL
 (defmacro string-case (expression &rest forms)
   `(cond
-     ,@(loop for form in forms collect
-                `((string= ,expression ,(first form)) ,(second form)))))
+     ,@(loop for form in forms
+             collect (destructuring-bind (to-compare result) form
+                       (if (eq to-compare t)
+                           `(t ,result)
+                           `((string= ,expression ,to-compare) ,result))))))
 
 (defun trim-string (string-to-trim desired-length)
   (if (< (length string-to-trim) desired-length)
@@ -136,15 +139,11 @@
 
 ;;; VOLUME
 (defun get-volume-icon (volume)
-  (or
-   (cdr
-    (assoc
-     volume
-     '(("0%" . "󰝟")
-       ("muted" . "󰝟")
-       ("100%" . "󰕾"))
-     :test #'equal))
-   "󰖀"))
+  (string-case volume
+    ("0%" "󰝟")
+    ("muted" "󰝟")
+    ("100%" "󰕾")
+    (t "󰖀")))
 
 (defun get-volume ()
   (remove #\Newline (run-shell-command "pamixer --get-volume-human" t)))
@@ -172,17 +171,15 @@
 
 ;;; Player status
 (defun get-playing-status-icon (status)
-  (or
-   (cdr
-    (assoc
-     status
-     '(("Playing" . "")
-       ("Paused" . ""))
-     :test #'equal))
-   ""))
+  (string-case status
+    ("Playing" "")
+    ("Paused" "")
+    (t "")))
 
 (defun ml-player-status ()
-  (format-with-on-click-id (concat (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))) " ") :ml-player-on-click nil))
+  (format-with-on-click-id
+   (concat (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))) " ")
+   :ml-player-on-click nil))
 
 (defun ml-update-player-status ()
   (setf *ml-player-status* (ml-player-status))
