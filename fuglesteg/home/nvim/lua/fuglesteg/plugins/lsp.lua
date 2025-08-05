@@ -1,14 +1,14 @@
 return {
-    'neovim/nvim-lspconfig',
+    'williamboman/mason-lspconfig.nvim',
     dependencies = {
         -- LSP installation
         { 'williamboman/mason.nvim', opts = {} },
-        { 'williamboman/mason-lspconfig.nvim' },
+        'neovim/nvim-lspconfig',
 
         -- Autocompletion
         { 
             "saghen/blink.cmp",
-            version = "v0.12.4", -- Use release to match prebuilt binaries downloaded with guix
+            version = "v1.5.1", -- Use release to match prebuilt binaries downloaded with guix
             opts = {
                 keymap = {
                     preset = "default",
@@ -132,23 +132,11 @@ return {
             }
         }
 
-        -- Servers that are configured elsewhere
-        local disabledServerConfigs = {
-            omnisharp = true
-        }
-
         require('lspconfig').volar.setup({})
 
         require('mason-lspconfig').setup({
-            handlers = {
-                function(server_name)
-                    -- if disabledServerConfigs[server_name] ~= nil then
-                    --     return
-                    -- end
-                    local server = servers[server_name] or {}
-                    server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-                    require('lspconfig')[server_name].setup(server)
-                end,
+            automatic_enable = {
+                exclude = { "omnisharp" }
             }
         })
     end,
