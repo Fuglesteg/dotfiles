@@ -43,10 +43,12 @@
 
 (lmap "b" 'lem/list-buffers:list-buffers)
 
-(lmap "Space" 'lem:find-file-recursively)
+(lmap "Space" 'lem-core/commands/project:project-find-file)
 
 (lmap "f s" 'lem:save-current-buffer)
 (lmap "f S" 'lem:save-some-buffers)
+(lmap "f p" 'lem-core/commands/project:project-root-directory)
+(lmap "f f" 'lem/directory-mode/commands:find-file-directory)
 
 (lmap "Tab" 'lem:previous-buffer)
 
@@ -69,6 +71,7 @@
 (lmap "9" 'lem/frame-multiplexer:frame-multiplexer-switch-8)
 
 (nmap "g d" 'lem/language-mode:find-definitions)
+(nmap "g D" 'lem-lsp-mode/lsp-mode::lsp-type-definition)
 (nmap "g r" 'lem/language-mode:find-references)
 (nmap "g h" 'hover)
 
@@ -88,6 +91,13 @@
 
 (lmap "s r" 'open-last-search)
 (lmap "s g" 'lem/grep::project-grep)
+
+
+;;; Modes
+
+;; Vue-mode
+(setf lem-vue-mode:*vue-language-server-location* (merge-pathnames ".local/lib/node_modules/@vue/language-server"
+                                                                   (uiop/cl:user-homedir-pathname)))
 
 ;;; Visual
 
