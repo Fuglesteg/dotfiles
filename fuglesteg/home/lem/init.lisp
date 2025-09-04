@@ -87,7 +87,8 @@
   (setf *last-used-collector* collector))
 
 (define-command open-last-search () ()
-  (lem/peek-source::display *last-used-collector*))
+  (when (boundp '*last-used-collector*)
+    (lem/peek-source::display *last-used-collector*)))
 
 (lmap "s r" 'open-last-search)
 (lmap "s g" 'lem/grep::project-grep)
@@ -107,24 +108,26 @@
       t)
 
 (defun lem-sdl2-p ()
-  (boundp 'lem-sdl2/display::*display*))
+  (and (find-package "lem-sdl2")
+       (boundp (find-symbol "*display*" (find-package "lem-sdl2")))))
 
 ;; Broken opacity
 ;(sdl2-ffi.functions:sdl-set-window-opacity
 ; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
 
 ;; Font
+#+lem-sdl2
 (when (lem-sdl2-p)
   (let ((font-regular #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Regular.ttf")
         (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
     (when (and (uiop:file-exists-p font-regular)
                (uiop:file-exists-p font-bold))
       (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
-                                    (lem-sdl2/font:make-font-config 
-                                     :latin-normal-file font-regular
-                                     :latin-bold-file font-bold
-                                     :cjk-normal-file font-regular
-                                     :cjk-bold-file font-bold)))))
+                        (lem-sdl2/font:make-font-config 
+                         :latin-normal-file font-regular
+                         :latin-bold-file font-bold
+                         :cjk-normal-file font-regular
+                         :cjk-bold-file font-bold)))))
 
 #+nil
 (define-command lisp-quickload (system-name)
