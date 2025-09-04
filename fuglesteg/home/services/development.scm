@@ -8,6 +8,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shells)
   #:use-module (gnu packages)
+  #:use-module (gnu packages nss)
   #:use-module (fuglesteg packages fonts)
   #:use-module (fuglesteg packages vim)
   #:use-module (fuglesteg packages lem)
