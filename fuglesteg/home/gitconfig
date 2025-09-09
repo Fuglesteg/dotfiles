@@ -5,7 +5,7 @@
 [init]
     defaultBranch = main
 [core]
-    editor = nvim
+    editor = lem
 [color "branch"]
     current = yellow bold
     local = green bold
