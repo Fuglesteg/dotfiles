@@ -30,6 +30,11 @@
       string-to-trim
       (concat (subseq string-to-trim 0 desired-length) "-")))
 
+(defun clamp (number min max)
+  (cond ((< number min) min)
+        ((> number max) max)
+        (t number)))
+
 ;;; Colors
 (setf *colors*
       '("#ffffff"
@@ -218,8 +223,34 @@
   (ml-update-player-status)
   (ml-update-media-title))
 
+;;; Window click
+(defun window-renumber (window new-number &key (group (current-group)))
+  (let ((existing-window (find new-number 
+                               (group-windows group)
+                               :key #'window-number
+                               :test #'=)))
+    (when existing-window
+      (setf (window-number existing-window) (window-number window))
+      (setf (window-number (group-current-window group)) new-number))))
+
+(defun ml-window-on-click (code id &rest rest)
+  (declare (ignore rest))
+  (let ((button (stumpwm::decode-button-code code))
+        (window (stumpwm::window-by-id id)))
+    (case button
+      ((:left-button)
+       (when window
+         (stumpwm::focus-all window)))
+      ((:middle-button)
+       (delete-window window))
+      ((:wheel-up)
+       (window-renumber window (clamp (1+ (window-number window)) 0 20)))
+      ((:wheel-down)
+       (window-renumber window (clamp (1- (window-number window)) 0 20))))))
+
 ;;; Register on-click handlers
 (when *initializing*
+  (register-ml-on-click-id :ml-on-click-focus-window #'ml-window-on-click)
   (register-ml-on-click-id :ml-volume-on-click #'ml-volume-on-click)
   (register-ml-on-click-id :ml-player-on-click #'ml-player-on-click)
   (register-ml-on-click-id :ml-mic-on-click #'ml-mic-on-click))
@@ -343,10 +374,11 @@ xrdb -merge ~/.Xresources" t))
   (ml-update-mic))
 
 (defcommand screenshot () ()
-    (sb-thread:make-thread (lambda () 
-	(run-shell-command "flameshot gui" t)
-	(fclear)
-	(pull-hidden-other))))
+    (sb-thread:make-thread
+     (lambda ()
+       (run-shell-command "flameshot gui" t)
+       (fclear)
+       (pull-hidden-other))))
 
 (defun get-all-windows ()
   "Get all windows in all groups"
