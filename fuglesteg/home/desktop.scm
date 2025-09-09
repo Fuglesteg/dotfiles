@@ -19,7 +19,6 @@
   #:use-module (fuglesteg packages fonts)
   #:use-module (fuglesteg packages stumpwm)
   #:use-module (fuglesteg packages packup)
-  #:use-module (fuglesteg home services packup)
   #:use-module (fuglesteg home services development))
 
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps
