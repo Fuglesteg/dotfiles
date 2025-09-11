@@ -93,6 +93,23 @@
 (lmap "s r" 'open-last-search)
 (lmap "s g" 'lem/grep::project-grep)
 
+;;; Functionality
+
+(defun scan-for-file (file-name &key (directory #P"."))
+  (let ((files (uiop:with-current-directory (directory)
+                 (lem-core/commands/file::get-files-recursively :find))))
+    (loop for file in files
+          do (when (ppcre:scan (format nil ".*~a$" file-name)  file)
+               (return (pathname (format nil "~a/~a" directory file)))))))
+
+(define-command open-translations () ()
+  (let ((no-json (scan-for-file "no.json" :directory #P"src/")))
+    (unless no-json
+      (editor-error "Could not find no.json"))
+    (lem/frame-multiplexer:frame-multiplexer-create-with-new-buffer-list)
+    (find-file no-json)
+    (split-window-horizontally (current-window))
+    (find-file #P"en.json")))
 
 ;;; Modes
 
