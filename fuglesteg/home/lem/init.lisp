@@ -125,12 +125,16 @@
       t)
 
 (defun lem-sdl2-p ()
-  (and (find-package "lem-sdl2")
-       (boundp (find-symbol "*display*" (find-package "lem-sdl2")))))
+  (alexandria:when-let ((sdl2-package (find-package "lem-sdl2")))
+       (boundp (find-symbol "*display*" sdl2-package))))
 
 ;; Broken opacity
 ;(sdl2-ffi.functions:sdl-set-window-opacity
 ; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
+
+(add-hook (variable-value 'before-save-hook :global)
+          (lambda (buffer)
+            (delete-trailing-whitespace buffer)))
 
 ;; Font
 #+lem-sdl2
@@ -139,8 +143,8 @@
         (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
     (when (and (uiop:file-exists-p font-regular)
                (uiop:file-exists-p font-bold))
-      (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
-                        (lem-sdl2/font:make-font-config 
+      (lem-sdl2/display:change-font (lem-sdl2/display:current-display)
+                        (lem-sdl2/font:make-font-config
                          :latin-normal-file font-regular
                          :latin-bold-file font-bold
                          :cjk-normal-file font-regular
