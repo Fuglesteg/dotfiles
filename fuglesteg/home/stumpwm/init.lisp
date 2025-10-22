@@ -58,6 +58,21 @@
                              (ml-update-player-status)))
                          :name "update-media-title"))
 
+(defvar *ml-time-string* "")
+
+(defun ml-get-time-string ()
+  (multiple-value-bind (seconds minutes hours day month year)
+      (decode-universal-time (get-universal-time))
+    (declare (ignore seconds))
+    (format nil "^2󰸗 ~2,'0d.~2,'0d.~2,'0d | ^n ~2,'0d:~2,'0d" day month year hours minutes)))
+
+(when *initializing*
+  (sb-thread:make-thread (lambda ()
+                           (loop
+                             (sleep 1)
+                             (setf *ml-time-string* (ml-get-time-string))))
+                         :name "update-time-string"))
+
 ; Initialize asdf source to guix home dependencies
 (asdf:initialize-source-registry
   `(:source-registry
@@ -65,24 +80,14 @@
      :inherit-configuration))
 
 ;;; Fonts
-#|
-; clx-ttf-fonts
-(asdf:load-system :ttf-fonts)
 
-(when *initializing*
-    (setf xft:*font-dirs* `(,(concat (getenv "HOME") "/.guix-home/profile/share/fonts")))
-    (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
-    (xft:cache-fonts) 
-    (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
-|#
-
-;; sdl-fonts
 (asdf:load-system :sdl-fonts)
 
 (defparameter *mononoki* (sdl-fonts:load-font
                           (concat (getenv "HOME")
                                   "/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf")
-                          16))
+                          16
+                          :hinting :mono))
 
 (set-font *mononoki*)
 
@@ -238,7 +243,7 @@
 
 ;;; Window click
 (defun window-renumber (window new-number &key (group (current-group)))
-  (let ((existing-window (find new-number 
+  (let ((existing-window (find new-number
                                (group-windows group)
                                :key #'window-number
                                :test #'=)))
@@ -273,9 +278,10 @@
 (setf *screen-mode-line-format*
       (list "^2( ^n%g^2 )^n "       ; groups
 	    "%W"                    ; windows
-	    "^>"                    ; right align
-            "%d "                   ; date and time
-	    '(:eval *ml-media-string*)
+            "^>"                    ; right align
+            '(:eval *ml-time-string*)
+            " "
+            '(:eval *ml-media-string*)
 	    "%T"))                  ; stumptray
 
 ; Enable the mode line
@@ -401,7 +407,7 @@ xrdb -merge ~/.Xresources" t))
   (format nil "~9,a | ~a" (group-name (slot-value window 'group)) (slot-value window 'title)))
 
 (defun select-from-windows ()
-  (let* ((windows (get-all-windows)) 
+  (let* ((windows (get-all-windows))
 	 (windows-list (loop for window in windows collect (list (format-window window) window))))
     (second (select-from-menu (current-screen) windows-list))))
 
