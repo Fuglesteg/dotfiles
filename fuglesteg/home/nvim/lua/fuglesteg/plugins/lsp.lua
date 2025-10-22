@@ -8,7 +8,7 @@ return {
         -- Autocompletion
         { 
             "saghen/blink.cmp",
-            version = "v1.5.1", -- Use release to match prebuilt binaries downloaded with guix
+            version = "v1.7.0", -- Use release to match prebuilt binaries downloaded with guix
             opts = {
                 keymap = {
                     preset = "default",
@@ -41,6 +41,7 @@ return {
                     }
                 },
                 fuzzy = {
+                		-- implementation = "lua",
                     prebuilt_binaries = {
                         download = false
                     }

@@ -45,8 +45,8 @@
 
 (define blink-cmp-fuzzy
   (origin (method url-fetch)
-          (uri "https://github.com/Saghen/blink.cmp/releases/download/v1.5.1/x86_64-unknown-linux-gnu.so")
-          (sha256 (base32 "1hy2csh6bmhpp20dw0g0r0931gwps4qfwvfc5zicd7xjw32s7jrl"))))
+          (uri "https://github.com/Saghen/blink.cmp/releases/download/v1.7.0/x86_64-unknown-linux-gnu.so")
+          (sha256 (base32 "08yra51liggbg8ygjc9xxl7675q6wz6dvygmq5h6cy742s0c0mcb"))))
 
 (define (home-development-xdg-data-files-service config)
   `(("nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so" ,blink-cmp-fuzzy)
