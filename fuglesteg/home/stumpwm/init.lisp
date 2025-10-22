@@ -65,6 +65,8 @@
      :inherit-configuration))
 
 ;;; Fonts
+#|
+; clx-ttf-fonts
 (asdf:load-system :ttf-fonts)
 
 (when *initializing*
@@ -72,6 +74,17 @@
     (setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
     (xft:cache-fonts) 
     (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
+|#
+
+;; sdl-fonts
+(asdf:load-system :sdl-fonts)
+
+(defparameter *mononoki* (sdl-fonts:load-font
+                          (concat (getenv "HOME")
+                                  "/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf")
+                          16))
+
+(set-font *mononoki*)
 
 ;;; General settings
 (setf *message-window-gravity* :center
