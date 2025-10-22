@@ -30,45 +30,34 @@
                      web-browsers pdf freedesktop lisp-xyz sdl
                      package-management gnome-xyz syncthing gnuzilla)
 
-(define sbcl-stumpwm-sdl-fonts
-  (let ((commit "sdl2-ttf")
+(define sbcl-stumpwm-clim-mode-line
+  (let ((commit "326725802fcedc2f8f28df91d4b548743da9e7bc")
         (revision "1"))
     (package
-     (name "sbcl-stumpwm-sdl-fonts")
+     (name "sbcl-stumpwm-clim-mode-line")
      (version (git-version "0.0.1" revision commit))
      (source
       (origin
        (method git-fetch)
        (uri (git-reference
-             (url "https://github.com/Fuglesteg/stumpwm-contrib.git")
+             (url "https://github.com/stumpwm/stumpwm-contrib.git")
              (commit commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "08j4l0zar14jx5wzr2k0m8inxwjbj41gz1082ljg3f7yacc0li5v"))))
+        (base32 "1z9rrkf44sj38ax8iiz95fzq84kx0sy4a8kfzki9f387wfhjx311"))))
      (build-system asdf-build-system/sbcl)
      (inputs
       (list stumpwm
-            sdl2
-            sdl2-ttf
-            sbcl-cffi))
+            sbcl-mcclim))
      (arguments
-      (list #:asd-systems ''("sdl-fonts")
-            #:phases
-            #~(modify-phases %standard-phases
-                             (add-after 'unpack 'patch-sdl-dependencies
-                                        (lambda _
-                                          (substitute* "util/sdl-fonts/sdl-fonts.lisp"
-                                                       (("libSDL2-2.0.so.0")
-                                                        (string-append #$sdl2 "/lib/libSDL2.so"))
-                                                       (("libSDL2_ttf-2.0.so.0")
-                                                        (string-append #$sdl2-ttf "/lib/libSDL2_ttf.so"))))))))
+      (list #:asd-systems ''("clim-mode-line")))
      (home-page "https://github.com/stumpwm/stumpwm-contrib")
      (synopsis "StumpWM extra modules")
      (description "This package provides extra modules for StumpWM.")
      (license (list license:gpl2+ license:gpl3+ license:bsd-2)))))
   
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
-                               sbcl-stumpwm-sdl-fonts
+                               sbcl-stumpwm-clim-mode-line
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf sbcl xset

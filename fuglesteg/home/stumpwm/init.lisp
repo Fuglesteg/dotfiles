@@ -50,7 +50,7 @@
 (update-color-map (current-screen))
 
 ; Background thread for updating mode-line elements
-(when *initializing*
+#+nil(when *initializing*
   (sb-thread:make-thread (lambda ()
                            (loop
                              (sleep 5)
@@ -66,7 +66,7 @@
 
 ;;; Fonts
 #|
-; clx-ttf-fonts
+;; clx-ttf-fonts
 (asdf:load-system :ttf-fonts)
 
 (when *initializing*
@@ -76,7 +76,9 @@
     (set-font (make-instance 'xft:font :family "Mononoki Nerd Font" :subfamily "Bold" :size 16)))
 |#
 
+#|
 ;; sdl-fonts
+
 (asdf:load-system :sdl-fonts)
 
 (defparameter *mononoki* (sdl-fonts:load-font
@@ -85,6 +87,11 @@
                           16))
 
 (set-font *mononoki*)
+|#
+
+;; clim-mode-line
+(asdf:load-system :clim-mode-line)
+(clim-mode-line:app-main)
 
 ;;; General settings
 (setf *message-window-gravity* :center
@@ -110,6 +117,7 @@
 (defparameter *msg-border-color* (nth 0 *colors*))
 
 ;;; Mode Line
+#|
 (defparameter *mode-line-bg-color* (nth 1 *colors*))
 (defparameter *mode-line-fg-color* (nth 0 *colors*))
 (setf *mode-line-background-color* *mode-line-bg-color*)
@@ -280,6 +288,7 @@
 
 ; Enable the mode line
 (enable-mode-line (current-screen) (current-head) t)
+|#
 
 #+nil
 (let ((*message-window-gravity* :top-right)
@@ -522,6 +531,7 @@ xrdb -merge ~/.Xresources" t))
 			   (user-homedir-pathname))))
 
 ;;; Tray
+#|
 (require "stumptray")
 (setf stumptray::*tray-win-background* (second *colors*))
 (setf stumptray::*tray-viwin-background* (second *colors*))
@@ -529,7 +539,9 @@ xrdb -merge ~/.Xresources" t))
 (setf stumptray::*tray-cursor-color* (first *colors*))
 (when *initializing*
     (stumptray:stumptray))
+|#
 
+#|
 ;;; Gaps
 (require "swm-gaps")
 
@@ -543,6 +555,7 @@ xrdb -merge ~/.Xresources" t))
 (setf swm-gaps:*outer-gaps-size* 20)
 
 (swm-gaps:toggle-gaps-on)
+|#
 
 (defcommand repack-group-numbers () ()
   (let ((groups (sort (copy-seq
