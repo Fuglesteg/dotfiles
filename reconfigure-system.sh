@@ -1,1 +1,1 @@
-sudo -E guix system -L . reconfigure ./fuglesteg/system.scm
+sudo -E guix system -L . reconfigure ./fuglesteg/k80.scm
