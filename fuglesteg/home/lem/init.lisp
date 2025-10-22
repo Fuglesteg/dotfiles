@@ -93,6 +93,23 @@
 (lmap "s r" 'open-last-search)
 (lmap "s g" 'lem/grep::project-grep)
 
+;;; Functionality
+
+(defun scan-for-file (file-name &key (directory #P"."))
+  (let ((files (uiop:with-current-directory (directory)
+                 (lem-core/commands/file::get-files-recursively :find))))
+    (loop for file in files
+          do (when (ppcre:scan (format nil ".*~a$" file-name)  file)
+               (return (pathname (format nil "~a/~a" directory file)))))))
+
+(define-command open-translations () ()
+  (let ((no-json (scan-for-file "no.json" :directory #P"src/")))
+    (unless no-json
+      (editor-error "Could not find no.json"))
+    (lem/frame-multiplexer:frame-multiplexer-create-with-new-buffer-list)
+    (find-file no-json)
+    (split-window-horizontally (current-window))
+    (find-file #P"en.json")))
 
 ;;; Modes
 
@@ -108,12 +125,16 @@
       t)
 
 (defun lem-sdl2-p ()
-  (and (find-package "lem-sdl2")
-       (boundp (find-symbol "*display*" (find-package "lem-sdl2")))))
+  (alexandria:when-let ((sdl2-package (find-package "lem-sdl2")))
+       (boundp (find-symbol "*display*" sdl2-package))))
 
 ;; Broken opacity
 ;(sdl2-ffi.functions:sdl-set-window-opacity
 ; (lem-sdl2/display:display-window (lem-sdl2/display:current-display)) 1.0)
+
+(add-hook (variable-value 'before-save-hook :global)
+          (lambda (buffer)
+            (delete-trailing-whitespace buffer)))
 
 ;; Font
 #+lem-sdl2
@@ -122,8 +143,8 @@
         (font-bold #P"/home/andy/.guix-home/profile/share/fonts/truetype/MononokiNerdFont-Bold.ttf"))
     (when (and (uiop:file-exists-p font-regular)
                (uiop:file-exists-p font-bold))
-      (lem-sdl2/display:change-font (lem-sdl2/display:current-display) 
-                        (lem-sdl2/font:make-font-config 
+      (lem-sdl2/display:change-font (lem-sdl2/display:current-display)
+                        (lem-sdl2/font:make-font-config
                          :latin-normal-file font-regular
                          :latin-bold-file font-bold
                          :cjk-normal-file font-regular
