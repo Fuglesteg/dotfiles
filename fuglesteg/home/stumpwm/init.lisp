@@ -104,11 +104,14 @@
       *normal-border-width* 2)
 
 ;;; Groups
-(when *initializing*
+#+nil(when *initializing*
     (grename "󰖟 Web")
     (gnewbg "󰯂 Code")
     (gnewbg "󰗃 General")
     (gnewbg " Gaming"))
+
+(when *initializing*
+  (grename "󰗃 General"))
 
 (defparameter *msg-bg-color* (nth 1 *colors*))
 (defparameter *msg-fg-color* (nth 0 *colors*))
