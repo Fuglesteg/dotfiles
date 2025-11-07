@@ -6,6 +6,7 @@
 (lem-vi-mode:vi-mode)
 
 (defvar *leader* "Space")
+(defvar *local-leader* ",")
 
 (defun imap (key action)
   "Map to insert mode"
@@ -15,13 +16,17 @@
   "Map to normal mode"
   (define-key lem-vi-mode:*normal-keymap* key action))
 
+(defun vmap (key action)
+  "Map to visual mode"
+  (define-key lem-vi-mode:*visual-keymap* key action))
+
 (defun lmap (key action)
   "Map to leader"
   (nmap (format nil "~a ~a" *leader* key) action))
 
-(defun vmap (key action)
-  "Map to visual mode"
-  (define-key lem-vi-mode:*visual-keymap* key action))
+(defun localmap (key action)
+  "Map to local leader"
+  (nmap (format nil "~a ~a" *local-leader* key) action))
 
 (define-command hover () ()
   (if (or (mode-active-p (current-buffer) 'lem-lisp-mode:lisp-mode)
@@ -75,9 +80,10 @@
 (nmap "g r" 'lem/language-mode:find-references)
 (nmap "g h" 'hover)
 
+(lmap "c e" 'lem-lsp-mode/lsp-mode::lsp-rename)
+
 (nmap "c-L" 'lem-paredit-mode:paredit-slurp)
 (nmap "c-H" 'lem-paredit-mode:paredit-barf)
-
 
 ;;; Search
 
@@ -110,6 +116,34 @@
     (find-file no-json)
     (split-window-horizontally (current-window))
     (find-file #P"en.json")))
+
+(defun camel-case->kebab-case (camel-case)
+  (with-output-to-string (kebab-case)
+    (format kebab-case (string-downcase (subseq camel-case 0 1)))
+    (loop for char across (subseq camel-case 1)
+          do (if (upper-case-p char)
+                 (format kebab-case "-~a" (char-downcase char))
+                 (format kebab-case "~a" char)))
+    kebab-case))
+
+(defun grep (query)
+  (lem/grep:grep (print (concatenate 'string
+                                     lem/grep:*grep-command*
+                                     " "
+                                     lem/grep:*grep-args*
+                                     " '"
+                                     query
+                                     "'"))
+                 (lem-core/commands/project:find-root (buffer-filename))))
+
+(define-command vue-current-component-usages () ()
+  (grep (print
+         (concatenate 'string
+                      "<"
+                      (camel-case->kebab-case
+                       (subseq (buffer-name) 0 (position #\. (buffer-name))))))))
+
+(localmap "c u" 'vue-current-component-usages)
 
 ;;; Modes
 
