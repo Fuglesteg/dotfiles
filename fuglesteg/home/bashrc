@@ -52,7 +52,7 @@ fi
 
 # Zoxide support
 eval "$(zoxide init bash)"
-    
+
 # FZF
 eval "$(fzf --bash)"
 
@@ -149,7 +149,7 @@ tmux-vue() {
 
     if ! tmux has-session -t $session_name 2> /dev/null; then
         tmux new-session -ds $session_name -c $PWD -n $session_name 'guix shell node'
-        tmux new-window -t $session_name:2 -n 'server' 'guix shell node -- npm run dev'
+        tmux new-window -t $session_name:2 -n 'server' 'guix shell node bash -- bash -c "npm run dev"'
     fi
 
     tmux attach-session -t $session_name
@@ -184,4 +184,3 @@ sbcl-micros-server() {
         --eval "(asdf:load-system :micros)" \
         --eval "(micros:create-server $create_server_args)"
 }
-
