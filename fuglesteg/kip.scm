@@ -10,25 +10,30 @@
   #:use-module (gnu services desktop)
   #:use-module (gnu services ssh)
   #:use-module (gnu services guix)
+  #:use-module (gnu packages linux)
   #:use-module (gnu packages gnome)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages gl)
   #:use-module (gnu packages xorg)
+  #:use-module (gnu packages video)
+  #:use-module (gnu packages wm)
   #:use-module (gnu services linux)
   #:use-module (gnu services xorg)
+  #:use-module (nongnu packages video)
   #:use-module (nongnu packages linux))
 
 (operating-system
  (kernel linux)
  (firmware (cons* linux-firmware
                   intel-microcode
-                  broadcom-bt-firmware
+                  ibt-hw-firmware
                   %base-firmware))
  (kernel-arguments (list "modprobe.blacklist=b43,b43legacy,ssb,bcm43xx,brcm80211,brcmfmac,brcmsmac,bcma"))
  (kernel-loadable-modules (list broadcom-sta))
  (locale "en_US.utf8")
  (timezone "Europe/Oslo")
- (keyboard-layout (keyboard-layout "no"))
+ (keyboard-layout (keyboard-layout "us"
+                                   #:options '("esc:nocaps")))
  (host-name "kip")
  (groups (cons* (user-group (name "sudo"))
                 %base-groups))
@@ -37,11 +42,22 @@
                 (comment "Andreas Fuglesteg Dale")
                 (group "users")
                 (home-directory "/home/andy")
-                (supplementary-groups (list "wheel" "netdev" "audio" "kvm" "video" "sudo")))
+                (supplementary-groups (list "wheel" "netdev" "audio"
+                                            "kvm" "video" "sudo")))
+               (user-account
+                (name "mina")
+                (comment "Mina Fuglesteg Dale")
+                (group "users")
+                (home-directory "/home/mina")
+                (supplementary-groups (list "netdev" "audio" "video")))
                %base-user-accounts))
  (name-service-switch %mdns-host-lookup-nss)
  (packages (cons* xf86-video-intel
                   mesa
+                  intel-media-driver/nonfree
+                  acpilight
+                  gnome-software
+                  stumpwm
                   %base-packages))
  (services (cons* (service guix-home-service-type
                            `(("andy" ,desktop-home)))
@@ -51,6 +67,8 @@
                             (authorized-keys
                              `(("andy" ,(local-file "k80.pub"))))))
                   (service tlp-service-type)
+                  (service bluetooth-service-type)
+                  (service gnome-desktop-service-type)
                   (modify-services %desktop-services
                                    (guix-service-type
                                     config =>
@@ -58,7 +76,6 @@
                                      (inherit config)
                                      (substitute-urls
                                       (append (list "https://substitutes.nonguix.org")
-                                              #;(list "https://nonguix-proxy.ditigal.xyz")
                                               %default-substitute-urls))
                                      (authorized-keys
                                       (append (list (plain-file "non-guix.pub"
