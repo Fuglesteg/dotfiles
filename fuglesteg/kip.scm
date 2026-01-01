@@ -17,6 +17,7 @@
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages video)
   #:use-module (gnu packages wm)
+  #:use-module (gnu packages xdisorg)
   #:use-module (gnu services linux)
   #:use-module (gnu services xorg)
   #:use-module (nongnu packages video)
@@ -27,9 +28,9 @@
  (firmware (cons* linux-firmware
                   intel-microcode
                   ibt-hw-firmware
+                  iwlwifi-firmware
+                  i915-firmware
                   %base-firmware))
- (kernel-arguments (list "modprobe.blacklist=b43,b43legacy,ssb,bcm43xx,brcm80211,brcmfmac,brcmsmac,bcma"))
- (kernel-loadable-modules (list broadcom-sta))
  (locale "en_US.utf8")
  (timezone "Europe/Oslo")
  (keyboard-layout (keyboard-layout "us"
@@ -45,6 +46,12 @@
                 (supplementary-groups (list "wheel" "netdev" "audio"
                                             "kvm" "video" "sudo")))
                (user-account
+                (name "dineo")
+                (comment "Dineo Joy Seabi")
+                (group "users")
+                (home-directory "/home/dineo")
+                (supplementary-groups (list "netdev" "audio" "video")))
+               (user-account
                 (name "mina")
                 (comment "Mina Fuglesteg Dale")
                 (group "users")
@@ -52,12 +59,13 @@
                 (supplementary-groups (list "netdev" "audio" "video")))
                %base-user-accounts))
  (name-service-switch %mdns-host-lookup-nss)
- (packages (cons* xf86-video-intel
-                  mesa
-                  intel-media-driver/nonfree
-                  acpilight
-                  gnome-software
+ (packages (cons* mesa
                   stumpwm
+                  light
+                  gnome-software
+                  intel-media-driver/nonfree
+                  xf86-input-synaptics
+                  xf86-input-wacom
                   %base-packages))
  (services (cons* (service guix-home-service-type
                            `(("andy" ,desktop-home)))
@@ -69,7 +77,33 @@
                   (service tlp-service-type)
                   (service bluetooth-service-type)
                   (service gnome-desktop-service-type)
+                  (udev-rules-service 'light-rules light)
                   (modify-services %desktop-services
+                                   (gdm-service-type
+                                    config =>
+                                   (gdm-configuration
+                                        (inherit config)
+                                        (xorg-configuration
+                                         (xorg-configuration
+                                          (resolutions '((1920 1080)))
+                                          (extra-config '("Section \"Device\""
+                                                          "Identifier \"Intel Graphics\""
+                                                          "Driver \"modesetting\""
+                                                          ;"Option \"TearFree\" \"true\""
+                                                          "EndSection"
+
+                                                          "Section \"InputClass\""
+                                                          "Identifier \"touchpad catchall\""
+                                                          "Driver \"synaptics\""
+                                                          "MatchIsTouchpad \"on\""
+                                                          "MatchDevicePath \"/dev/input/event*\""
+                                                          "Option \"TapButton1\" \"1\""
+                                                          "Option \"TapButton2\" \"2\""
+                                                          "Option \"TapButton3\" \"3\""
+                                                          "Option \"CircularScrolling\" \"on\""
+                                                          "Option \"CircScrollStrigger\" \"0\""
+                                                          "Option \"CircularPad\" \"on\""
+                                                          "EndSection"))))))
                                    (guix-service-type
                                     config =>
                                     (guix-configuration

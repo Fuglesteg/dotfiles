@@ -16,7 +16,6 @@
   :map *root-map*
   :key (kbd "b"))
 
-
 ;; top level prefix keys
 (defun r-define-key (key command)
   (define-key *root-map* (kbd key) command))
@@ -42,38 +41,15 @@
     (tr-define-key (prepend-prefix up) "move-window up")
     (tr-define-key (prepend-prefix right) "move-window right")))
 
-(defmacro set-gselect-prefix (prefix)
-  `(progn
-     ,@(loop for i across stumpwm::*group-number-map*
-             collect `(t-define-key ,(format nil "~a-~a" prefix i) ,(format nil "gselect ~a" i)))))
+(defun set-gselect-prefix (prefix)
+  (loop for i across stumpwm::*group-number-map*
+        do (t-define-key (format nil "~a-~a" prefix i)
+                         (format nil "gselect ~a" i))))
 
-(defmacro set-wselect-prefix (prefix)
-  `(progn
-     ,@(loop for i across stumpwm::*window-number-map*
-             collect `(t-define-key ,(format nil "~a-~a" prefix i) ,(format nil "select-window-by-number ~a" i)))))
-
-(set-gselect-prefix "M")
-(set-wselect-prefix "M")
-(set-window-focus-keys "h" "j" "k" "l")
-(set-window-move-keys "M" "h" "j" "k" "l")
-(tr-define-key "s" "vsplit")
-(tr-define-key "v" "hsplit")
-(tr-define-key "d" "remove-split")
-(r-define-key "space" "run-program")
-(r-define-key "w" "find-window")
-(tr-define-key "F6" "play-pause")
-(tr-define-key "F7" "next-track")
-(tr-define-key "F5" "previous-track")
-(tr-define-key "F3" "increase-volume")
-(tr-define-key "F2" "decrease-volume")
-(tr-define-key "F1" "toggle-mute")
-(t-define-key "s-x" "screenshot")
-(tr-define-key "p" "pull-window")
-(tr-define-key "f" "toggle-float")
-(tr-define-key "a" "toggle-always-on-top")
-(r-define-key "F10" "hello")
-(t-define-key "s-F4" "toggle-mic-mute")
-(r-define-key "=" "balance-frames")
+(defun set-wselect-prefix (prefix)
+  (loop for i across stumpwm::*window-number-map*
+        do (t-define-key (format nil "~a-~a" prefix i)
+                         (format nil "select-window-by-number ~a" i))))
 
 ;; Norwegian keys
 (defcommand register-norwegian-keys () ()
@@ -91,6 +67,30 @@
   (t-define-key "M-:" "window-send-string Ø")
   (t-define-key "M-'" "window-send-string æ")
   (t-define-key "M-\"" "window-send-string Æ")
+
+  (set-gselect-prefix "M")
+  (set-wselect-prefix "M")
+
+  (set-window-focus-keys "h" "j" "k" "l")
+  (set-window-move-keys "M" "h" "j" "k" "l")
+  (tr-define-key "s" "vsplit")
+  (tr-define-key "v" "hsplit")
+  (tr-define-key "d" "remove-split")
+  (r-define-key "space" "run-program")
+  (r-define-key "w" "find-window")
+  (tr-define-key "F6" "play-pause")
+  (tr-define-key "F7" "next-track")
+  (tr-define-key "F5" "previous-track")
+  (tr-define-key "F3" "increase-volume")
+  (tr-define-key "F2" "decrease-volume")
+  (tr-define-key "F1" "toggle-mute")
+  (t-define-key "s-x" "screenshot")
+  (tr-define-key "p" "pull-window")
+  (tr-define-key "f" "toggle-float")
+  (tr-define-key "a" "toggle-always-on-top")
+  (r-define-key "F10" "hello")
+  (t-define-key "s-F4" "toggle-mic-mute")
+  (r-define-key "=" "balance-frames")
 
   ;; Input
 

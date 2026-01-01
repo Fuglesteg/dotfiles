@@ -3,7 +3,8 @@
         :stumpwm
         :fugwm/utils
         :fugwm/commands
-        :fugwm/media)
+        :fugwm/media
+        :fugwm/laptop)
   (:export
    :init-mode-line))
 
@@ -52,6 +53,8 @@
 (defun init-mode-line ()
   (init-time-string-thread)
   (init-update-media-thread)
+  #+laptop (init-battery-level-thread)
+  #+laptop (ml-update-screen-brightness)
 
   (let ((mode-line-bg-color (nth 1 *colors*))
         (mode-line-fg-color (nth 0 *colors*)))
@@ -69,6 +72,7 @@
   (register-ml-on-click-id :ml-volume-on-click #'ml-volume-on-click)
   (register-ml-on-click-id :ml-player-on-click #'ml-player-on-click)
   (register-ml-on-click-id :ml-mic-on-click #'ml-mic-on-click)
+  (register-ml-on-click-id :ml-screen-brightness-on-click #'ml-screen-brightness-on-click)
 
   (ml-update-media-string-hard)
 
@@ -77,12 +81,16 @@
   (setf stumptray::*tray-viwin-background* (second *colors*))
   (setf stumptray::*tray-hiwin-background* (second *colors*))
   (setf stumptray::*tray-cursor-color* (first *colors*))
-  ;(stumptray:stumptray)
+  #-kip (stumptray:stumptray) ; Kip crashes with tray
 
   (setf *screen-mode-line-format*
         (list "^2( ^n%g^2 )^n "       ; groups
               "%W"                    ; windows
               "^>"                    ; right align
+              #+laptop '(:eval *ml-screen-brightness-string*)
+              " ^2|^n "
+              #+laptop '(:eval (ml-battery-level))
+              "^2 | "
               '(:eval *ml-time-string*)
               " "
               '(:eval *ml-media-string*)

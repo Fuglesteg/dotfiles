@@ -70,9 +70,11 @@
 ^0 Happy Hacking!")
 
   (run-shell-command "picom -b &
-xsetroot -cursor_name left_ptr &
-xrandr --output DisplayPort-2 --rate 144 --primary --output HDMI-A-0 --off &
-xrdb -merge ~/.Xresources" t)
+xsetroot -cursor_name left_ptr" t)
+
+  #+k80
+  (run-shell-command
+   "xrandr --output DisplayPort-2 --rate 144 --primary --output HDMI-A-0 --off" t)
 
   (add-hook *destroy-window-hook* 'on-window-destroy)
 

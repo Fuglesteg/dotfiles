@@ -127,7 +127,8 @@
 
 (defun ml-player-status ()
   (format-with-on-click-id
-   (concat (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t))) " ")
+   (concat (get-playing-status-icon (remove #\Newline (run-shell-command "playerctl status" t)))
+           " ")
    :ml-player-on-click nil))
 
 (defun ml-update-player-status ()
@@ -136,7 +137,9 @@
 
 ;;; Media title
 (defun ml-media-title ()
-  (format-with-on-click-id (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20) :ml-player-on-click nil))
+  (format-with-on-click-id
+   (trim-string (remove #\Newline (run-shell-command "playerctl metadata title" t)) 20)
+   :ml-player-on-click nil))
 
 (defun ml-update-media-title ()
   (setf *ml-media-title* (ml-media-title))

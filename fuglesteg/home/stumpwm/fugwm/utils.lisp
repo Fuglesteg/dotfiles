@@ -1,5 +1,5 @@
 (uiop:define-package :fugwm/utils
-  (:use :cl)
+  (:use :cl :stumpwm)
   (:export :string-case
            :trim-string
            :clamp))
@@ -17,7 +17,7 @@
 (defun trim-string (string-to-trim desired-length)
   (if (< (length string-to-trim) desired-length)
       string-to-trim
-      (concat (subseq string-to-trim 0 desired-length) "-")))
+      (concat (subseq string-to-trim 0 (1- desired-length)) "-")))
 
 (defun clamp (number min max)
   (cond ((< number min) min)

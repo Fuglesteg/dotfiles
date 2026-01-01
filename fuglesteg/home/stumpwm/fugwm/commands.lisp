@@ -59,19 +59,6 @@
      (fclear)
      (pull-hidden-other))))
 
-(defun screen-brightness ()
-  (parse-integer (run-shell-command "acpilight -get" t)))
-
-(defun (setf screen-brightness) (brightness)
-  (run-shell-command (format nil "acpilight -set ~a" brightness)
-                     nil))
-
-(defcommand screen-brightness-down () ()
-  (decf (screen-brightness)))
-
-(defcommand screen-brightness-up () ()
-  (incf (screen-brightness)))
-
 (defun get-all-windows ()
   "Get all windows in all groups"
   (act-on-matching-windows (w) (stumpwm::title-re-p w "") w))
