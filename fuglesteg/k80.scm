@@ -1,8 +1,10 @@
 (define-module (fuglesteg k80)
                #:use-module (gnu)
                #:use-module (gnu home)
+               #:use-module (gnu packages avahi)
                #:use-module (gnu services)
                #:use-module (gnu services guix)
+               #:use-module (gnu services avahi)
                #:use-module (gnu system setuid)
                #:use-module (gnu system nss)
                #:use-module (guix packages)
@@ -15,6 +17,7 @@
                      docker xorg)
 
 (use-package-modules fonts vim video certs docker networking
+                     xdisorg kde-graphics
                      gl xorg version-control linux)
 
 (define-public k80
@@ -37,12 +40,17 @@
                                  (group "users")
                                  (home-directory "/home/andy")
                                  (supplementary-groups '("wheel" "netdev" "audio" "kvm"
-                                                         "video" "docker" "sudo")))
+                                                         "video" "docker" "sudo" "input")))
                                %base-user-accounts))
                  (name-service-switch %mdns-host-lookup-nss)
-                 (packages (cons* git vim
+                 (packages (cons* git
+                                  vim
                                   v4l2loopback-linux-module ; Used for virtual camera in OBS
-                                  xf86-video-amdgpu mesa
+                                  avahi
+                                  xf86-video-amdgpu
+                                  mesa
+                                  xf86-input-wacom
+                                  krita
                                   %base-packages))
                  (kernel-loadable-modules (list v4l2loopback-linux-module))
                  (initrd-modules (cons "kvm_amd" %base-initrd-modules)) ; Virual machine kernel module
@@ -58,15 +66,28 @@
                      (service guix-home-service-type
                               `(("andy" ,desktop-home)))
                      (service gnome-keyring-service-type)
+                     (simple-service 'k8-host
+                                     hosts-service-type
+                                     (list (host "192.168.1.20" "k8")))
+                     ;; For Sims 3 (lol)
                      (service pam-limits-service-type
                               (list
                                (pam-limits-entry "andy" 'hard 'nofile 524288)))
+                     (udev-rules-service 'keychron-rules
+                                         (udev-rule "99-keychron.rules"
+                                                          (string-append "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"3434\", ATTRS{idProduct}==\"d048\","
+                                                                         "MODE=\"0660\", GROUP=\"users\", TAG+=\"uaccess\", TAG+=\"udev-acl\"")))
                      (modify-services %desktop-services
+                                      (avahi-service-type
+                                       config =>
+                                       (avahi-configuration
+                                        (inherit config)
+                                        (wide-area? #t)))
                                       (gdm-service-type
                                        config =>
                                        (gdm-configuration
                                         (inherit config)
-                                        (xorg-configuration 
+                                        (xorg-configuration
                                          (xorg-configuration
                                           (resolutions '((3840 2160) (1920 1080)))
                                           (extra-config '("Section \"Device\""
@@ -84,9 +105,9 @@
                                          (append (list "https://substitutes.nonguix.org")
                                                  %default-substitute-urls))
                                         (authorized-keys
-                                         (append (list (plain-file "non-guix.pub" 
-                                                                   "(public-key 
-                                                                             (ecc 
+                                         (append (list (plain-file "non-guix.pub"
+                                                                   "(public-key
+                                                                             (ecc
                                                                                (curve Ed25519)
                                                                                (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
                                                  %default-authorized-guix-keys)))))))

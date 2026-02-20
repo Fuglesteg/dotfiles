@@ -62,10 +62,7 @@
               ("ls" . "eza -l --icons")
               ("info" . "info --vi-keys")
               ("neovide" . "neovide --multigrid")
-              ("sshf" . ,(let ((filename "./fuglesteg-server-ip.secret"))
-                           (if (file-exists? filename)
-                             (string-append "ssh " (call-with-input-file filename read-line))
-                             "echo \"Not configured with server address\"")))
+              ("sshf" . "ssh k8")
               ("sbcl" . "rlwrap sbcl --noinform")))
    (bashrc (list (local-file "../bashrc" "bashrc")))
    (bash-profile (list (local-file
