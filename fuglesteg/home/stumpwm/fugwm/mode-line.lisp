@@ -4,7 +4,7 @@
         :fugwm/utils
         :fugwm/commands
         :fugwm/media
-        :fugwm/laptop)
+        #+laptop :fugwm/laptop)
   (:export
    :init-mode-line))
 
@@ -72,7 +72,7 @@
   (register-ml-on-click-id :ml-volume-on-click #'ml-volume-on-click)
   (register-ml-on-click-id :ml-player-on-click #'ml-player-on-click)
   (register-ml-on-click-id :ml-mic-on-click #'ml-mic-on-click)
-  (register-ml-on-click-id :ml-screen-brightness-on-click #'ml-screen-brightness-on-click)
+  #+laptop (register-ml-on-click-id :ml-screen-brightness-on-click #'ml-screen-brightness-on-click)
 
   (ml-update-media-string-hard)
 
@@ -81,14 +81,13 @@
   (setf stumptray::*tray-viwin-background* (second *colors*))
   (setf stumptray::*tray-hiwin-background* (second *colors*))
   (setf stumptray::*tray-cursor-color* (first *colors*))
-  #-kip (stumptray:stumptray) ; Kip crashes with tray
 
   (setf *screen-mode-line-format*
         (list "^2( ^n%g^2 )^n "       ; groups
               "%W"                    ; windows
               "^>"                    ; right align
               #+laptop '(:eval *ml-screen-brightness-string*)
-              " ^2|^n "
+              #+laptop " ^2|^n "
               #+laptop '(:eval (ml-battery-level))
               "^2 | "
               '(:eval *ml-time-string*)
@@ -97,4 +96,7 @@
               "%T"))                   ; stumptray
 
   ; Enable the mode line
-  (enable-mode-line (current-screen) (current-head) t))
+  (enable-mode-line (current-screen) (current-head) t)
+
+  ; Crashes with stumptray
+  #+nil (stumptray:stumptray))
