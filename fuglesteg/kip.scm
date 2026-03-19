@@ -60,11 +60,10 @@
                %base-user-accounts))
  (name-service-switch %mdns-host-lookup-nss)
  (packages (cons* mesa
-                  stumpwm
                   light
                   gnome-software
                   intel-media-driver/nonfree
-                  xf86-input-synaptics
+                  ;xf86-input-synaptics
                   xf86-input-wacom
                   %base-packages))
  (services (cons* (service guix-home-service-type
