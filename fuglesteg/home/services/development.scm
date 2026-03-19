@@ -70,7 +70,7 @@
                         "bash_profile")))))
 
 (define (home-development-activation-service config)
-  #~(invoke (file-append node-lts "/bin/npm")
+  #~(invoke #$(file-append node-lts "/bin/npm")
             "i" "-g"
             "typescript" "typescript-language-server"
             "@vue/language-server" "@vue/typescript-plugin"))
