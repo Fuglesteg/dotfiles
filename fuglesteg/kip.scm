@@ -75,6 +75,18 @@
                              `(("andy" ,(local-file "k80.pub"))))))
                   (service tlp-service-type)
                   (service bluetooth-service-type)
+                  (service wireguard-service-type
+                           (wireguard-configuration
+                            (interface "wg-k8")
+                            (private-key "/home/andy/wg/k8-private.key")
+                            (addresses "10.0.0.1")
+                            (peers
+                             (list
+                              (wireguard-peer
+                               (name "K8")
+                               (public-key "Z2Inejk/94vVSbaEwJm5y+undnfOR8ADky9zidVTHEU=")
+                               (allowed-ips '("10.0.0.8/24"))
+                               (keep-alive 25))))))
                   (service gnome-desktop-service-type)
                   (udev-rules-service 'light-rules light)
                   (modify-services %desktop-services
