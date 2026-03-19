@@ -34,7 +34,7 @@
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf sbcl xset
-                               xrandr nyxt firefox pavucontrol pulseaudio xrdb
+                               xrandr firefox pavucontrol pulseaudio xrdb
                                pamixer playerctl flameshot bluez
                                thunar tumbler ffmpegthumbnailer
                                p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
