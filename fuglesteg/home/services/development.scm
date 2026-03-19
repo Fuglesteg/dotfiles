@@ -73,9 +73,10 @@
                         "bash_profile")))))
 
 (define (home-development-activation-service config)
-  #~(invoke "npm" "i" "-g"
-                      "typescript" "typescript-language-server"
-                      "@vue/language-server" "@vue/typescript-plugin"))
+  #~(invoke (file-append node-lts "/bin/npm")
+            "i" "-g"
+            "typescript" "typescript-language-server"
+            "@vue/language-server" "@vue/typescript-plugin"))
 
 (define-public fuglesteg-development-service-type
   (service-type
