@@ -23,6 +23,11 @@
   :map *root-map*
   :key (kbd "b"))
 
+(defprogram-shortcut file-manager
+  :command "exec thunar"
+  :map *root-map*
+  :key (kbd "f"))
+
 (defun init ()
   (setf stumpwm:*colors*
         '("#ffffff"

@@ -59,7 +59,9 @@
 ;;; Battery level
 
 (defun battery-level ()
-  (parse-integer (uiop:read-file-string #P"/sys/class/power_supply/BAT1/capacity")))
+  (let ((file #P"/sys/class/power_supply/BAT1/capacity"))
+    (when (probe-file file)
+      (parse-integer (uiop:read-file-string file)))))
 
 (defvar *battery-level* 100)
 
