@@ -1,5 +1,6 @@
 (define-module (fuglesteg kip)
   #:use-module (fuglesteg home desktop)
+  #:use-module (fuglesteg services vpn)
   #:use-module (guix packages)
   #:use-module (guix build-system trivial)
   #:use-module (gnu)
@@ -75,46 +76,39 @@
                              `(("andy" ,(local-file "k80.pub"))))))
                   (service tlp-service-type)
                   (service bluetooth-service-type)
-                  (service wireguard-service-type
-                           (wireguard-configuration
-                            (interface "wg-k8")
-                            (private-key "/home/andy/wg/k8-private.key")
-                            (addresses "10.0.0.1")
-                            (peers
-                             (list
-                              (wireguard-peer
-                               (name "K8")
-                               (public-key "Z2Inejk/94vVSbaEwJm5y+undnfOR8ADky9zidVTHEU=")
-                               (allowed-ips '("10.0.0.8/24"))
-                               (keep-alive 25))))))
+                  (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
+                                               #:address "10.0.0.1/24"
+                                               #:peers (list peer-k8
+                                                             peer-k80))
+                  (fuglesteg-hosts-service)
                   (service gnome-desktop-service-type)
                   (udev-rules-service 'light-rules light)
                   (modify-services %desktop-services
                                    (gdm-service-type
                                     config =>
-                                   (gdm-configuration
-                                        (inherit config)
-                                        (xorg-configuration
-                                         (xorg-configuration
-                                          (resolutions '((1920 1080)))
-                                          (extra-config '("Section \"Device\""
-                                                          "Identifier \"Intel Graphics\""
-                                                          "Driver \"modesetting\""
-                                                          ;"Option \"TearFree\" \"true\""
-                                                          "EndSection"
+                                    (gdm-configuration
+                                     (inherit config)
+                                     (xorg-configuration
+                                      (xorg-configuration
+                                       (resolutions '((1920 1080)))
+                                       (extra-config '("Section \"Device\""
+                                                       "Identifier \"Intel Graphics\""
+                                                       "Driver \"modesetting\""
+                                                       ;"Option \"TearFree\" \"true\""
+                                                       "EndSection"
 
-                                                          "Section \"InputClass\""
-                                                          "Identifier \"touchpad catchall\""
-                                                          "Driver \"synaptics\""
-                                                          "MatchIsTouchpad \"on\""
-                                                          "MatchDevicePath \"/dev/input/event*\""
-                                                          "Option \"TapButton1\" \"1\""
-                                                          "Option \"TapButton2\" \"2\""
-                                                          "Option \"TapButton3\" \"3\""
-                                                          "Option \"CircularScrolling\" \"on\""
-                                                          "Option \"CircScrollStrigger\" \"0\""
-                                                          "Option \"CircularPad\" \"on\""
-                                                          "EndSection"))))))
+                                                       "Section \"InputClass\""
+                                                       "Identifier \"touchpad catchall\""
+                                                       "Driver \"synaptics\""
+                                                       "MatchIsTouchpad \"on\""
+                                                       "MatchDevicePath \"/dev/input/event*\""
+                                                       "Option \"TapButton1\" \"1\""
+                                                       "Option \"TapButton2\" \"2\""
+                                                       "Option \"TapButton3\" \"3\""
+                                                       "Option \"CircularScrolling\" \"on\""
+                                                       "Option \"CircScrollStrigger\" \"0\""
+                                                       "Option \"CircularPad\" \"on\""
+                                                       "EndSection"))))))
                                    (guix-service-type
                                     config =>
                                     (guix-configuration
