@@ -4,10 +4,12 @@
   #:use-module (gnu packages avahi)
   #:use-module (gnu services)
   #:use-module (gnu services xorg)
+  #:use-module (gnu services sddm)
   #:use-module (gnu system pam)
   #:use-module (gnu services networking)
   #:use-module (gnu services dbus)
   #:use-module (gnu services vpn)
+  #:use-module (gnu services dns)
   #:use-module (gnu services guix)
   #:use-module (gnu services avahi)
   #:use-module (gnu services sound)
@@ -25,7 +27,7 @@
 
 (use-package-modules fonts vim video certs docker networking
                      xdisorg kde-graphics libusb nfs
-                     gl xorg version-control linux)
+                     wm gl xorg version-control linux)
 
 (define-public k80
   (operating-system
@@ -53,11 +55,12 @@
    (packages (cons* git
                     vim
                     v4l2loopback-linux-module ; Used for virtual camera in OBS
+                    v4l-utils
                     avahi
                     xf86-video-amdgpu
                     mesa
                     xf86-input-wacom
-                    krita
+                    stumpwm
                     %base-packages))
    (kernel-loadable-modules (list v4l2loopback-linux-module))
    (initrd-modules (cons "kvm_amd" %base-initrd-modules)) ; Virtual machine kernel module
@@ -127,8 +130,8 @@
                         (udev-rule "99-keychron.rules"
                                    (string-append "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"3434\", ATTRS{idProduct}==\"d048\","
                                                   "MODE=\"0660\", GROUP=\"users\", TAG+=\"uaccess\", TAG+=\"udev-acl\"")))
-    (service slim-service-type
-             (slim-configuration
+    (service sddm-service-type
+             (sddm-configuration
               (xorg-configuration
                (xorg-configuration
                 (resolutions '((3840 2160) (1920 1080)))
@@ -176,7 +179,6 @@
 
     (service x11-socket-directory-service-type)
 
-    (service pulseaudio-service-type)
     (service alsa-service-type)
     %base-services))
   (bootloader (bootloader-configuration

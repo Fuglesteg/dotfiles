@@ -10,6 +10,7 @@
   #:use-module (gnu home services desktop)
   #:use-module (gnu home services syncthing)
   #:use-module (gnu home services shells)
+  #:use-module (gnu home services sound)
   #:use-module (gnu packages)
   #:use-module (gnu services)
   #:use-module (guix gexp)
@@ -27,7 +28,7 @@
 (use-package-modules wm vim video certs base gl lisp tmux rust-apps
                      terminals image-viewers xdisorg xorg tls xfce
                      pulseaudio music image compton glib linux
-                     web-browsers pdf freedesktop lisp-xyz sdl
+                     web-browsers pdf freedesktop lisp-xyz sdl kde-graphics
                      package-management gnome-xyz syncthing gnuzilla)
 
 (define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-sdl-fonts
@@ -36,7 +37,7 @@
                                zathura zathura-pdf-mupdf mupdf sbcl xset
                                xrandr firefox pavucontrol pulseaudio xrdb
                                pamixer playerctl flameshot bluez
-                               thunar tumbler ffmpegthumbnailer
+                               thunar tumbler ffmpegthumbnailer krita
                                p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
                                picom flatpak-xdg-utils flatpak xdg-utils
                                xsetroot hackneyed-x11-cursors
@@ -64,6 +65,9 @@
                                 (latitude 59.91)
                                 (longitude 10.75)))
                      (service home-dbus-service-type)
+                     (service home-pipewire-service-type
+                              (home-pipewire-configuration
+                               (enable-pulseaudio? #t)))
                      (simple-service 'desktop-environment-variables
                                      home-environment-variables-service-type
                                      `(("BROWSER" . "firefox")
