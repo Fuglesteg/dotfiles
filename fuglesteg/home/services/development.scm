@@ -35,6 +35,7 @@
   `((".tmux.conf" ,(local-file "../tmux.conf"))
     (".tmux-set-colors.conf" ,(local-file "../tmux-set-colors.conf"))
     (".vimrc" ,(local-file "../vimrc"))
+    (".npmrc" ,(local-file "../npmrc"))
     (".lem/init.lisp" ,(local-file "../lem/init.lisp"))
     (".gitconfig" ,(local-file "../gitconfig"))
     (".inputrc" ,(local-file "../inputrc"))
@@ -70,7 +71,7 @@
                         "bash_profile")))))
 
 (define (home-development-activation-service config)
-  #~(invoke (file-append node-lts "/bin/npm")
+  #~(invoke #$(file-append node-lts "/bin/npm")
             "i" "-g"
             "typescript" "typescript-language-server"
             "@vue/language-server" "@vue/typescript-plugin"))
