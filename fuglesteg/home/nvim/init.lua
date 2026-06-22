@@ -48,27 +48,31 @@ local function vmap(binding, action, description)
     vim.keymap.set('v', binding, action, { desc = description })
 end
 
+local function lmap(binding, action, description)
+    nmap("<Leader>" .. binding, action, description)
+end
+
 -- General
 nmap("<Esc>", vim.cmd.nohlsearch)
 vmap("<", "<gv")
 vmap(">", ">gv")
-nmap("<Leader>ff", vim.cmd.Oil)
-nmap("<Leader><Tab>", function() vim.cmd.edit("#") end)
 nmap("zh", "20zh")
 nmap("zl", "20zl")
+lmap("ff", vim.cmd.Oil)
+lmap("<Tab>", function() vim.cmd.edit("#") end)
 
 -- Tabpages
-nmap("<Leader>1", function() vim.cmd.tabnext(1) end)
-nmap("<Leader>2", function() vim.cmd.tabnext(2) end)
-nmap("<Leader>3", function() vim.cmd.tabnext(3) end)
-nmap("<Leader>4", function() vim.cmd.tabnext(4) end)
-nmap("<Leader>5", function() vim.cmd.tabnext(5) end)
-nmap("<Leader>6", function() vim.cmd.tabnext(6) end)
-nmap("<Leader>7", function() vim.cmd.tabnext(7) end)
-nmap("<Leader>8", function() vim.cmd.tabnext(8) end)
-nmap("<Leader>9", function() vim.cmd.tabnext(9) end)
+lmap("1", function() vim.cmd.tabnext(1) end)
+lmap("2", function() vim.cmd.tabnext(2) end)
+lmap("3", function() vim.cmd.tabnext(3) end)
+lmap("4", function() vim.cmd.tabnext(4) end)
+lmap("5", function() vim.cmd.tabnext(5) end)
+lmap("6", function() vim.cmd.tabnext(6) end)
+lmap("7", function() vim.cmd.tabnext(7) end)
+lmap("8", function() vim.cmd.tabnext(8) end)
+lmap("9", function() vim.cmd.tabnext(9) end)
 
-nmap("<Leader>T", vim.cmd.tabnew)
+lmap("T", vim.cmd.tabnew)
 
 -- Lsp
 nmap("gh", vim.lsp.buf.hover, "Open LSP symbol hover information")
@@ -78,11 +82,12 @@ nmap("gD", vim.lsp.buf.type_definition, "Go to Type definition")
 nmap("gi", vim.lsp.buf.implementation, "Go to Impementation")
 nmap("gr", vim.lsp.buf.references, "Go to References")
 nmap("ge", vim.lsp.buf.rename, "Edit symbol")
-nmap("<Leader>cf", vim.lsp.buf.format, "Code Format")
-nmap("<Leader>cd", vim.diagnostic.setloclist, "Code Diagnostics")
-nmap("<Leader>ca", vim.lsp.buf.code_action, "Code Actions")
-nmap("<Leader>sbs", vim.lsp.buf.document_symbol, "Search Buffer Symbols")
-nmap("<Leader>ss", vim.lsp.buf.workspace_symbol, "Search workspace Symbols")
+
+lmap("cf", vim.lsp.buf.format, "Code Format")
+lmap("cd", vim.diagnostic.setloclist, "Code Diagnostics")
+lmap("ca", vim.lsp.buf.code_action, "Code Actions")
+lmap("sbs", vim.lsp.buf.document_symbol, "Search Buffer Symbols")
+lmap("ss", vim.lsp.buf.workspace_symbol, "Search workspace Symbols")
 
 -----------------
 --== Plugins ==--
@@ -99,7 +104,6 @@ vim.pack.add({
     { src = gh("neovim/nvim-lspconfig") },
     { src = gh("pmizio/typescript-tools.nvim") },
     { src = gh("nvim-treesitter/nvim-treesitter") },
-    { src = gh("Decodetalkers/csharpls-extended-lsp.nvim") },
     { src = gh("j-hui/fidget.nvim") },
     { src = gh("nvim-mini/mini.pick") },
     { src = gh("saghen/blink.cmp"), version = "v1.8.0" },
@@ -109,6 +113,24 @@ vim.pack.add({
 require("mini.icons").setup({})
 require("fidget").setup({})
 require("oil").setup({})
+
+-- Git
+local gitsigns = require("gitsigns")
+gitsigns.setup({
+    attach_to_untracked = false,
+})
+
+lmap("gsb", gitsigns.stage_buffer)
+lmap("gsh", gitsigns.stage_hunk)
+lmap("gd", gitsigns.diffthis)
+lmap("gbb", gitsigns.blame)
+lmap("gbl", gitsigns.blame_line)
+lmap("gq", function() gitsigns.setqflist("all") end)
+lmap("gl", gitsigns.setloclist)
+lmap("grh", gitsigns.reset_hunk)
+lmap("gn", function() gitsigns.nav_hunk("next") end)
+lmap("gp", function() gitsigns.nav_hunk("prev") end)
+lmap("gP", gitsigns.preview_hunk_inline)
 
 -- Treesitter
 local treesitter = require("nvim-treesitter")
@@ -248,6 +270,85 @@ vim.lsp.config("lua_ls", {
 vim.lsp.enable("lua_ls")
 
 -- csharp_ls is installed with: `dotnet tool install --global csharp-ls`
-vim.lsp.enable("csharp_ls")
-require("csharpls_extended").buf_read_cmd_bind()
 
+--[[
+-- Using roslyn_ls instead
+vim.lsp.config("csharp_ls", {
+    cmd = function(dispatchers, config)
+        return vim.lsp.rpc.start({ "csharp-ls", "--features", "metadata-urls" }, dispatchers, {
+            cwd = config.cmd_cwd or config.root_dir,
+            env = config.cmd_env,
+            detached = config.detached,
+        })
+    end
+})
+]]
+
+-- roslyn_ls is installed with: `dotnet tool install --global --prerelease roslyn-language-server`
+
+--=============================
+-- Yoinked from nvim-lspconfig
+--=============================
+
+---@param client vim.lsp.Client
+---@param target string
+local function on_init_sln(client, target)
+  vim.notify('Initializing: ' .. target, vim.log.levels.TRACE, { title = 'roslyn_ls' })
+  ---@diagnostic disable-next-line: param-type-mismatch
+  client:notify('solution/open', {
+    solution = vim.uri_from_fname(target),
+  })
+end
+
+---@param client vim.lsp.Client
+---@param project_files string[]
+local function on_init_project(client, project_files)
+  vim.notify('Initializing: projects', vim.log.levels.TRACE, { title = 'roslyn_ls' })
+  ---@diagnostic disable-next-line: param-type-mismatch
+  client:notify('project/open', {
+    projects = vim.tbl_map(function(file)
+      return vim.uri_from_fname(file)
+    end, project_files),
+  })
+end
+
+vim.lsp.config("roslyn_ls", {
+    cmd = { (vim.fn.has("win32") == 1 and "roslyn-language-server.cmd") or "roslyn-language-server", "--stdio" },
+    settings = {
+        -- better performance
+        ["csharp|background_analysis"] = {
+            dotnet_analyzer_diagnostics_scope = "openFiles",
+            dotnet_compiler_diagnostics_scope = "openFiles",
+        }
+    },
+    on_init = {
+        function(client)
+            local root_dir = client.config.root_dir
+
+            -- Load the right omnium solution
+            for entry, type in vim.fs.dir(root_dir) do
+                if type == 'file' and entry == "Omnium.sln" then
+                    on_init_sln(client, vim.fs.joinpath(root_dir, entry))
+                    return
+                end
+            end
+
+            -- try load first solution we find
+            for entry, type in vim.fs.dir(root_dir) do
+                if type == 'file' and (vim.endswith(entry, '.sln') or vim.endswith(entry, '.slnx')) then
+                    on_init_sln(client, vim.fs.joinpath(root_dir, entry))
+                    return
+                end
+            end
+
+            -- if no solution is found load project
+            for entry, type in vim.fs.dir(root_dir) do
+                if type == 'file' and vim.endswith(entry, '.csproj') then
+                    on_init_project(client, { vim.fs.joinpath(root_dir, entry) })
+                end
+            end
+        end,
+    },
+})
+
+vim.lsp.enable("roslyn_ls")

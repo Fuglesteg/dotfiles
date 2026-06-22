@@ -15,18 +15,21 @@
 
 (use-package-modules version-control base rust-apps web ssh node
                      tmux terminals curl syncthing text-editors
-                     readline admin compression certs vim)
+                     readline admin compression certs vim lua)
 
 (define (home-development-profile-service config)
   (list curl syncthing coreutils node
         rlwrap ripgrep nss-certs openssh
         htop neovim fzf glibc-locales
         git zoxide fd tmux unzip eza lem-latest font-nerd-mononoki))
+        nvim-telescope-fzf-native lua-language-server
 
 (define (home-development-variables-service config)
   `(("VISUAL" . "nvim")
     ("GUIX_LOCPATH" . "$HOME/.guix-home/profile/lib/locale")
-    ("PATH" . ,(string-append "$PATH:" "$HOME/.local/bin:"))
+    ("PATH" . ,(string-append "$PATH:"
+                              "$HOME/.local/bin:"
+                              "~/.guix-home/share/dotnet:~/.dotnet/tools"))
     ("EDITOR" . "nvim")))
 
 (define (home-development-files-service config)

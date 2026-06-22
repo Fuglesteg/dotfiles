@@ -17,6 +17,15 @@
             (openpgp-fingerprint
               "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
       (channel
+        (name 'sijo)
+        (url "https://git.sr.ht/~simendsjo/dotfiles")
+        (branch "main")
+        (introduction
+         (make-channel-introduction
+          "c352f7331b1722b2ffb964572c7f7fbec585bd2f"
+          (openpgp-fingerprint
+           "B0F2 D6C5 2936 95FD 57B5  D255 77BC 6345 B65D 6CFB"))))
+      (channel
         (name 'fuglesteg)
         (url "https://github.com/fuglesteg/guix-fuglesteg-channel")
         (branch "main")))
