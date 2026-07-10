@@ -67,62 +67,59 @@
                   ;xf86-input-synaptics
                   xf86-input-wacom
                   %base-packages))
- (services (cons* (service guix-home-service-type
-                           `(("andy" ,desktop-home)))
-                  (service openssh-service-type
-                           (openssh-configuration
-                            (password-authentication? #f)
-                            (authorized-keys
-                             `(("andy" ,(local-file "k80.pub"))))))
-                  (service tlp-service-type)
-                  (service bluetooth-service-type)
-                  (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
-                                               #:address "10.0.0.1/24"
-                                               #:peers (list peer-k8
-                                                             peer-k80))
-                  (fuglesteg-hosts-service)
-                  (service gnome-desktop-service-type)
-                  (udev-rules-service 'light-rules light)
-                  (modify-services %desktop-services
-                                   (gdm-service-type
-                                    config =>
-                                    (gdm-configuration
-                                     (inherit config)
-                                     (xorg-configuration
-                                      (xorg-configuration
-                                       (resolutions '((1920 1080)))
-                                       (extra-config '("Section \"Device\""
-                                                       "Identifier \"Intel Graphics\""
-                                                       "Driver \"modesetting\""
-                                                       ;"Option \"TearFree\" \"true\""
-                                                       "EndSection"
+ (services
+  (cons* (service guix-home-service-type
+                  `(("andy" ,desktop-home)))
+         (service openssh-service-type
+                  (openssh-configuration
+                   (password-authentication? #f)
+                   (authorized-keys
+                    `(("andy" ,(local-file "k80.pub"))))))
+         (service tlp-service-type)
+         (service bluetooth-service-type)
+         (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
+                                      #:address "10.0.0.1/24"
+                                      #:peers (list peer-k8
+                                                    peer-k80))
+         (fuglesteg-hosts-service)
+         (service gnome-desktop-service-type)
+         (udev-rules-service 'light-rules light)
+         (simple-service 'guix-moe guix-service-type
+                         (guix-extension
+                          (authorized-keys
+                           (list (plain-file "guix-moe-old.pub"
+                                             "(public-key (ecc (curve Ed25519) (q #374EC58F5F2EC0412431723AF2D527AD626B049D657B5633AAAEBC694F3E33F9#)))")
+                                 ;; New key since 2025-10-29.
+                                 (plain-file "guix-moe.pub"
+                                             "(public-key (ecc (curve Ed25519) (q #552F670D5005D7EB6ACF05284A1066E52156B51D75DE3EBD3030CD046675D543#)))")))
+                          (substitute-urls
+                           '("https://cache-cdn.guix.moe"))))
+         (modify-services %desktop-services
+                          (gdm-service-type
+                           config =>
+                           (gdm-configuration
+                            (inherit config)
+                            (xorg-configuration
+                             (xorg-configuration
+                              (resolutions '((1920 1080)))
+                              (extra-config '("Section \"Device\""
+                                              "Identifier \"Intel Graphics\""
+                                              "Driver \"modesetting\""
+                                              ;"Option \"TearFree\" \"true\""
+                                              "EndSection"
 
-                                                       "Section \"InputClass\""
-                                                       "Identifier \"touchpad catchall\""
-                                                       "Driver \"synaptics\""
-                                                       "MatchIsTouchpad \"on\""
-                                                       "MatchDevicePath \"/dev/input/event*\""
-                                                       "Option \"TapButton1\" \"1\""
-                                                       "Option \"TapButton2\" \"2\""
-                                                       "Option \"TapButton3\" \"3\""
-                                                       "Option \"CircularScrolling\" \"on\""
-                                                       "Option \"CircScrollStrigger\" \"0\""
-                                                       "Option \"CircularPad\" \"on\""
-                                                       "EndSection"))))))
-                                   (guix-service-type
-                                    config =>
-                                    (guix-configuration
-                                     (inherit config)
-                                     (substitute-urls
-                                      (append (list "https://substitutes.nonguix.org")
-                                              %default-substitute-urls))
-                                     (authorized-keys
-                                      (append (list (plain-file "non-guix.pub"
-                                                                "(public-key
-                                                                   (ecc
-                                                                    (curve Ed25519)
-                                                                    (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
-                                              %default-authorized-guix-keys)))))))
+                                              "Section \"InputClass\""
+                                              "Identifier \"touchpad catchall\""
+                                              "Driver \"synaptics\""
+                                              "MatchIsTouchpad \"on\""
+                                              "MatchDevicePath \"/dev/input/event*\""
+                                              "Option \"TapButton1\" \"1\""
+                                              "Option \"TapButton2\" \"2\""
+                                              "Option \"TapButton3\" \"3\""
+                                              "Option \"CircularScrolling\" \"on\""
+                                              "Option \"CircScrollStrigger\" \"0\""
+                                              "Option \"CircularPad\" \"on\""
+                                              "EndSection")))))))))
  (bootloader (bootloader-configuration
               (bootloader grub-efi-bootloader)
               (targets (list "/boot/efi"))
