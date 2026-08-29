@@ -10,13 +10,12 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages nss)
   #:use-module (fuglesteg packages fonts)
-  #:use-module (fuglesteg packages vim)
   #:use-module (fuglesteg packages lem)
   #:export (fuglesteg-development-service-type))
 
 (use-package-modules version-control base rust-apps web ssh node
                      tmux terminals curl syncthing text-editors
-                     readline admin compression certs)
+                     readline admin compression certs vim)
 
 (define (home-development-profile-service config)
   (list curl syncthing coreutils node

@@ -25,9 +25,9 @@
   #:use-module (fuglesteg packages packup)
   #:use-module (fuglesteg home services development))
 
-(use-package-modules wm vim video certs base gl lisp tmux rust-apps
+(use-package-modules window-management vim video certs base gl lisp tmux rust-apps
                      terminals image-viewers xdisorg xorg tls xfce
-                     pulseaudio music image compton glib linux
+                     pulseaudio music image compton glib linux inkscape
                      web-browsers pdf freedesktop lisp-xyz sdl kde-graphics
                      package-management gnome-xyz syncthing gnuzilla)
 
