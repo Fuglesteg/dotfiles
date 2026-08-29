@@ -31,13 +31,52 @@
                      web-browsers pdf freedesktop lisp-xyz sdl kde-graphics
                      package-management gnome-xyz syncthing gnuzilla)
 
-(define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-sdl-fonts
+(define sbcl-stumpwm-sdl-fonts
+  (let ((commit "sdl2-ttf")
+        (revision "1"))
+    (package
+     (name "sbcl-stumpwm-sdl-fonts")
+     (version (git-version "0.0.1" revision commit))
+     (source
+      (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/Fuglesteg/stumpwm-contrib.git")
+             (commit commit)))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "08j4l0zar14jx5wzr2k0m8inxwjbj41gz1082ljg3f7yacc0li5v"))))
+     (build-system asdf-build-system/sbcl)
+     (inputs
+      (list stumpwm
+            sdl2
+            sdl2-ttf
+            sbcl-cffi))
+     (arguments
+      (list #:asd-systems ''("sdl-fonts")
+            #:phases
+            #~(modify-phases %standard-phases
+                             (add-after 'unpack 'patch-sdl-dependencies
+                                        (lambda _
+                                          (substitute* "util/sdl-fonts/sdl-fonts.lisp"
+                                                       (("libSDL2-2.0.so.0")
+                                                        (string-append #$sdl2 "/lib/libSDL2.so"))
+                                                       (("libSDL2_ttf-2.0.so.0")
+                                                        (string-append #$sdl2-ttf "/lib/libSDL2_ttf.so"))))))))
+     (home-page "https://github.com/stumpwm/stumpwm-contrib")
+     (synopsis "StumpWM extra modules")
+     (description "This package provides extra modules for StumpWM.")
+     (license (list license:gpl2+ license:gpl3+ license:bsd-2)))))
+
+
+(define desktop-packages (list obs rofi vlc xclip stumpwm sbcl-stumpwm-ttf-fonts
+                               sbcl-stumpwm-sdl-fonts
                                sbcl-stumpwm-swm-gaps sbcl-stumpwm-stumptray sbcl-clx-xembed
                                sbcl-stumpwm-stump-regkey feh google-chrome-stable
                                zathura zathura-pdf-mupdf mupdf sbcl xset
-                               xrandr firefox pavucontrol pulseaudio xrdb
-                               pamixer playerctl flameshot bluez
-                               thunar tumbler ffmpegthumbnailer krita
+                               thunar tumbler ffmpegthumbnailer krita inkscape
+                               xrandr pavucontrol pulseaudio xrdb
+                               pamixer playerctl flameshot bluez firefox
                                p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
                                picom flatpak-xdg-utils flatpak xdg-utils
                                xsetroot hackneyed-x11-cursors

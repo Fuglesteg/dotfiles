@@ -5,14 +5,28 @@
   #:use-module (gnu)
   #:use-module (gnu services)
   #:use-module (gnu system)
+  #:use-module (gnu system accounts)
   #:use-module (gnu system nss)
   #:use-module (gnu services desktop)
   #:use-module (gnu services ssh)
+  #:use-module (gnu services pm)
   #:use-module (gnu services guix)
   #:use-module (gnu packages gnome)
+  #:use-module (gnu packages kde-plasma)
+  #:use-module (gnu packages freedesktop)
+  #:use-module (gnu packages package-management)
   #:use-module (gnu packages xml)
+  #:use-module (gnu packages glib)
+  #:use-module (gnu packages nss)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages xorg)
+  #:use-module (gnu packages gnome-xyz)
   #:use-module (gnu services linux)
+  #:use-module (gnu services containers)
   #:use-module (gnu services xorg)
+  #:use-module (gnu services docker)
+  #:use-module (gnu services dbus)
+  #:use-module (gnu services networking)
   #:use-module (nongnu packages nvidia)
   #:use-module (nongnu services nvidia)
   #:use-module (nongnu packages linux))
@@ -24,7 +38,8 @@
                   broadcom-bt-firmware
                   broadcom-sta
                   %base-firmware))
- (kernel-arguments (list "modprobe.blacklist=b43,b43legacy,ssb,bcm43xx,brcm80211,brcmfmac,brcmsmac,bcma"))
+ (kernel-arguments (list "modprobe.blacklist=b43,b43legacy,ssb,bcm43xx,brcm80211,brcmfmac,brcmsmac,bcma,nouveau"
+                         "nvidia_drm.modeset=1"))
  (kernel-loadable-modules (list broadcom-sta))
  (locale "en_US.utf8")
  (timezone "Europe/Oslo")
@@ -48,15 +63,41 @@
  (name-service-switch %mdns-host-lookup-nss)
  (packages (cons*
             gnome-software
+            xdg-desktop-portal
+            xdg-desktop-portal-gtk
+            xdg-desktop-portal-gnome
+            xdg-desktop-portal-kde
+            xdg-dbus-proxy
+            xdg-utils
+            p11-kit
+            flatpak
+            flatpak-xdg-utils
+            shared-mime-info
+            (list glib "bin")
+            hackneyed-x11-cursors
+            bibata-cursor-theme
             %base-packages))
  (services (cons* (service guix-home-service-type
                            `(("andy" ,desktop-home)))
+                  (service nvidia-service-type)
                   (service openssh-service-type
                            (openssh-configuration
                             (password-authentication? #f)
                             (authorized-keys
                              `(("andy" ,(local-file "k80.pub"))))))
+                  (service docker-service-type)
+                  (service containerd-service-type)
                   (service gnome-desktop-service-type)
+                  ; Required for rootless podman
+                  (service iptables-service-type)
+                  (service rootless-podman-service-type
+                           (rootless-podman-configuration
+                            (subgids
+                             (list (subid-range (name "dineo"))
+                                   (subid-range (name "andy"))))
+                            (subuids
+                             (list (subid-range (name "dineo"))
+                                   (subid-range (name "andy"))))))
                   (service tlp-service-type)
                   (service bluetooth-service-type)
                   (modify-services %desktop-services
@@ -66,7 +107,6 @@
                                      (inherit config)
                                      (substitute-urls
                                       (append (list "https://substitutes.nonguix.org")
-                                              #;(list "https://nonguix-proxy.ditigal.xyz")
                                               %default-substitute-urls))
                                      (authorized-keys
                                       (append (list (plain-file "non-guix.pub"
