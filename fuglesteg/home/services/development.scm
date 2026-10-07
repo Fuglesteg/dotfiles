@@ -10,31 +10,41 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages nss)
   #:use-module (fuglesteg packages fonts)
+  #:use-module ((fuglesteg packages vim) #:select (nvim-telescope-fzf-native))
   #:use-module (fuglesteg packages lem)
   #:export (fuglesteg-development-service-type))
 
 (use-package-modules version-control base rust-apps web ssh node
                      tmux terminals curl syncthing text-editors
-                     readline admin compression certs vim lua)
+                     readline admin compression certs vim lua
+                     tree-sitter sqlite)
 
 (define (home-development-profile-service config)
-  (list curl syncthing coreutils node
+  (list curl syncthing coreutils node sqlite
         rlwrap ripgrep nss-certs openssh
         htop neovim fzf glibc-locales
-        git zoxide fd tmux unzip eza lem-latest font-nerd-mononoki))
-        nvim-telescope-fzf-native lua-language-server
+        git zoxide fd nvim-telescope-fzf-native lua-language-server
+        tree-sitter-vue
+        tree-sitter-javascript
+        tree-sitter-typescript
+        tree-sitter-jsdoc
+        tree-sitter-c-sharp
+        tree-sitter-markdown
+        tree-sitter-yaml
+        ;markdown-inline
+        tree-sitter-json
+        tmux unzip eza lem-latest font-nerd-mononoki))
 
 (define (home-development-variables-service config)
   `(("VISUAL" . "nvim")
     ("GUIX_LOCPATH" . "$HOME/.guix-home/profile/lib/locale")
     ("PATH" . ,(string-append "$PATH:"
                               "$HOME/.local/bin:"
-                              "~/.guix-home/share/dotnet:~/.dotnet/tools"))
+                              "$HOME/.guix-home/share/dotnet:$HOME/.dotnet/tools"))
     ("EDITOR" . "nvim")))
 
 (define (home-development-files-service config)
   `((".tmux.conf" ,(local-file "../tmux.conf"))
-    (".tmux-set-colors.conf" ,(local-file "../tmux-set-colors.conf"))
     (".vimrc" ,(local-file "../vimrc"))
     (".npmrc" ,(local-file "../npmrc"))
     (".lem/init.lisp" ,(local-file "../lem/init.lisp"))
@@ -58,8 +68,8 @@
    (aliases `(("dcd" . "docker compose down")
               ("dcu" . "docker compose up")
               ("dps" . "docker ps")
-              ("tree" . "eza --icons --tree")
-              ("ls" . "eza -l --icons")
+              ("tree" . "eza --icons auto --tree")
+              ("ls" . "eza -l --icons auto")
               ("info" . "info --vi-keys")
               ("neovide" . "neovide --multigrid")
               ("sshf" . "ssh k8")
@@ -72,8 +82,9 @@
 (define (home-development-activation-service config)
   #~(invoke #$(file-append node-lts "/bin/npm")
             "i" "-g"
-            "typescript" "typescript-language-server"
-            "@vue/language-server" "@vue/typescript-plugin"))
+            "typescript@6" "typescript-language-server"
+            "@vue/language-server" "@vue/typescript-plugin"
+            "@agentclientprotocol/claude-agent-acp@0.66.0"))
 
 (define-public fuglesteg-development-service-type
   (service-type
