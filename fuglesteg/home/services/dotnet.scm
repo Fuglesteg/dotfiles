@@ -14,8 +14,7 @@
 
 
 (define (home-dotnet-variables-service config)
-  `(("DOTNET_ENVIRONMENT" . "Development")
-    ("DOTNET_ROOT" . "~/.guix-home/share/dotnet")))
+  `(("DOTNET_ENVIRONMENT" . "Development")))
 
 (define-public fuglesteg-dotnet-service-type
   (service-type
