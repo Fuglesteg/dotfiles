@@ -80,7 +80,9 @@ else
 fi
 
 # PATH
-PATH="$PATH:$HOME/.local/bin"
+# Prepend so our own npm-installed CLIs (e.g. tree-sitter-cli) take
+# precedence over Windows-side binaries pulled in via WSL interop PATH.
+PATH="$HOME/.local/bin:$PATH"
 
 
 # PROMPT
@@ -133,37 +135,79 @@ export -f color_path
 PS1="${user_color}\u${white}@${host_color}\h\[\033[00m\]:${blue}\w${guix_color}${GUIX_ENVIRONMENT:+ []}\[\033[00m\]\$ "
 trap 'echo -ne "\033]0;${PWD}: (${BASH_COMMAND})\007"' DEBUG
 
+# Watch status titles
+#
+# Sets the pane title (OSC 0, same mechanism as the DEBUG trap above) based
+# on a watch command's output, so build windows show their current status
+# (building / ready / errored) via tmux's automatic-rename (see tmux.conf,
+# automatic-rename-format = "#{pane_title}") instead of just the program name.
+_watch_title() {
+    local label="$1" building_re="$2" ready_re="$3" error_re="$4"
+    shift 4
+
+    # Turn off job control for this pipeline: watch commands often take a
+    # moment to shut down after the first Ctrl-C (graceful shutdown), and
+    # with monitor mode on bash tracks it as a background job and later
+    # dumps its reconstructed source as a job-completion notice.
+    set +m
+    "$@" 2>&1 | while IFS= read -r line; do
+        echo "$line"
+        if [[ "$line" =~ $error_re ]]; then
+            printf '\033]0;❌ %s\007' "$label"
+        elif [[ "$line" =~ $ready_re ]]; then
+            printf '\033]0;✅ %s\007' "$label"
+        elif [[ "$line" =~ $building_re ]]; then
+            printf '\033]0;🔨 %s\007' "$label"
+        fi
+    done
+    local status="${PIPESTATUS[0]}"
+    set -m
+
+    return "$status"
+}
+
 # Csharp
 dotnet-run() {
-    dotnet watch run --project $(basename $PWD)
+    local project="$1"
+    if [ -z "$project" ]; then
+        project=$(basename $PWD)
+    fi
+
+    # dotnet watch prints a benign "❌ Failed to read '...staticwebassets...'"
+    # even on a clean run, so error detection keys off actual build failures
+    # rather than any ❌ line.
+    _watch_title "$project" \
+        'dotnet watch 🔄|Determining projects to restore' \
+        'Application started\. Press Ctrl\+C to shut down\.|C# and Razor changes applied' \
+        'Build FAILED|error CS[0-9]|Unable to apply changes due to compilation errors|Fix the error to continue' \
+        dotnet watch --non-interactive run --property:WarningLevel=0 /clp:ErrorsOnly --project "$project"
+}
+
+# JS
+npm-watch() {
+    local label="${1:-$(basename "$PWD")}"
+
+    # Tuned for `webpack --watch --progress`. Only the setup/building/sealing/
+    # emitting phases count as "building" — webpack keeps emitting progress
+    # lines for cache/idle bookkeeping right after a successful build too,
+    # and those shouldn't flip the title back from ready.
+    _watch_title "$label" \
+        '\[webpack\.Progress\] [0-9]+% (setup|building|sealing|emitting)' \
+        'compiled (successfully|with [0-9]+ warning)' \
+        'compiled with [0-9]+ error' \
+        npm run watch
 }
 
 dotnet-test() {
     dotnet test --filter=FullyQualifiedName~$1
 }
 
-# Sets up tmux with one editor window and one server process window
-tmux-vue() {
-    local session_name=$(basename $PWD)
-    session_name=$(echo $session_name | sed 's/\./_/')
-
-    if ! tmux has-session -t $session_name 2> /dev/null; then
-        tmux new-session -ds $session_name -c $PWD -n $session_name 'guix shell node'
-        tmux new-window -t $session_name:2 -n 'server' 'guix shell node bash -- bash -c "npm run dev"'
-    fi
-
-    tmux attach-session -t $session_name
-}
-
-# Sets up tmux with one editor window, one server process window and one testing window
-tmux-csharp() {
+mux() {
     local session_name=$(basename $PWD)
     session_name=$(echo $session_name | sed 's/\./_/')
 
     if ! tmux has-session -t "$session_name" 2> /dev/null; then
         tmux new-session -ds "$session_name" -c "$PWD" -n "$session_name"
-        tmux new-window -t "$session_name:2" -n 'server'
-        tmux new-window -t "$session_name:3" -n 'testing'
     fi
 
     tmux attach-session -t "$session_name"
