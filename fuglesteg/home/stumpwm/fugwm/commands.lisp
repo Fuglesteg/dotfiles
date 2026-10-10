@@ -37,6 +37,9 @@
   (refresh-heads)
   (refresh-heads))
 
+(defcommand start-tv-browser () ()
+  (run-shell-command "GDK_DPI_SCALE=2.0 firefox --new-instance --profile /home/andy/.mozilla/firefox/zisx9izf.TV"))
+
 (defcommand disconnect-tv () ()
   (run-shell-command "xrandr --output HDMI-A-0 --off" t)
   (sleep 4)

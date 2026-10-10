@@ -8,9 +8,10 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shells)
   #:use-module (gnu packages)
+  #:use-module (gnu packages vim)
+  #:use-module (gnu packages inkscape)
   #:use-module (gnu packages nss)
   #:use-module (fuglesteg packages fonts)
-  #:use-module ((fuglesteg packages vim) #:select (nvim-telescope-fzf-native))
   #:use-module (fuglesteg packages lem)
   #:export (fuglesteg-development-service-type))
 
@@ -22,8 +23,9 @@
 (define (home-development-profile-service config)
   (list curl syncthing coreutils node sqlite
         rlwrap ripgrep nss-certs openssh
-        htop neovim fzf glibc-locales
+        btop htop neovim fzf glibc-locales
         git zoxide fd nvim-telescope-fzf-native lua-language-server
+        tmux unzip eza lem-latest font-nerd-mononoki
         tree-sitter-vue
         tree-sitter-javascript
         tree-sitter-typescript
@@ -32,8 +34,7 @@
         tree-sitter-markdown
         tree-sitter-yaml
         ;markdown-inline
-        tree-sitter-json
-        tmux unzip eza lem-latest font-nerd-mononoki))
+        tree-sitter-json))
 
 (define (home-development-variables-service config)
   `(("VISUAL" . "nvim")

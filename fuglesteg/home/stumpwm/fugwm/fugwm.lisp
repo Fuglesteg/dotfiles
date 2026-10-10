@@ -74,6 +74,8 @@
   (setf *startup-message* "^5 Welcome Home :)
 ^0 Happy Hacking!")
 
+; xscreensaver -no-splash &
+
   (run-shell-command "picom -b &
 xsetroot -cursor_name left_ptr" t)
 
