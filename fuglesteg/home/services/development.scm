@@ -24,7 +24,7 @@
   (list curl syncthing coreutils node sqlite
         rlwrap ripgrep nss-certs openssh
         btop htop neovim fzf glibc-locales
-        git zoxide fd nvim-telescope-fzf-native lua-language-server
+        git zoxide fd lua-language-server
         tmux unzip eza lem-latest font-nerd-mononoki
         tree-sitter-vue
         tree-sitter-javascript
