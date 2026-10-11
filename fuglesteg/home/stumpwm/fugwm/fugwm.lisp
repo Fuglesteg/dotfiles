@@ -81,7 +81,7 @@ xsetroot -cursor_name left_ptr" t)
 
   #+k80
   (run-shell-command
-   "xrandr --output DisplayPort-2 --rate 144 --primary --output HDMI-A-0 --off" t)
+   "xrandr --output HDMI-A-0 --off --output DisplayPort-2 --mode 3840x2160 --rate 143.99 --primary " t)
 
   (add-hook *destroy-window-hook* 'on-window-destroy)
 

@@ -17,6 +17,7 @@
   #:use-module (gnu system nss)
   #:use-module (gnu system accounts)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module (guix channels)
   #:use-module (nongnu packages linux)
@@ -27,7 +28,7 @@
                      virtualization docker xorg nix containers)
 
 (use-package-modules fonts vim video certs docker networking
-                     virtualization firmware
+                     virtualization firmware display-managers
                      xdisorg kde-graphics libusb nfs package-management
                      wm gl xorg version-control linux)
 
@@ -268,6 +269,9 @@
                           "ATTR{power/autosuspend}=\"-1\"\n")))
 (service sddm-service-type
          (sddm-configuration
+           (sddm sddm-qt5)
+           (theme "sugar-dark")
+           (themes-directory #~(string-append #$sugar-dark-sddm-theme-qt5 "/share/sddm/themes"))
           (xorg-configuration
            (xorg-configuration
             (resolutions '((3840 2160) (1920 1080)))
