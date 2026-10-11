@@ -46,7 +46,7 @@
         tumbler ffmpegthumbnailer krita
         p11-kit xdg-desktop-portal xdg-desktop-portal-gtk
         picom flatpak-xdg-utils flatpak xdg-utils
-        xsetroot hackneyed-x11-cursors
+        xsetroot hackneyed-x11-cursors strawberry
         guix-icons adwaita-icon-theme
         bibata-cursor-theme alacritty))
 
