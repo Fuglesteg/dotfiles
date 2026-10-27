@@ -1,5 +1,6 @@
 (define-module (fuglesteg kit)
   #:use-module (fuglesteg home desktop)
+  #:use-module (fuglesteg services vpn)
   #:use-module (guix packages)
   #:use-module (guix build-system trivial)
   #:use-module (gnu)
@@ -101,6 +102,11 @@
                                      (subid-range (name "andy"))))))
                     (service tlp-service-type)
                     (service bluetooth-service-type)
+                    (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
+                                                 #:address "10.0.0.11/24"
+                                                 #:peers (list peer-k8
+                                                               peer-k80
+                                                               peer-kip))
                     (modify-services %desktop-services
                                      (guix-service-type
                                       config =>

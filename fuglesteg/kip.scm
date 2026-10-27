@@ -80,7 +80,8 @@
          (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
                                       #:address "10.0.0.1/24"
                                       #:peers (list peer-k8
-                                                    peer-k80))
+                                                    peer-k80
+                                                    peer-kit))
          (fuglesteg-hosts-service)
          (service gnome-desktop-service-type)
          (udev-rules-service 'light-rules light)

@@ -114,7 +114,8 @@
      (fuglesteg-wireguard-service #:private-key "/home/andy/wg/fuglesteg-private.key"
                                   #:address "10.0.0.80/24"
                                   #:peers (list peer-k8
-                                                peer-kip))
+                                                peer-kip
+                                                peer-kit))
      (fuglesteg-hosts-service)
      (service guix-home-service-type
               `(("andy" ,desktop-home)))

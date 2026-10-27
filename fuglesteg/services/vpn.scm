@@ -25,6 +25,13 @@
    (allowed-ips '("10.0.0.1/32"))
    (keep-alive 25)))
 
+(define-public peer-kit
+  (wireguard-peer
+   (name "Kit")
+   (public-key "9q74ge19pfsNSDiPzBXeCNY/brNNnTEW3YO0NxAcdkQ=")
+   (allowed-ips '("10.0.0.11/32"))
+   (keep-alive 25)))
+
 (define* (fuglesteg-wireguard-service #:key private-key address peers)
   (service wireguard-service-type
            (wireguard-configuration
@@ -40,4 +47,5 @@
                   hosts-service-type
                   (list (host "10.0.0.8" "k8")
                         (host "10.0.0.80" "k80")
-                        (host "10.0.0.1" "kip"))))
+                        (host "10.0.0.1" "kip")
+                        (host "10.0.0.11" "kit"))))
